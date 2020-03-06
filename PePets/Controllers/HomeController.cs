@@ -12,17 +12,19 @@ namespace PePets.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly AdvertRepository _advertRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, AdvertRepository advertRepository)
         {
             _logger = logger;
+            _advertRepository = advertRepository;
         }
 
         public IActionResult Index()
         {
-            HelloModel hello = new HelloModel { HelloMessage = "Здарова, бандиты" };
-
-            return View(hello);
+            //HelloModel hello = new HelloModel { HelloMessage = "Здарова, бандиты" };
+            var adverts = _advertRepository.GetAdverts();
+            return View(adverts);
         }
 
         public IActionResult Privacy()

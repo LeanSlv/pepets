@@ -1,0 +1,31 @@
+﻿@model PePets.Models.Advert
+
+<div class="text-center">
+    <h1>Редактировать объявление</h1>
+    <div>
+        <form asp-controller="Advert" asp-action="AdvertEdit" method="post">
+            <input type="hidden" asp-for="Id"/>
+            <div asp-validation-summary="All"></div>
+
+            <div>
+                <label asp-for="Title">Title</label>
+                <input type="text"asp-for="Title" />
+                <span asp-validation-for="Title"></span>
+            </div>
+            <div>
+                <label asp-for="Description">Description</label>
+                <textarea asp-for="Description"></textarea>
+                <span asp-validation-for="Description"></span>
+            </div>
+            <div>
+                <label asp-for="Cost">Cost</label>
+                <input type="text" asp-for="Cost"/>
+                <span asp-validation-for="Cost"></span>
+            </div>
+
+            <input type="submit" value="Сохранить" />
+        </form>
+    </div>
+</div>
+
+

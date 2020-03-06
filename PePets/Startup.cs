@@ -27,6 +27,7 @@ namespace PePets
         {
             services.AddControllersWithViews();
             services.AddDbContext<PePetsDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("PePetsDbContext")));
+            services.AddTransient<AdvertRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -20,12 +20,12 @@ namespace PePets.Models
             return _context.Adverts.OrderBy(x => x.Title);
         }
 
-        public Advert GetAdvertById(int id)
+        public Advert GetAdvertById(Guid id)
         {
             return _context.Adverts.Single(x => x.Id == id);
         }
 
-        public int SaveAdvert(Advert entity)
+        public Guid SaveAdvert(Advert entity)
         {
             
             if (entity.Id == default)
