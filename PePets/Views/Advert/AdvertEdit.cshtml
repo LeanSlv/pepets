@@ -3,13 +3,13 @@
 <div class="text-center">
     <h1>Редактировать объявление</h1>
     <div>
-        <form asp-controller="Advert" asp-action="AdvertEdit" method="post">
-            <input type="hidden" asp-for="Id"/>
+        <form asp-controller="Advert" asp-action="AdvertEdit" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
             <div asp-validation-summary="All"></div>
 
             <div>
                 <label asp-for="Title">Title</label>
-                <input type="text"asp-for="Title" />
+                <input type="text" asp-for="Title" />
                 <span asp-validation-for="Title"></span>
             </div>
             <div>
@@ -19,8 +19,15 @@
             </div>
             <div>
                 <label asp-for="Cost">Cost</label>
-                <input type="text" asp-for="Cost"/>
+                <input type="text" asp-for="Cost" />
                 <span asp-validation-for="Cost"></span>
+            </div>
+
+
+            <div>
+                <label asp-for="Images">Upload images</label>
+                <input type="file" accept="image/*" asp-for="Images" multiple />
+                <span asp-validation-for="Images"></span>
             </div>
 
             <input type="submit" value="Сохранить" />
