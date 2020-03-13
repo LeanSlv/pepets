@@ -41,15 +41,15 @@ namespace PePets.Controllers
             _advertRepository.SaveAdvert(advert);
 
                 // Сохранение изображений в отдельную папку и добавление их путей в БД
-                Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/img/{advert.Id}");
+                Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}");
                 List<string> imagesPaths = new List<string>();
                 int i = 0;
                 foreach (var image in images)
                 {
-                    using (var fileStream = new FileStream($"{_appEnvironment.WebRootPath}/img/{advert.Id}/image{i}.png", FileMode.Create, FileAccess.Write))
+                    using (var fileStream = new FileStream($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}/image{i}.png", FileMode.Create, FileAccess.Write))
                     {
                         image.CopyTo(fileStream);
-                        imagesPaths.Add($"/img/{advert.Id}/image{i}.png");
+                        imagesPaths.Add($"/usersFiles/advertsImages/{advert.Id}/image{i}.png");
                     }
                     i++;
                 }
