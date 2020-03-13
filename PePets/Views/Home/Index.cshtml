@@ -1,21 +1,23 @@
 ﻿@model IQueryable<PePets.Models.Advert>
 
-<div class="text-center">
-    <h1 class="display-4">Объявления</h1>
-    @foreach (Advert advert in Model) {
-<div>
-    <h2>@advert.Title</h2>
-    @if (advert.Images != null)
-    {
-        @foreach (string imagePath in advert.Images)
+    <div class="text-center">
+        <h1 class="display-4">Объявления</h1>
+        <a asp-controller="Advert" asp-action="AdvertEdit">Создать объявление</a>
+        @foreach (Advert advert in Model)
         {
-            <img src=@imagePath />
+            <div>
+                <h2>@advert.Title</h2>
+                @if (advert.Images != null)
+                {
+                    @foreach (string imagePath in advert.Images)
+                    {
+                        <img src=@imagePath />
+                    }
+                }
+                <p>@advert.Description</p>
+                <h3>@advert.Cost</h3>
+                <hr />
+            </div>
         }
-    }
-    <p>@advert.Description</p>
-    <h3>@advert.Cost</h3>
-    <hr />
-</div>
-    }
-    <a asp-controller="Advert" asp-action="AdvertEdit">Создать объявление</a>
-</div>
+
+    </div>

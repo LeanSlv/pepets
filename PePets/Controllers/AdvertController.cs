@@ -14,11 +14,13 @@ namespace PePets.Controllers
     {
         private readonly AdvertRepository _advertRepository;
         IWebHostEnvironment _appEnvironment;
+        private readonly int maxImagesCount;
 
         public AdvertController(AdvertRepository advertRepository, IWebHostEnvironment appEnvironment)
         {
             _advertRepository = advertRepository;
             _appEnvironment = appEnvironment;
+            maxImagesCount = 10;
         }
         public IActionResult AdvertEdit(Guid id)
         {
@@ -28,11 +30,15 @@ namespace PePets.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(31457280)] // 30 Мб
         public IActionResult AdvertEdit(Advert advert, IFormFileCollection images)
         {
-            if (ModelState.IsValid)
-            {
-                _advertRepository.SaveAdvert(advert);
+            if (images.Count > maxImagesCount)
+                ModelState.AddModelError(nameof(advert.Images), "Нельзя загружать больше 10 изображений");
+            if (!ModelState.IsValid)
+                return View(advert);
+
+            _advertRepository.SaveAdvert(advert);
 
                 // Сохранение изображений в отдельную папку и добавление их путей в БД
                 Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/img/{advert.Id}");
@@ -53,7 +59,7 @@ namespace PePets.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return View(advert);
-        }
+            
+        
     }
 }
