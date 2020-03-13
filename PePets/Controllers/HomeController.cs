@@ -22,7 +22,6 @@ namespace PePets.Controllers
 
         public IActionResult Index()
         {
-            //HelloModel hello = new HelloModel { HelloMessage = "Здарова, бандиты" };
             var adverts = _advertRepository.GetAdverts();
             return View(adverts);
         }

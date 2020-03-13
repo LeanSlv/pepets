@@ -16,6 +16,8 @@
 
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="wwwroot\usersFiles\advertsImages\" />
+    <Folder Include="wwwroot\usersFiles\avatars\" />
   </ItemGroup>
 
 
