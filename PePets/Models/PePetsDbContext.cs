@@ -16,5 +16,6 @@ namespace PePets.Models
         }
 
         public DbSet<Advert> Adverts { get; set; }
+        public DbSet<PetDescription> PetsDescription { get; set; }
     }
 }

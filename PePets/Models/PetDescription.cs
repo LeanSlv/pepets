@@ -11,14 +11,14 @@ namespace PePets.Models
         Dog
     }
 
-    public class Pet
+    public class PetDescription
     {
         public Guid Id { get; set; }
         public string Sex { get; set; }
         public TypeofPet Type { get; set; }
         public string Breed { get; set; }
-        public DateTime Age { get; set; }
+        public string Age { get; set; }
         public string Color { get; set; }
-
+        public Advert Advert { get; set; }
     }
 }

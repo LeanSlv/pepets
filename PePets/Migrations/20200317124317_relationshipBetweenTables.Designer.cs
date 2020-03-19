@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PePets.Models;
 
 namespace PePets.Migrations
 {
     [DbContext(typeof(PePetsDbContext))]
-    partial class PePetsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200317124317_relationshipBetweenTables")]
+    partial class relationshipBetweenTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,13 +61,12 @@ namespace PePets.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PetDescriptionId")
-                        .IsUnique();
+                    b.HasIndex("PetDescriptionId");
 
                     b.ToTable("Adverts");
                 });
 
-            modelBuilder.Entity("PePets.Models.PetDescription", b =>
+            modelBuilder.Entity("PePets.Models.Pet", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,9 +94,9 @@ namespace PePets.Migrations
 
             modelBuilder.Entity("PePets.Models.Advert", b =>
                 {
-                    b.HasOne("PePets.Models.PetDescription", "PetDescription")
-                        .WithOne("Advert")
-                        .HasForeignKey("PePets.Models.Advert", "PetDescriptionId")
+                    b.HasOne("PePets.Models.Pet", "PetDescription")
+                        .WithMany()
+                        .HasForeignKey("PetDescriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

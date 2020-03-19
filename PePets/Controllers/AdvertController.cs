@@ -40,26 +40,28 @@ namespace PePets.Controllers
 
             _advertRepository.SaveAdvert(advert);
 
-                // Сохранение изображений в отдельную папку и добавление их путей в БД
-                Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}");
-                List<string> imagesPaths = new List<string>();
-                int i = 0;
-                foreach (var image in images)
+            // Сохранение изображений в отдельную папку и добавление их путей в БД
+            Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}");
+            List<string> imagesPaths = new List<string>();
+            int i = 0;
+            foreach (var image in images)
+            {
+                using (var fileStream = new FileStream($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}/image{i}.png", FileMode.Create, FileAccess.Write))
                 {
-                    using (var fileStream = new FileStream($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}/image{i}.png", FileMode.Create, FileAccess.Write))
-                    {
-                        image.CopyTo(fileStream);
-                        imagesPaths.Add($"/usersFiles/advertsImages/{advert.Id}/image{i}.png");
-                    }
-                    i++;
+                    image.CopyTo(fileStream);
+                    imagesPaths.Add($"/usersFiles/advertsImages/{advert.Id}/image{i}.png");
                 }
-                advert.Images = imagesPaths.ToArray();
-                _advertRepository.SaveAdvert(advert);
-
-                return RedirectToAction("Index", "Home");
+                i++;
             }
+            advert.Images = imagesPaths.ToArray();
 
-            
-        
+            PetDescription petDescription = new PetDescription();
+
+
+            _advertRepository.SaveAdvert(advert);
+
+            return RedirectToAction("Index", "Home");
+        }
+ 
     }
 }

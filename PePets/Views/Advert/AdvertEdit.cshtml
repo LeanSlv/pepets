@@ -1,12 +1,12 @@
 ﻿@model PePets.Models.Advert
-
+@using static PePets.Models.PetDescription
 <div class="text-center">
     <h1>Редактировать объявление</h1>
     <div>
         <form asp-controller="Advert" asp-action="AdvertEdit" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="Id" />
             <div asp-validation-summary="All"></div>
-
+            
             <div>
                 <label asp-for="Title">Title</label>
                 <input type="text" asp-for="Title" />
@@ -29,7 +29,36 @@
                 <input type="file" accept="image/*" asp-for="Images" multiple />
                 <span asp-validation-for="Images"></span>
             </div>
+            
+            <div>
+                <input type="hidden" asp-for="PetDescription.Id" />
+                <span asp-validation-for="PetDescription.Id"></span>
+                <div>
+                    <label asp-for="PetDescription">Pet description</label>
+                </div>
+                <div>
+                    <label asp-for="PetDescription.Age">Age</label>
+                    <input type="text" asp-for="PetDescription.Age" />
+                    <span asp-validation-for="PetDescription.Age"></span>
+                </div>
+                <div>
+                    <label asp-for="PetDescription.Color">Color</label>
+                    <input type="text" asp-for="PetDescription.Color" />
+                    <span asp-validation-for="PetDescription.Color"></span>
+                </div>
+                <div>
+                    <label asp-for="PetDescription.Type">Breed</label>
+                    <select asp-for="PetDescription.Type">
+                        @foreach (string type in Enum.GetNames(typeof(TypeofPet)))
+                        {
+                            <option value=@Enum.Parse(typeof(TypeofPet), type)>@type</option>
+                        }
+                    </select>
+                    <span asp-validation-for="PetDescription.Type"></span>
+                </div>
 
+            </div>
+            
             <input type="submit" value="Сохранить" />
         </form>
     </div>
