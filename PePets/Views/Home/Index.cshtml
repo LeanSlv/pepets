@@ -5,20 +5,23 @@
         <a asp-controller="Advert" asp-action="AdvertEdit">Создать объявление</a>
         @foreach (Advert advert in Model)
         {
-    <div>
-        <h2>@advert.Title</h2>
-        @if (advert.Images != null)
-        {
-            @foreach (string imagePath in advert.Images)
-            {
-                <img src=@imagePath />
-            }
+            <div>
+                <h2>@advert.Title</h2>
+                @if (advert.Images != null)
+                {
+                    @foreach (string imagePath in advert.Images)
+                    {
+                        <img src=@imagePath />
+                    }
+                }
+                <p>@advert.Description</p>
+                <h3>@advert.Cost.ToString("c")</h3>
+                <p>@advert.PetDescription.Type</p>
+                <p>@advert.PetDescription.Sex</p>
+                <p>@advert.PetDescription.Color</p>
+                <p>@advert.PetDescription.Breed</p>
+                <p>@advert.PetDescription.Age</p>
+                <hr />
+            </div>
         }
-        <p>@advert.Description</p>
-        <h3>@advert.Cost.ToString("c")</h3>
-        <p>@advert.PetDescription.Type</p>
-        <hr />
-    </div>
-        }
-
     </div>

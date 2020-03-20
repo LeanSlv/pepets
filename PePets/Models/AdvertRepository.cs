@@ -17,7 +17,7 @@ namespace PePets.Models
 
         public IQueryable<Advert> GetAdverts()
         {
-            return _context.Adverts.OrderBy(x => x.Title);
+            return _context.Adverts.Include(x => x.PetDescription);
         }
 
         public Advert GetAdvertById(Guid id)

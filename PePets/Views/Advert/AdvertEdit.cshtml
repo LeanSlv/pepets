@@ -31,8 +31,7 @@
             </div>
             
             <div>
-                <input type="hidden" asp-for="PetDescription.Id" />
-                <span asp-validation-for="PetDescription.Id"></span>
+                
                 <div>
                     <label asp-for="PetDescription">Pet description</label>
                 </div>
@@ -47,7 +46,17 @@
                     <span asp-validation-for="PetDescription.Color"></span>
                 </div>
                 <div>
-                    <label asp-for="PetDescription.Type">Breed</label>
+                    <label asp-for="PetDescription.Sex">Sex</label>
+                    <select asp-for="PetDescription.Sex">
+                        @foreach (string gender in Enum.GetNames(typeof(Genders)))
+                        {
+                            <option value="@Enum.Parse(typeof(Genders), gender)">@gender</option>
+                        }
+                    </select>
+                    <span asp-validation-for="PetDescription.Sex"></span>
+                </div>
+                <div>
+                    <label asp-for="PetDescription.Type">Type</label>
                     <select asp-for="PetDescription.Type">
                         @foreach (string type in Enum.GetNames(typeof(TypeofPet)))
                         {
@@ -56,7 +65,11 @@
                     </select>
                     <span asp-validation-for="PetDescription.Type"></span>
                 </div>
-
+                <div>
+                    <label asp-for="PetDescription.Breed">Breed</label>
+                    <input type="text" asp-for="PetDescription.Breed" />
+                    <span asp-validation-for="PetDescription.Breed"></span>
+                </div>
             </div>
             
             <input type="submit" value="Сохранить" />

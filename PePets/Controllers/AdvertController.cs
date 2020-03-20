@@ -25,7 +25,6 @@ namespace PePets.Controllers
         public IActionResult AdvertEdit(Guid id)
         {
             Advert advert = id == default ? new Advert() : _advertRepository.GetAdvertById(id);
-
             return View(advert);
         }
 
@@ -54,9 +53,6 @@ namespace PePets.Controllers
                 i++;
             }
             advert.Images = imagesPaths.ToArray();
-
-            PetDescription petDescription = new PetDescription();
-
 
             _advertRepository.SaveAdvert(advert);
 
