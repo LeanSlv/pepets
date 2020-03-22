@@ -17,7 +17,7 @@ namespace PePets.Models
 
         public IQueryable<Advert> GetAdverts()
         {
-            return _context.Adverts.OrderBy(x => x.Title);
+            return _context.Adverts.Include(x => x.PetDescription);
         }
 
         public Advert GetAdvertById(Guid id)
@@ -26,14 +26,19 @@ namespace PePets.Models
         }
 
         public Guid SaveAdvert(Advert entity)
-        {
-            
+        {       
             if (entity.Id == default)
+            {
                 // Если статьи не существует, то добавляем её
+                _context.PetsDescription.Add(entity.PetDescription);
                 _context.Entry(entity).State = EntityState.Added;
+            } 
             else
+            {
                 // Иначе обновляем
+                //_context.PetsDescription.Update(entity.PetDescription);
                 _context.Entry(entity).State = EntityState.Modified;
+            }
 
             _context.SaveChanges();
 

@@ -15,9 +15,13 @@
                     }
                 }
                 <p>@advert.Description</p>
-                <h3>@advert.Cost</h3>
+                <h3>@advert.Cost.ToString("c")</h3>
+                <p>@advert.PetDescription.Type</p>
+                <p>@advert.PetDescription.Sex</p>
+                <p>@advert.PetDescription.Color</p>
+                <p>@advert.PetDescription.Breed</p>
+                <p>@advert.PetDescription.Age</p>
                 <hr />
             </div>
         }
-
     </div>

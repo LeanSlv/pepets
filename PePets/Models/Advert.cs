@@ -27,12 +27,11 @@ namespace PePets.Models
             set { _images = JsonConvert.SerializeObject(value); } 
         }
         public int Cost { get; set; }
-        public Pet PetDecription { get; set; }
+        public PetDescription PetDescription { get; set; }
         public Guid UserId { get; set; }
         public string Location { get; set; }
         public int NumberOfLikes { get; set; }
         public int Views { get; set; }
         public DateTime PublicationDate { get; set; }
-
     }
 }

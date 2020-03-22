@@ -25,7 +25,6 @@ namespace PePets.Controllers
         public IActionResult AdvertEdit(Guid id)
         {
             Advert advert = id == default ? new Advert() : _advertRepository.GetAdvertById(id);
-
             return View(advert);
         }
 
@@ -40,26 +39,34 @@ namespace PePets.Controllers
 
             _advertRepository.SaveAdvert(advert);
 
-                // Сохранение изображений в отдельную папку и добавление их путей в БД
-                Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}");
-                List<string> imagesPaths = new List<string>();
-                int i = 0;
-                foreach (var image in images)
-                {
-                    using (var fileStream = new FileStream($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}/image{i}.png", FileMode.Create, FileAccess.Write))
-                    {
-                        image.CopyTo(fileStream);
-                        imagesPaths.Add($"/usersFiles/advertsImages/{advert.Id}/image{i}.png");
-                    }
-                    i++;
-                }
-                advert.Images = imagesPaths.ToArray();
-                _advertRepository.SaveAdvert(advert);
+            // Сохранение изображений в отдельную папку и добавление их путей в БД
+            advert.Images = SaveImages(advert, images);
 
-                return RedirectToAction("Index", "Home");
+            //Добавление актуальной даты публикации
+            advert.PublicationDate = DateTime.Now;
+
+            _advertRepository.SaveAdvert(advert);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        private string[] SaveImages(Advert advert, IFormFileCollection images)
+        {
+            Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}");
+            List<string> imagesPaths = new List<string>();
+            int i = 0;
+            foreach (var image in images)
+            {
+                using (var fileStream = new FileStream($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}/image{i}.png", FileMode.Create, FileAccess.Write))
+                {
+                    image.CopyTo(fileStream);
+                    imagesPaths.Add($"/usersFiles/advertsImages/{advert.Id}/image{i}.png");
+                }
+                i++;
             }
 
-            
-        
+            return imagesPaths.ToArray();
+        }
+ 
     }
 }

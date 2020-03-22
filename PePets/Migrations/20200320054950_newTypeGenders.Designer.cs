@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PePets.Models;
 
 namespace PePets.Migrations
 {
     [DbContext(typeof(PePetsDbContext))]
-    partial class PePetsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200320054950_newTypeGenders")]
+    partial class newTypeGenders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,6 +39,9 @@ namespace PePets.Migrations
                     b.Property<int>("NumberOfLikes")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("PetDescriptionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("PublicationDate")
                         .HasColumnType("datetime2");
 
@@ -56,6 +61,8 @@ namespace PePets.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PetDescriptionId");
+
                     b.ToTable("Adverts");
                 });
 
@@ -63,9 +70,6 @@ namespace PePets.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AdvertId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Age")
@@ -85,17 +89,14 @@ namespace PePets.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdvertId")
-                        .IsUnique();
-
                     b.ToTable("PetsDescription");
                 });
 
-            modelBuilder.Entity("PePets.Models.PetDescription", b =>
+            modelBuilder.Entity("PePets.Models.Advert", b =>
                 {
-                    b.HasOne("PePets.Models.Advert", "Advert")
-                        .WithOne("PetDescription")
-                        .HasForeignKey("PePets.Models.PetDescription", "AdvertId")
+                    b.HasOne("PePets.Models.PetDescription", "PetDescription")
+                        .WithMany()
+                        .HasForeignKey("PetDescriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
