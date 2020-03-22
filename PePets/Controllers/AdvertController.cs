@@ -50,6 +50,20 @@ namespace PePets.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
+        public IActionResult DeleteAdvert(Guid id)
+        {
+            Advert advertToDelete = _advertRepository.GetAdvertById(id);
+
+            //Удаление изображений с сервера
+            DeleteAllImages(advertToDelete.Images);
+
+            //Удаление записи в БД
+            _advertRepository.DeleteAdvert(advertToDelete);
+
+            return RedirectToAction("Index", "Home");
+        }
+
         private string[] SaveImages(Advert advert, IFormFileCollection images)
         {
             Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}");
@@ -67,6 +81,18 @@ namespace PePets.Controllers
 
             return imagesPaths.ToArray();
         }
- 
+        
+        private void DeleteAllImages(string[] pathsToImages)
+        {
+            string directoryName = Path.GetDirectoryName(_appEnvironment.WebRootPath + pathsToImages[0]);
+            try
+            {
+                Directory.Delete(directoryName, true);
+            }
+            catch (DirectoryNotFoundException dirNotFound)
+            {
+                throw new Exception(dirNotFound.Message);
+            }
+        }
     }
 }

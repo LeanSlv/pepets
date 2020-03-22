@@ -21,6 +21,13 @@
                 <p>@advert.PetDescription.Color</p>
                 <p>@advert.PetDescription.Breed</p>
                 <p>@advert.PetDescription.Age</p>
+                |
+                <a asp-controller="Advert" asp-action="AdvertEdit" asp-route-id="@advert.Id">Редактировать</a>
+                |
+                <form method="post" asp-controller="Advert" asp-action="DeleteAdvert">
+                    <input type="hidden" value="@advert.Id" name="Id"/>
+                    <input type="submit" value="Удалить" />
+                </form>
                 <hr />
             </div>
         }
