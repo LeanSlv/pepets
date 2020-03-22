@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,6 +21,7 @@ namespace PePets.Models
 
     public class PetDescription
     {
+        [Required]
         public Guid Id { get; set; }
         public Genders Sex { get; set; }
         public TypeofPet Type { get; set; }
