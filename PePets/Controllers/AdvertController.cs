@@ -40,6 +40,18 @@ namespace PePets.Controllers
             _advertRepository.SaveAdvert(advert);
 
             // Сохранение изображений в отдельную папку и добавление их путей в БД
+            advert.Images = SaveImages(advert, images);
+
+            //Добавление актуальной даты публикации
+            advert.PublicationDate = DateTime.Now;
+
+            _advertRepository.SaveAdvert(advert);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        private string[] SaveImages(Advert advert, IFormFileCollection images)
+        {
             Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}");
             List<string> imagesPaths = new List<string>();
             int i = 0;
@@ -52,11 +64,8 @@ namespace PePets.Controllers
                 }
                 i++;
             }
-            advert.Images = imagesPaths.ToArray();
 
-            _advertRepository.SaveAdvert(advert);
-
-            return RedirectToAction("Index", "Home");
+            return imagesPaths.ToArray();
         }
  
     }
