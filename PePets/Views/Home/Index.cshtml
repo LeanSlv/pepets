@@ -5,23 +5,30 @@
         <a asp-controller="Advert" asp-action="AdvertEdit">Создать объявление</a>
         @foreach (Advert advert in Model)
         {
-            <div>
-                <h2>@advert.Title</h2>
-                @if (advert.Images != null)
-                {
-                    @foreach (string imagePath in advert.Images)
-                    {
-                        <img src=@imagePath />
-                    }
-                }
-                <p>@advert.Description</p>
-                <h3>@advert.Cost.ToString("c")</h3>
-                <p>@advert.PetDescription.Type</p>
-                <p>@advert.PetDescription.Sex</p>
-                <p>@advert.PetDescription.Color</p>
-                <p>@advert.PetDescription.Breed</p>
-                <p>@advert.PetDescription.Age</p>
-                <hr />
-            </div>
+    <div>
+        <h2>@advert.Title</h2>
+        @if (advert.Images != null)
+        {
+            @foreach (string imagePath in advert.Images)
+            {
+                <img src=@imagePath style="max-height: 250px; max-width: 250px"/>
+            }
+        }
+        <p>@advert.Description</p>
+        <h3>@advert.Cost.ToString("c")</h3>
+        <p>@advert.PetDescription.Type</p>
+        <p>@advert.PetDescription.Sex</p>
+        <p>@advert.PetDescription.Color</p>
+        <p>@advert.PetDescription.Breed</p>
+        <p>@advert.PetDescription.Age</p>
+        |
+        <a asp-controller="Advert" asp-action="AdvertEdit" asp-route-id="@advert.Id">Редактировать</a>
+        |
+        <form method="post" asp-controller="Advert" asp-action="DeleteAdvert">
+            <input type="hidden" value="@advert.Id" name="Id" />
+            <input type="submit" value="Удалить" />
+        </form>
+        <hr />
+    </div>
         }
     </div>

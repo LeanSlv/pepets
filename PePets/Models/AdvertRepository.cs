@@ -22,7 +22,7 @@ namespace PePets.Models
 
         public Advert GetAdvertById(Guid id)
         {
-            return _context.Adverts.Single(x => x.Id == id);
+            return _context.Adverts.Include(c => c.PetDescription).Single(x => x.Id == id);
         }
 
         public Guid SaveAdvert(Advert entity)
@@ -30,14 +30,14 @@ namespace PePets.Models
             if (entity.Id == default)
             {
                 // Если статьи не существует, то добавляем её
-                _context.PetsDescription.Add(entity.PetDescription);
                 _context.Entry(entity).State = EntityState.Added;
+                _context.Entry(entity.PetDescription).State = EntityState.Added;
             } 
             else
             {
-                // Иначе обновляем
-                //_context.PetsDescription.Update(entity.PetDescription);
+                // Иначе обновляем        
                 _context.Entry(entity).State = EntityState.Modified;
+                _context.Entry(entity.PetDescription).State = EntityState.Modified;
             }
 
             _context.SaveChanges();
