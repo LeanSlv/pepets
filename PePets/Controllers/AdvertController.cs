@@ -56,7 +56,8 @@ namespace PePets.Controllers
             Advert advertToDelete = _advertRepository.GetAdvertById(id);
 
             //Удаление изображений с сервера
-            DeleteAllImages(advertToDelete.Images);
+            if(advertToDelete.Images.Length > 0)
+                DeleteAllImages(advertToDelete.Images);
 
             //Удаление записи в БД
             _advertRepository.DeleteAdvert(advertToDelete);
@@ -68,7 +69,7 @@ namespace PePets.Controllers
         {
             Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}");
             List<string> imagesPaths = new List<string>();
-            int i = 0;
+            Guid i = Guid.NewGuid();
             foreach (var image in images)
             {
                 using (var fileStream = new FileStream($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}/image{i}.png", FileMode.Create, FileAccess.Write))
@@ -76,7 +77,7 @@ namespace PePets.Controllers
                     image.CopyTo(fileStream);
                     imagesPaths.Add($"/usersFiles/advertsImages/{advert.Id}/image{i}.png");
                 }
-                i++;
+                i = Guid.NewGuid();
             }
 
             return imagesPaths.ToArray();

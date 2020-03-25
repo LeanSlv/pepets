@@ -36,12 +36,22 @@
                     <span asp-validation-for="Cost"></span>
                 </div>
 
-
                 <div>
                     <label asp-for="Images">Upload images</label>
                     <input type="file" accept="image/*" asp-for="Images" multiple />
+                    @if (Model.Id != default)
+                    {
+                        <div>
+                            <p>Загруженные изображения</p>
+
+                            @foreach (string imagePath in Model.Images)
+                            {
+                                <img src=@imagePath style="max-height: 100px; max-width: 100px" />
+                            }
+                        </div>
+                    }
                     <span asp-validation-for="Images"></span>
-                </div>
+                    </div>
 
                 <div>
                     <div>
