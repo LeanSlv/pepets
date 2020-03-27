@@ -1,5 +1,7 @@
 ﻿@model IQueryable<PePets.Models.Advert>
 
+    @await Html.PartialAsync("StartPagePartial")
+
     <div class="text-center">
         <h1 class="display-4">Объявления</h1>
         <a asp-controller="Advert" asp-action="AdvertEdit">Создать объявление</a>
