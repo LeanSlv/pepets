@@ -1,0 +1,48 @@
+﻿.advertCard {
+    border-radius: 25px;
+    padding: 1em;
+    margin-bottom: 10px;
+}
+
+.advertCard:hover {
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.25);
+}
+
+.card-image {
+    max-width: 250px;
+    max-height: 250px;
+    border-radius: 25px;
+}
+
+.description {
+    padding-left: 1.5em;
+}
+
+.crud-block {
+    display: none;
+}
+
+.advertCard:hover .crud-block {
+    display: block;
+}
+
+.far {
+    font-size: 22px;
+}
+
+.btn-crud {
+    margin-bottom: 10px;
+}
+
+.btn-like,
+.btn-edit {
+    color: rgb(56, 56, 56);
+}
+
+    .btn-like:hover {
+        color: rgb(240, 83, 83);
+    }
+
+.btn-delete:hover {
+    color: rgb(200, 0, 0);
+}
