@@ -1,0 +1,32 @@
+﻿@model PePets.Models.Register
+
+    <div>
+        <h1>Регистрация</h1>
+
+        <div>
+            <form method="post" asp-controller="Account" asp-action="Register">
+                <div asp-validation-summary="ModelOnly"></div>
+                <div>
+                    <label asp-for="Email">Введите ваш email</label>
+                    <input type="email" asp-for="Email" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Password">Придумайте пароль</label>
+                    <input type="password" asp-for="Password" />
+                    <span asp-validation-for="Password"></span>
+                </div>
+
+                <div>
+                    <label asp-for="ConfirmPassword">Подтвердите пароль</label>
+                    <input type="password" asp-for="ConfirmPassword" />
+                    <span asp-validation-for="ConfirmPassword"></span>
+                </div>
+
+                <div>
+                    <input type="submit" value="Зарегистрироваться" />
+                </div>
+            </form>
+        </div>
+    </div>

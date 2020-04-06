@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PePets.Models;
@@ -22,6 +23,8 @@ namespace PePets.Controllers
             _appEnvironment = appEnvironment;
             maxImagesCount = 10;
         }
+
+        [Authorize]
         public IActionResult AdvertEdit(Guid id)
         {
             Advert advert = id == default ? new Advert() : _advertRepository.GetAdvertById(id);
