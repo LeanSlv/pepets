@@ -28,7 +28,8 @@ namespace PePets.Models
         }
         public int Cost { get; set; }
         public PetDescription PetDescription { get; set; }
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
+        public User User { get; set; }
         public string Location { get; set; }
         public int NumberOfLikes { get; set; }
         public int Views { get; set; }

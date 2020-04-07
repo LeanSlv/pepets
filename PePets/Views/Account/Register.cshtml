@@ -6,6 +6,13 @@
         <div>
             <form method="post" asp-controller="Account" asp-action="Register">
                 <div asp-validation-summary="ModelOnly"></div>
+
+                <div>
+                    <label asp-for="Name">Введите ваше имя</label>
+                    <input type="text" asp-for="Name"/>
+                    <span asp-validation-for="Name"></span>
+                </div>
+
                 <div>
                     <label asp-for="Email">Введите ваш email</label>
                     <input type="email" asp-for="Email" />

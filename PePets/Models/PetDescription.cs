@@ -10,7 +10,7 @@ namespace PePets.Models
     {
         NotChosen,
         Female,
-        male
+        Male
     }
     public enum TypeofPet
     {

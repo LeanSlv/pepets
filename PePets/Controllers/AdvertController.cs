@@ -48,11 +48,15 @@ namespace PePets.Controllers
             //Добавление актуальной даты публикации
             advert.PublicationDate = DateTime.Now;
 
+            // TODO: Кто создал объявление
+            
+
             _advertRepository.SaveAdvert(advert);
 
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult DeleteAdvert(Guid id)
         {

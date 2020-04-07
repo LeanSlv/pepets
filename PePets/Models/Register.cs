@@ -8,6 +8,9 @@ namespace PePets.Models
 {
     public class Register
     {
+        [Required(ErrorMessage = "Не указано имя")]
+        public string Name { get; set; }
+
         [Required(ErrorMessage = "Не указан Email")]
         public string Email { get; set; }
 
