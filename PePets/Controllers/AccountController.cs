@@ -59,7 +59,11 @@ namespace PePets.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = new User { Email = model.Email, UserName = model.Name};
+                User user = new User 
+                { 
+                    Email = model.Email, 
+                    UserName = model.Name, 
+                };
 
                 // добавляем пользователя в БД
                 var result = await _userManager.CreateAsync(user, model.Password);

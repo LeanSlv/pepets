@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,8 +7,8 @@ using PePets.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace PePets.Controllers
 {
@@ -15,12 +16,14 @@ namespace PePets.Controllers
     {
         private readonly AdvertRepository _advertRepository;
         IWebHostEnvironment _appEnvironment;
+        private readonly UserManager<User> _userManager;
         private readonly int maxImagesCount;
 
-        public AdvertController(AdvertRepository advertRepository, IWebHostEnvironment appEnvironment)
+        public AdvertController(AdvertRepository advertRepository, IWebHostEnvironment appEnvironment, UserManager<User> userManager)
         {
             _advertRepository = advertRepository;
             _appEnvironment = appEnvironment;
+            _userManager = userManager;
             maxImagesCount = 10;
         }
 
@@ -33,7 +36,7 @@ namespace PePets.Controllers
 
         [HttpPost]
         [RequestSizeLimit(31457280)] // 30 Мб
-        public IActionResult AdvertEdit(Advert advert, IFormFileCollection images)
+        public async Task<IActionResult> AdvertEdit(Advert advert, IFormFileCollection images)
         {
             if (images.Count > maxImagesCount)
                 ModelState.AddModelError(nameof(advert.Images), "Нельзя загружать больше 10 изображений");
@@ -48,8 +51,10 @@ namespace PePets.Controllers
             //Добавление актуальной даты публикации
             advert.PublicationDate = DateTime.Now;
 
-            // TODO: Кто создал объявление
-            
+            // Кто создал объявление
+            User currentUser = await GetCurrentUser();
+            advert.User = currentUser;
+            currentUser.Adverts.Add(advert);
 
             _advertRepository.SaveAdvert(advert);
 
@@ -101,6 +106,12 @@ namespace PePets.Controllers
             {
                 throw new Exception(dirNotFound.Message);
             }
+        }
+
+        private async Task<User> GetCurrentUser()
+        {
+            ClaimsPrincipal currentUser = User;
+            return await _userManager.GetUserAsync(currentUser);
         }
     }
 }

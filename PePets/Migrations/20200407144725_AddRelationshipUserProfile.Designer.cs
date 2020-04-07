@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PePets.Models;
 
 namespace PePets.Migrations
 {
     [DbContext(typeof(PePetsDbContext))]
-    partial class PePetsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200407144725_AddRelationshipUserProfile")]
+    partial class AddRelationshipUserProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -178,8 +180,11 @@ namespace PePets.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid?>("UserProfileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UserProfileId1")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Views")
                         .HasColumnType("int");
@@ -192,7 +197,9 @@ namespace PePets.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserProfileId");
+
+                    b.HasIndex("UserProfileId1");
 
                     b.ToTable("Adverts");
                 });
@@ -237,12 +244,6 @@ namespace PePets.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Avatar")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -253,12 +254,6 @@ namespace PePets.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -283,9 +278,6 @@ namespace PePets.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("SecondName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -307,6 +299,39 @@ namespace PePets.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("PePets.Models.UserProfile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecondName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
+
+                    b.ToTable("UserProfiles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -363,12 +388,16 @@ namespace PePets.Migrations
             modelBuilder.Entity("PePets.Models.Advert", b =>
                 {
                     b.HasOne("PePets.Models.User", "User")
-                        .WithMany("Adverts")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.HasOne("PePets.Models.User", null)
+                    b.HasOne("PePets.Models.UserProfile", null)
+                        .WithMany("Adverts")
+                        .HasForeignKey("UserProfileId");
+
+                    b.HasOne("PePets.Models.UserProfile", null)
                         .WithMany("FavoriteAdverts")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserProfileId1");
                 });
 
             modelBuilder.Entity("PePets.Models.PetDescription", b =>
@@ -378,6 +407,13 @@ namespace PePets.Migrations
                         .HasForeignKey("PePets.Models.PetDescription", "AdvertId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PePets.Models.UserProfile", b =>
+                {
+                    b.HasOne("PePets.Models.User", "User")
+                        .WithOne("UserProfile")
+                        .HasForeignKey("PePets.Models.UserProfile", "UserId");
                 });
 #pragma warning restore 612, 618
         }
