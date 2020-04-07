@@ -1,0 +1,31 @@
+﻿@model PePets.Models.Login
+
+    <div>
+        <h1>Вход на сайт</h1>
+
+        <div>
+            <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">
+                <div>
+                    <label asp-for="Email">Введите логин</label>
+                    <input type="email" asp-for="Email" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+                
+                <div>
+                    <label asp-for="Password">Введите пароль</label>
+                    <input type="password" asp-for="Password"/>
+                    <span asp-validation-for="Password"></span>
+                </div>
+
+                <div>
+                    <label asp-for="RememberMe">Запомнить?</label>
+                    <input asp-for="RememberMe"/>
+                </div>
+
+                <div>
+                    <input type="submit" value="Войти" />
+                </div>
+            </form>
+            <a asp-controller="Account" asp-action="Register">Нет аккаунта? Зарегистрируйтесь</a>
+        </div>
+    </div>
