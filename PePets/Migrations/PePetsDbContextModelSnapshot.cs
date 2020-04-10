@@ -383,7 +383,7 @@ namespace PePets.Migrations
 
             modelBuilder.Entity("PePets.Models.Advert", b =>
                 {
-                    b.HasOne("PePets.Models.User", "Uesr")
+                    b.HasOne("PePets.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
