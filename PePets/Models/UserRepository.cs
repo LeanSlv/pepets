@@ -26,6 +26,11 @@ namespace PePets.Models
                 .SingleOrDefault(x => x.UserName == currentUserClaims.Identity.Name);
         }
 
+        public async Task<User> GetUserById(string userId)
+        {
+            return await _userManager.FindByIdAsync(userId);
+        }
+
         public async Task<IdentityResult> SaveUser(User user, string password="")
         {
             if(password != "")

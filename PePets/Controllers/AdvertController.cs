@@ -46,7 +46,7 @@ namespace PePets.Controllers
             _advertRepository.SaveAdvert(advert);
 
             // Сохранение изображений в отдельную папку и добавление их путей в БД
-            advert.Images = SaveImages(advert, images);
+            advert.Images = SaveImages(advert.Id, images);
 
             //Добавление актуальной даты публикации
             advert.PublicationDate = DateTime.Now;
@@ -79,17 +79,17 @@ namespace PePets.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private string[] SaveImages(Advert advert, IFormFileCollection images)
+        private string[] SaveImages(Guid advertId, IFormFileCollection images)
         {
-            Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}");
+            Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advertId}");
             List<string> imagesPaths = new List<string>();
             Guid i = Guid.NewGuid();
             foreach (var image in images)
             {
-                using (var fileStream = new FileStream($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}/image{i}.png", FileMode.Create, FileAccess.Write))
+                using (var fileStream = new FileStream($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advertId}/image{i}.png", FileMode.Create, FileAccess.Write))
                 {
                     image.CopyTo(fileStream);
-                    imagesPaths.Add($"/usersFiles/advertsImages/{advert.Id}/image{i}.png");
+                    imagesPaths.Add($"/usersFiles/advertsImages/{advertId}/image{i}.png");
                 }
                 i = Guid.NewGuid();
             }

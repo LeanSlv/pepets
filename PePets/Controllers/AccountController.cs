@@ -94,11 +94,5 @@ namespace PePets.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-
-        public async Task<IActionResult> UserProfile()
-        {
-            User currentUser = _userRepository.GetCurrentUser(User);
-            return View(currentUser);
-        }
     }
 }
