@@ -15,15 +15,15 @@ namespace PePets.Controllers
     public class AdvertController : Controller
     {
         private readonly AdvertRepository _advertRepository;
+        private readonly UserRepository _userRepository;
         IWebHostEnvironment _appEnvironment;
-        private readonly UserManager<User> _userManager;
         private readonly int maxImagesCount;
 
-        public AdvertController(AdvertRepository advertRepository, IWebHostEnvironment appEnvironment, UserManager<User> userManager)
+        public AdvertController(AdvertRepository advertRepository, UserRepository userRepository, IWebHostEnvironment appEnvironment)
         {
             _advertRepository = advertRepository;
+            _userRepository = userRepository;
             _appEnvironment = appEnvironment;
-            _userManager = userManager;
             maxImagesCount = 10;
         }
 
@@ -52,11 +52,13 @@ namespace PePets.Controllers
             advert.PublicationDate = DateTime.Now;
 
             // Кто создал объявление
-            User currentUser = await GetCurrentUser();
+            User currentUser = _userRepository.GetCurrentUser(User);
             advert.User = currentUser;
             currentUser.Adverts.Add(advert);
 
+            // Сохранение сущностей в БД
             _advertRepository.SaveAdvert(advert);
+            await _userRepository.SaveUser(currentUser);
 
             return RedirectToAction("Index", "Home");
         }
@@ -106,12 +108,6 @@ namespace PePets.Controllers
             {
                 throw new Exception(dirNotFound.Message);
             }
-        }
-
-        private async Task<User> GetCurrentUser()
-        {
-            ClaimsPrincipal currentUser = User;
-            return await _userManager.GetUserAsync(currentUser);
         }
     }
 }

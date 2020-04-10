@@ -1,0 +1,34 @@
+﻿@model  PePets.Models.User
+
+<div class="container">
+    <h1>Мой профиль</h1>
+
+    <div>
+        <h3>@Model.Name</h3>
+
+        <div>
+            <label>Email</label>
+            <span>@Model.Email</span>
+        </div>
+
+        <div>
+            <label>Age</label>
+            <span>@Model.Age</span>
+        </div>
+
+        <div>
+            <label>PhoneNumber</label>
+            <span>@Model.PhoneNumber</span>
+        </div>
+
+        <div>
+            <label>My adverts</label>
+            @foreach(Advert advert in Model.Adverts)
+            {
+                <div>
+                    <span>@advert.Title</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>

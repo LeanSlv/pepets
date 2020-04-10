@@ -36,16 +36,16 @@
                     <div>
                         <img src="~/img/user.png" alt="User Avatar" height="50" width="50" />
                         <div class="list-group list-group-flush popup-user-block">
+
+                            <a asp-controller="Account" asp-action="UserProfile" class="list-group-item list-group-item-action">Мой профиль</a>
                             <!--
-                                <a href="#" class="list-group-item list-group-item-action">Мой профиль</a>
-                                <a href="#" class="list-group-item list-group-item-action">Сообщения
-                                    <span class="badge badge-primary badge-pill">5</span>
-                                </a>
+                            <a href="#" class="list-group-item list-group-item-action">Сообщения
+                                <span class="badge badge-primary badge-pill">5</span>
+                            </a>
                                 <a href="#" class="list-group-item list-group-item-action">Мои объявления</a>
                                 <a href="#" class="list-group-item list-group-item-action">Закладки</a>
-                                class="list-group-item list-group-item-action"
-                            -->
-
+                                 class="list-group-item list-group-item-action"
+                                -->
                             <form asp-controller="Account" asp-action="Logout" method="post">
                                 <button type="submit">Выйти</button>
                             </form>
