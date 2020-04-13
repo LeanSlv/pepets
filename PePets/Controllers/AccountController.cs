@@ -19,7 +19,7 @@ namespace PePets.Controllers
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
-            return View(new Login { ReturnUrl = returnUrl });
+            return PartialView(new Login { ReturnUrl = returnUrl });
         }
 
         [HttpPost]
@@ -52,7 +52,7 @@ namespace PePets.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return View();
+            return PartialView();
         }
 
         [HttpPost]

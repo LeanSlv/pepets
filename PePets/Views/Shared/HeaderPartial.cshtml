@@ -1,131 +1,80 @@
-﻿    <header>
-        <nav class="navbar navbar-expand-lg bg-info fixed-top">
-            <div class="row justify-content-between align-items-center w-100">
-                <div class="col-3 d-inline-flex">
-                    <a asp-controller="Home" asp-action="Index" class="navbar-brand">
-                        <img src="~/img/Logo.png" alt="Logo" width="50" height="50" />
-                    </a>
-
-                    <!-- Скорей всего не будет кнопок в шапке
-                    <button class="navbar-toggler" type="button" data-toggle="collapse"
-                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse d-sm-inline-flex flex-sm-row-reverse" id="navbarSupportedContent">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item active">
-                                <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
-                        </ul>
-                    </div>
-                    -->
-                </div>
-
-                <div class="col-3 title text-center text-light">
-                    <h3>PePets</h3>
-                </div>
-                
-                <div class="col-3 text-right user">
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <div>
-                            <img src="~/img/user.png" alt="User Avatar" height="50" width="50" />
-                            <div class="list-group list-group-flush popup-user-block">
-
-                                <a asp-controller="Users" asp-action="UserProfile" class="list-group-item list-group-item-action">Мой профиль</a>
-                                <!--
-                <a href="#" class="list-group-item list-group-item-action">Сообщения
-                    <span class="badge badge-primary badge-pill">5</span>
+﻿<header>
+    <nav class="navbar navbar-expand-lg bg-info fixed-top">
+        <div class="row justify-content-between align-items-center w-100">
+            <div class="col-3 d-inline-flex">
+                <a asp-controller="Home" asp-action="Index" class="navbar-brand">
+                    <img src="~/img/Logo.png" alt="Logo" width="50" height="50" />
                 </a>
-                    <a href="#" class="list-group-item list-group-item-action">Мои объявления</a>
-                    <a href="#" class="list-group-item list-group-item-action">Закладки</a>
-                     class="list-group-item list-group-item-action"
-                    -->
-                                <form asp-controller="Account" asp-action="Logout" method="post">
-                                    <button type="submit">Выйти</button>
-                                </form>
-                            </div>
 
-                        </div>
-                    }
-                    else
-                    {
-                         <!--<div>
-                            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light">Войти</a>
-                         </div>-->
+                <!-- Скорей всего не будет кнопок в шапке
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-                        <button type="button" class="btn btn-outline-light" data-toggle="modal" data-target="#ModalCenter">
-                            Войти
-                        </button>
-                    }
+                <div class="collapse navbar-collapse d-sm-inline-flex flex-sm-row-reverse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
                 </div>
+                -->
             </div>
-        </nav>
-    </header>
 
+            <div class="col-3 title text-center text-light">
+                <h3>PePets</h3>
+            </div>
 
-    <div class="modal fade" id="ModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="col-12 modal-title text-center">
-                        Войти на сайт
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </h3>
-                </div>
-                <div class="modal-body">
-
-
-
-
-
+            <div class="col-3 text-right user">
+                @if (User.Identity.IsAuthenticated)
+                {
                     <div>
+                        <img src="~/img/user.png" alt="User Avatar" height="50" width="50" />
+                        <div class="list-group list-group-flush popup-user-block">
 
-
-                        <div>
-                            <form method="post">
-                                <div class="form-group">
-                                    <input class="form-control" type="email" placeholder="Электронная почта" />
-                                    <span></span>
-                                </div>
-
-                                <div class="form-group">
-                                    <input class="form-control" type="password" placeholder="Пароль" />
-                                    <span></span>
-                                </div>
-
-                                <div class="form-check">
-                                    <input type="checkbox" />
-                                    <label>Запомнить?</label>
-
-                                    <div class="float-right"><a href="#">Нет аккаунта? Зарегистрируйтесь</a></div>
-                                </div>
-
-                                <div class="text-center">
-                                    <input class="btn btn-primary btn-lg btn-block" type="submit" value="Войти" />
-                                </div>
+                            <a asp-controller="Users" asp-action="UserProfile" class="list-group-item list-group-item-action">Мой профиль</a>
+                            <!--
+                            <a href="#" class="list-group-item list-group-item-action">Сообщения
+                                <span class="badge badge-primary badge-pill">5</span>
+                            </a>
+                                <a href="#" class="list-group-item list-group-item-action">Мои объявления</a>
+                                <a href="#" class="list-group-item list-group-item-action">Закладки</a>
+                                 class="list-group-item list-group-item-action"
+                                -->
+                            <form asp-controller="Account" asp-action="Logout" method="post">
+                                <button type="submit">Выйти</button>
                             </form>
-
                         </div>
+
                     </div>
-
-
-
-
-
-                </div>
-                <div class="modal-footer">
-                    <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary">Save changes</button>-->
-                </div>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-outline-light" data-toggle="modal" data-target="#ModalAuth">
+                        Войти
+                    </button>
+                }
             </div>
         </div>
+    </nav>
+</header>
+
+
+<div class="modal fade" id="ModalAuth" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div id="LoginForm">
+                @await Html.PartialAsync("../Account/Login.cshtml", new PePets.Models.Login())
+            </div>
+
+            <div id="RegisterForm" style="display: none">
+                @await Html.PartialAsync("../Account/Register.cshtml", new PePets.Models.Register())
+            </div> 
+        </div>
     </div>
-    
+</div>
