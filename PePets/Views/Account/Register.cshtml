@@ -1,39 +1,44 @@
 ﻿@model PePets.Models.Register
 
-    <div>
-        <h1>Регистрация</h1>
+    <div class="modal-header">
+        <h3 class="col-12 modal-title text-center">
+            Регистрация
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h3>
+    </div>
 
-        <div>
-            <form method="post" asp-controller="Account" asp-action="Register">
-                <div asp-validation-summary="ModelOnly"></div>
+    <div class="modal-body">
+        <form method="post" asp-controller="Account" asp-action="Register">
+            <div asp-validation-summary="ModelOnly"></div>
 
-                <div>
-                    <label asp-for="Name">Введите ваше имя</label>
-                    <input type="text" asp-for="Name"/>
-                    <span asp-validation-for="Name"></span>
-                </div>
+            <div>
+                <label asp-for="Name">Введите ваше имя</label>
+                <input type="text" asp-for="Name" />
+                <span asp-validation-for="Name"></span>
+            </div>
 
-                <div>
-                    <label asp-for="Email">Введите ваш email</label>
-                    <input type="email" asp-for="Email" />
-                    <span asp-validation-for="Email"></span>
-                </div>
+            <div>
+                <label asp-for="Email">Введите ваш email</label>
+                <input type="email" asp-for="Email" />
+                <span asp-validation-for="Email"></span>
+            </div>
 
-                <div>
-                    <label asp-for="Password">Придумайте пароль</label>
-                    <input type="password" asp-for="Password" />
-                    <span asp-validation-for="Password"></span>
-                </div>
+            <div>
+                <label asp-for="Password">Придумайте пароль</label>
+                <input type="password" asp-for="Password" />
+                <span asp-validation-for="Password"></span>
+            </div>
 
-                <div>
-                    <label asp-for="ConfirmPassword">Подтвердите пароль</label>
-                    <input type="password" asp-for="ConfirmPassword" />
-                    <span asp-validation-for="ConfirmPassword"></span>
-                </div>
+            <div>
+                <label asp-for="ConfirmPassword">Подтвердите пароль</label>
+                <input type="password" asp-for="ConfirmPassword" />
+                <span asp-validation-for="ConfirmPassword"></span>
+            </div>
 
-                <div>
-                    <input type="submit" value="Зарегистрироваться" />
-                </div>
-            </form>
-        </div>
+            <div>
+                <input type="submit" value="Зарегистрироваться" />
+            </div>
+        </form>
     </div>

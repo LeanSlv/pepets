@@ -55,11 +55,7 @@
                 }
                 else
                 {
-                    <!--<div>
-                       <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light">Войти</a>
-                    </div>-->
-
-                    <button type="button" class="btn btn-outline-light" data-toggle="modal" data-target="#ModalCenter">
+                    <button type="button" class="btn btn-outline-light" data-toggle="modal" data-target="#ModalAuth">
                         Войти
                     </button>
                 }
@@ -69,10 +65,16 @@
 </header>
 
 
-<div class="modal fade" id="ModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="ModalAuth" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            @await  Html.PartialAsync("../Account/Login.cshtml", new PePets.Models.Login())
+            <div id="LoginForm">
+                @await Html.PartialAsync("../Account/Login.cshtml", new PePets.Models.Login())
+            </div>
+
+            <div id="RegisterForm" style="display: none">
+                @await Html.PartialAsync("../Account/Register.cshtml", new PePets.Models.Register())
+            </div> 
         </div>
     </div>
 </div>

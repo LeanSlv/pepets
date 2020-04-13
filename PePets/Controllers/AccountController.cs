@@ -52,7 +52,7 @@ namespace PePets.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return View();
+            return PartialView();
         }
 
         [HttpPost]
