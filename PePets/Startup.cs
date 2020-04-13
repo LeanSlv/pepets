@@ -28,6 +28,7 @@ namespace PePets
         {
             services.AddDbContext<PePetsDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("PePetsDbContext")));
             services.AddTransient<AdvertRepository>();
+            services.AddTransient<UserRepository>();
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<PePetsDbContext>().AddDefaultTokenProviders();
             services.AddControllersWithViews();
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,20 +7,22 @@ using PePets.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace PePets.Controllers
 {
     public class AdvertController : Controller
     {
         private readonly AdvertRepository _advertRepository;
+        private readonly UserRepository _userRepository;
         IWebHostEnvironment _appEnvironment;
         private readonly int maxImagesCount;
 
-        public AdvertController(AdvertRepository advertRepository, IWebHostEnvironment appEnvironment)
+        public AdvertController(AdvertRepository advertRepository, UserRepository userRepository, IWebHostEnvironment appEnvironment)
         {
             _advertRepository = advertRepository;
+            _userRepository = userRepository;
             _appEnvironment = appEnvironment;
             maxImagesCount = 10;
         }
@@ -33,7 +36,7 @@ namespace PePets.Controllers
 
         [HttpPost]
         [RequestSizeLimit(31457280)] // 30 Мб
-        public IActionResult AdvertEdit(Advert advert, IFormFileCollection images)
+        public async Task<IActionResult> AdvertEdit(Advert advert, IFormFileCollection images)
         {
             if (images.Count > maxImagesCount)
                 ModelState.AddModelError(nameof(advert.Images), "Нельзя загружать больше 10 изображений");
@@ -43,15 +46,19 @@ namespace PePets.Controllers
             _advertRepository.SaveAdvert(advert);
 
             // Сохранение изображений в отдельную папку и добавление их путей в БД
-            advert.Images = SaveImages(advert, images);
+            advert.Images = SaveImages(advert.Id, images);
 
             //Добавление актуальной даты публикации
             advert.PublicationDate = DateTime.Now;
 
-            // TODO: Кто создал объявление
-            
+            // Кто создал объявление
+            User currentUser = _userRepository.GetCurrentUser(User);
+            advert.User = currentUser;
+            currentUser.Adverts.Add(advert);
 
+            // Сохранение сущностей в БД
             _advertRepository.SaveAdvert(advert);
+            await _userRepository.SaveUser(currentUser);
 
             return RedirectToAction("Index", "Home");
         }
@@ -72,17 +79,17 @@ namespace PePets.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private string[] SaveImages(Advert advert, IFormFileCollection images)
+        private string[] SaveImages(Guid advertId, IFormFileCollection images)
         {
-            Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}");
+            Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advertId}");
             List<string> imagesPaths = new List<string>();
             Guid i = Guid.NewGuid();
             foreach (var image in images)
             {
-                using (var fileStream = new FileStream($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advert.Id}/image{i}.png", FileMode.Create, FileAccess.Write))
+                using (var fileStream = new FileStream($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advertId}/image{i}.png", FileMode.Create, FileAccess.Write))
                 {
                     image.CopyTo(fileStream);
-                    imagesPaths.Add($"/usersFiles/advertsImages/{advert.Id}/image{i}.png");
+                    imagesPaths.Add($"/usersFiles/advertsImages/{advertId}/image{i}.png");
                 }
                 i = Guid.NewGuid();
             }

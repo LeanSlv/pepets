@@ -1,0 +1,52 @@
+﻿@model  PePets.Models.User
+
+<div class="container">
+    <h1>Мой профиль</h1>
+
+    <div>
+        <a asp-controller="Users" asp-action="EditProfile" asp-route-id="@Model.Id">Редактировать профиль</a>
+        <h3>@Model.Name</h3>
+        <h5>@Model.SecondName</h5>
+
+        <div>
+            @if (string.IsNullOrEmpty(Model.Avatar))
+            {
+                <img src="~/img/user.png" alt="user avatar" style="max-height: 100px; max-width: 100px"/>
+            }
+            else
+            {
+                <img src=@Model.Avatar alt="user avatar" style="max-height: 100px; max-width: 100px"/>
+            }
+        </div>
+
+        <div>
+            <label>Email</label>
+            <span>@Model.Email</span>
+        </div>
+
+        <div>
+            <label>Age</label>
+            <span>@Model.Age</span>
+        </div>
+
+        <div>
+            <label>PhoneNumber</label>
+            <span>@Model.PhoneNumber</span>
+        </div>
+
+        <div>
+            <label>Location</label>
+            <span>@Model.Location</span>
+        </div>
+
+        <div>
+            <label>My adverts</label>
+            @foreach(Advert advert in Model.Adverts)
+            {
+                <div>
+                    <span>@advert.Title</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>

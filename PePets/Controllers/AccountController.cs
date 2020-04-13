@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PePets.Models;
@@ -7,11 +8,11 @@ namespace PePets.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserRepository _userRepository;
         private readonly SignInManager<User> _signInManager;
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserRepository userRepository, SignInManager<User> signInManager)
         {
-            _userManager = userManager;
+            _userRepository = userRepository;
             _signInManager = signInManager;
         }
 
@@ -59,10 +60,15 @@ namespace PePets.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = new User { Email = model.Email, UserName = model.Name};
+                User user = new User 
+                { 
+                    Email = model.Email, 
+                    UserName = model.Email,
+                    Name = model.Name
+                };
 
                 // добавляем пользователя в БД
-                var result = await _userManager.CreateAsync(user, model.Password);
+                var result = await _userRepository.SaveUser(user, model.Password);
                 if (result.Succeeded)
                 {
                     // установка куки
