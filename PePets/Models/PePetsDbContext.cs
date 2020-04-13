@@ -7,7 +7,7 @@ namespace PePets.Models
     {
         public PePetsDbContext(DbContextOptions<PePetsDbContext> options) : base(options) 
         { 
-            Database.EnsureCreated(); 
+           // Database.EnsureCreated(); 
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
