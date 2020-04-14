@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace PePets.Models
+﻿namespace PePets.Models
 {
-    public class EditUserViewModel
+    public class EditUserProfileViewModel
     {
         public string Id { get; set; }
         public string FirstName { get; set; }

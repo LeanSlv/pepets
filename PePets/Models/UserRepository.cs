@@ -38,5 +38,10 @@ namespace PePets.Models
             else
                 return await _userManager.UpdateAsync(user);
         }
+
+        public async Task<IdentityResult> Delete(User user)
+        {
+            return await _userManager.DeleteAsync(user);
+        }
     }
 }
