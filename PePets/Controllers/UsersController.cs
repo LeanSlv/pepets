@@ -34,8 +34,8 @@ namespace PePets.Controllers
             if (user == null)
                 return NotFound();
 
-            
-            EditUserViewModel editUserViewModel = new EditUserViewModel
+
+            EditUserProfileViewModel editUserProfileViewModel = new EditUserProfileViewModel
             {
                 Id = user.Id,
                 FirstName = user.Name,
@@ -47,11 +47,11 @@ namespace PePets.Controllers
             };
             
 
-            return View(editUserViewModel);
+            return View(editUserProfileViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditProfile(EditUserViewModel model, IFormFile avatar)
+        public async Task<IActionResult> EditProfile(EditUserProfileViewModel model, IFormFile avatar)
         {
             if(ModelState.IsValid)
             {
@@ -86,6 +86,17 @@ namespace PePets.Controllers
                 }
             }
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Delete(string id)
+        {
+            User user = await _userReposittory.GetUserById(id);
+            if (user != null)
+            {
+                var result = await _userReposittory.Delete(user);
+            }
+            return RedirectToAction("Index", "Roles");
         }
     }
 }

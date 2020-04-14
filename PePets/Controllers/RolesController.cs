@@ -21,9 +21,7 @@ namespace PePets.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Index() => View(_roleManager.Roles.ToList());
-
-        public IActionResult Create() => View();
+        public IActionResult Index() => View();
 
         [HttpPost]
         public async Task<IActionResult> Create(string name)
@@ -57,13 +55,11 @@ namespace PePets.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult UserList() => View(_userManager.Users.ToList());
-
         [HttpGet]
-        public async Task<IActionResult> Edit(string userId)
+        public async Task<IActionResult> Edit(string id)
         {
             // получаем пользователя
-            User user = await _userManager.FindByIdAsync(userId);
+            User user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
                 // получем список ролей пользователя
@@ -102,7 +98,7 @@ namespace PePets.Controllers
 
                 await _userManager.RemoveFromRolesAsync(user, removedRoles);
 
-                return RedirectToAction("UserList");
+                return RedirectToAction("Index");
             }
 
             return NotFound();
