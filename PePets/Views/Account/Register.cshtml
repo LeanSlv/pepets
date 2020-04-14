@@ -11,34 +11,36 @@
 
     <div class="modal-body">
         <form method="post" asp-controller="Account" asp-action="Register">
-            <div asp-validation-summary="ModelOnly"></div>
 
-            <div>
-                <label asp-for="Name">Введите ваше имя</label>
-                <input type="text" asp-for="Name" />
-                <span asp-validation-for="Name"></span>
+
+            <div class="form-group">
+                <!--<label asp-for="Name"></label>-->
+                <input class="form-control" type="text" asp-for="Name" placeholder="Введите ваше имя" />
+                <span class="text-danger small" asp-validation-for="Name"></span>
             </div>
 
-            <div>
-                <label asp-for="Email">Введите ваш email</label>
-                <input type="email" asp-for="Email" />
-                <span asp-validation-for="Email"></span>
+            <div class="form-group">
+                <!--<label asp-for="Email"></label>-->
+                <input class="form-control" type="email" asp-for="Email" placeholder="Введите ваш email" />
+                <span class="text-danger small" asp-validation-for="Email"></span>
             </div>
 
-            <div>
-                <label asp-for="Password">Придумайте пароль</label>
-                <input type="password" asp-for="Password" />
-                <span asp-validation-for="Password"></span>
+            <div class="form-group">
+                <!--<label asp-for="Password"></label>-->
+                <input class="form-control" type="password" asp-for="Password" placeholder="Придумайте пароль" />
+                <span class="text-danger small" asp-validation-for="Password"></span>
             </div>
 
-            <div>
-                <label asp-for="ConfirmPassword">Подтвердите пароль</label>
-                <input type="password" asp-for="ConfirmPassword" />
-                <span asp-validation-for="ConfirmPassword"></span>
+            <div class="form-group">
+                <!--<label asp-for="ConfirmPassword"></label>-->
+                <input class="form-control" type="password" asp-for="ConfirmPassword" placeholder="Подтвердите пароль" />
+                <span class="text-danger small" asp-validation-for="ConfirmPassword"></span>
             </div>
 
+            <div class="text-danger small" asp-validation-summary="ModelOnly"></div>
+
             <div>
-                <input type="submit" value="Зарегистрироваться" />
+                <input class="btn btn-primary btn-lg btn-block" type="submit" value="Зарегистрироваться" />
             </div>
         </form>
     </div>
