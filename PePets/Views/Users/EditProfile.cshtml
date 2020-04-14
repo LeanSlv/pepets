@@ -60,5 +60,9 @@
 
         <input type="submit" value="Сохранить" />
     </form>
-    
+
+    <div>
+        @await  Html.PartialAsync("ChangePassword", new ChangePasswordViewModel { Id = Model.Id })
+        @* await Component.InvokeAsync("ChangePassword", Model.Id) *@
+    </div>
 </div>

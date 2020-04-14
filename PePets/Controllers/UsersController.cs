@@ -12,25 +12,25 @@ namespace PePets.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly UserRepository _userReposittory;
+        private readonly UserRepository _userRepository;
         private readonly IWebHostEnvironment _appEnvironment;
 
         public UsersController(UserRepository userRepository, IWebHostEnvironment appEnvironment)
         {
-            _userReposittory = userRepository;
+            _userRepository = userRepository;
             _appEnvironment = appEnvironment;
         }
 
         public IActionResult UserProfile()
         {
-            User currentUser = _userReposittory.GetCurrentUser(User);
+            User currentUser = _userRepository.GetCurrentUser(User);
             return View(currentUser);
         }
 
         [HttpGet]
         public async Task<IActionResult> EditProfile(string id)
         {
-            User user = await _userReposittory.GetUserById(id);
+            User user = await _userRepository.GetUserById(id);
             if (user == null)
                 return NotFound();
 
@@ -55,7 +55,7 @@ namespace PePets.Controllers
         {
             if(ModelState.IsValid)
             {
-                User user = await _userReposittory.GetUserById(model.Id);
+                User user = await _userRepository.GetUserById(model.Id);
                 if(user != null)
                 {
                     user.Name = model.FirstName;
@@ -74,7 +74,7 @@ namespace PePets.Controllers
                         }
                     } 
 
-                    var result = await _userReposittory.SaveUser(user);
+                    var result = await _userRepository.SaveUser(user);
                     if (result.Succeeded)
                     {
                         return RedirectToAction("UserProfile");
@@ -91,12 +91,52 @@ namespace PePets.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(string id)
         {
-            User user = await _userReposittory.GetUserById(id);
+            User user = await _userRepository.GetUserById(id);
             if (user != null)
             {
-                var result = await _userReposittory.Delete(user);
+                var result = await _userRepository.Delete(user);
             }
             return RedirectToAction("Index", "Roles");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ChangePassword(string id)
+        {
+            User user = await _userRepository.GetUserById(id);
+            if (user == null)
+                return NotFound();
+
+            ChangePasswordViewModel model = new ChangePasswordViewModel { Id = user.Id };
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = await _userRepository.GetUserById(model.Id);
+                if (user != null)
+                {
+                    var result = await _userRepository.ChangePassword(user, model.OldPassword, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("UserProfile", "Users");
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Пользователь не найден");
+                }
+            }
+            return PartialView(model);
         }
     }
 }

@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Users\Components\ChangePassword\" />
     <Folder Include="wwwroot\usersFiles\avatars\" />
   </ItemGroup>
 
