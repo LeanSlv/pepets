@@ -27,6 +27,12 @@ namespace PePets.Controllers
             maxImagesCount = 10;
         }
 
+        public IActionResult AdvertReview(Guid id)
+        {
+            Advert advert = _advertRepository.GetAdvertById(id);
+            return View(advert);
+        }
+
         [Authorize]
         public IActionResult AdvertEdit(Guid id)
         {
