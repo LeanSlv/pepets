@@ -1,1 +1,90 @@
-﻿<h2>Объявление</h2>
+﻿@model PePets.Models.Advert
+
+<div>
+    <h2>@Model.Title</h2>
+    <p>@Model.Description</p>
+</div>
+
+<div>
+    @foreach (string pathToImage in Model.Images)
+    {
+        <img src=@pathToImage height="200" width="200" />
+    }
+</div>
+
+<div>
+    <div>
+        <label>Cost: </label>
+        <span>@Model.Cost</span>
+    </div>
+
+    <div>
+        <label>Location: </label>
+        <span>@Model.Location</span>
+    </div>
+
+    <div>
+        <label>Number of likes: </label>
+        <span>@Model.NumberOfLikes</span>
+    </div>
+
+    <div>
+        <label>Views: </label>
+        <span>@Model.Views</span>
+    </div>
+
+</div>
+
+<div>
+    <h4>Pet description</h4>
+
+    <div>
+        <label>Gender: </label>
+        <span>@Model.PetDescription.Sex</span>
+    </div>
+
+    <div>
+        <label>Type: </label>
+        <span>@Model.PetDescription.Type</span>
+    </div>
+
+    <div>
+        <label>Age: </label>
+        <span>@Model.PetDescription.Age</span>
+    </div>
+
+    <div>
+        <label>Breed: </label>
+        <span>@Model.PetDescription.Breed</span>
+    </div>
+
+    <div>
+        <label>Color: </label>
+        <span>@Model.PetDescription.Color</span>
+    </div>
+</div>
+
+<div>
+    <h4>User profile</h4>
+
+    <div>
+        <label>First name: </label>
+        <span>@Model.User.Name</span>
+    </div>
+
+    <div>
+        <label>Second name: </label>
+        <span>@Model.User.SecondName</span>
+    </div>
+
+    <div>
+        @if (string.IsNullOrEmpty(Model.User.Avatar))
+        {
+            <img src="~/img/user.png" alt="user avatar" style="max-height: 100px; max-width: 100px" />
+        }
+        else
+        {
+            <img src=@Model.User.Avatar alt="user avatar" style="max-height: 100px; max-width: 100px" />
+        }
+    </div>
+</div>

@@ -2,7 +2,7 @@
 
     <div class="col-sm-8">
         <div class="card advertCard">        
-            <a class="block-link" asp-controller="Advert" asp-action="AdvertReview" asp-route-id=Model.Id></a> 
+            <a class="block-link" asp-controller="Advert" asp-action="AdvertReview" asp-route-id=@Model.Id></a> 
             <div class="row">
                 <div class="col-3">
                     @if (Model.Images != null && Model.Images.Length > 0)

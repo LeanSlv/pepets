@@ -22,7 +22,7 @@ namespace PePets.Models
 
         public Advert GetAdvertById(Guid id)
         {
-            return _context.Adverts.Include(c => c.PetDescription).Single(x => x.Id == id);
+            return _context.Adverts.Include(p => p.PetDescription).Include(u => u.User).Single(x => x.Id == id);
         }
 
         public Guid SaveAdvert(Advert entity)

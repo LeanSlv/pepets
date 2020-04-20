@@ -37,6 +37,7 @@
 }
 
 .btn-crud {
+    position: relative;
     margin-bottom: 10px;
     z-index: 2;
 }
