@@ -1,3 +1,9 @@
 ﻿header {
     margin-top: 75px;
 }
+
+.header-avatar {
+    height: 50px;
+    width: 50px;
+    border-radius: 50px; 
+}

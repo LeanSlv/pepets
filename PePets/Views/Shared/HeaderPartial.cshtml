@@ -16,7 +16,7 @@
                 {
                 <div>
                     <a class="dropdown-toggle text-decoration-none text-white" href="#" id="dropdownUserMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="~/img/user.png" alt="User Avatar" height="50" width="50" />
+                        @await Component.InvokeAsync("AvatarPartial", User)
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownUserMenu">
