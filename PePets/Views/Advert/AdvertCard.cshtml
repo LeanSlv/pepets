@@ -1,0 +1,65 @@
+﻿@model PePets.Models.Advert
+
+    <div class="col-sm-8" onclick="AdvertReviewPage()">
+        <div class="card advertCard">
+            <div class="row">
+                <div class="col-3">
+                    @if (Model.Images != null && Model.Images.Length > 0)
+                    {
+                        <img src=@Model.Images.First() class="card-image" />
+                    }
+                    else
+                    {
+                        <img src="~/img/no-image.png" class="card-image" />
+                    }
+                </div>
+                <div class="col-8 description">
+                    <div class="row">
+                        <div class="col-8">
+                            <h2>@Model.Title</h2>
+                            <p>@Model.Description</p>
+                        </div>
+                        <div class="col-4 text-right">
+                            <h3>@Model.Cost.ToString("c")</h3>
+                        </div>
+                    </div>
+                    <hr noshade>
+                    <div class="row">
+                        <div class="col-9">
+                            <span>@Model.PetDescription.Type</span>
+                            <span>@Model.PetDescription.Sex</span>
+                            <span>@Model.PetDescription.Color</span>
+                            <span>@Model.PetDescription.Breed</span>
+                            <span>@Model.PetDescription.Age</span>
+                        </div>
+                        <div class="col-3 text-right">
+                            <p>@Model.Location</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1 text-right">
+                    <div class="crud-block">
+                        <div class="btn-crud">
+                            <a href="#" class="btn-like text-decoration-none">
+                                <i class="far fa-heart"></i>
+                            </a>
+                        </div>
+                        <div class="btn-crud">
+                            <a asp-controller="Advert" asp-action="AdvertEdit" asp-route-id="@Model.Id" class="btn-edit text-decoration-none">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </div>
+                        <div class="btn-crud">
+                            <form method="post" asp-controller="Advert" asp-action="DeleteAdvert">
+                                <input type="hidden" value="@Model.Id" name="Id" />
+                                <button class="btn-delete border-0 bg-white" type="submit"><i class="far fa-trash-alt"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <a class="block__link" asp-controller="Advert" asp-action="AdvertReview" asp-route-id=@Model.Id></a>
+
+    </div>
