@@ -46,7 +46,7 @@ namespace PePets.Controllers
                     ModelState.AddModelError("", "Неправильный логин и (или) пароль");
                 }
             }
-            return View(model);
+            return PartialView(model);
         }
 
         [HttpGet]
@@ -83,7 +83,7 @@ namespace PePets.Controllers
                     }
                 }
             }
-            return View(model);
+            return PartialView(model);
         }
 
         [HttpPost]

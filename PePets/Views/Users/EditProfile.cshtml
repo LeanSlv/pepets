@@ -60,5 +60,8 @@
 
         <input type="submit" value="Сохранить" />
     </form>
-    
+
+    <div>       
+        @await  Html.PartialAsync("ChangePassword", new ChangePasswordViewModel { Id = Model.Id })
+    </div>
 </div>

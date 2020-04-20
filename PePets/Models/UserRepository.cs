@@ -43,5 +43,8 @@ namespace PePets.Models
         {
             return await _userManager.DeleteAsync(user);
         }
+
+        public async Task<IdentityResult> ChangePassword(User user, string oldPassword, string newPassword) =>
+            await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
     }
 }
