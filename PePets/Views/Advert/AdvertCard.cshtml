@@ -1,7 +1,8 @@
 ﻿@model PePets.Models.Advert
 
-    <div class="col-sm-8" onclick="AdvertReviewPage()">
-        <div class="card advertCard">
+    <div class="col-sm-8">
+        <div class="card advertCard">        
+            <a class="block-link" asp-controller="Advert" asp-action="AdvertReview" asp-route-id=Model.Id></a> 
             <div class="row">
                 <div class="col-3">
                     @if (Model.Images != null && Model.Images.Length > 0)
@@ -59,7 +60,4 @@
                 </div>
             </div>
         </div>
-        
-        <a class="block__link" asp-controller="Advert" asp-action="AdvertReview" asp-route-id=@Model.Id></a>
-
     </div>
