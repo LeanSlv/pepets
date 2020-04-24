@@ -12,19 +12,13 @@ namespace PePets.Models
         Female,
         Male
     }
-    public enum TypeofPet
-    {
-        NotChosen,
-        Cat,
-        Dog
-    }
 
     public class PetDescription
     {
         [Required]
         public Guid Id { get; set; }
-        public Genders Sex { get; set; }
-        public TypeofPet Type { get; set; }
+        public Genders Gender { get; set; }
+        public string Type { get; set; }
         public string Breed { get; set; }
         public string Age { get; set; }
         public string Color { get; set; }

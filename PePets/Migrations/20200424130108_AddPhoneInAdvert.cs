@@ -2,21 +2,21 @@
 
 namespace PePets.Migrations
 {
-    public partial class AddNameToUser : Migration
+    public partial class AddPhoneInAdvert : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Name",
-                table: "AspNetUsers",
+                name: "PhoneNumber",
+                table: "Adverts",
                 nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Name",
-                table: "AspNetUsers");
+                name: "PhoneNumber",
+                table: "Adverts");
         }
     }
 }

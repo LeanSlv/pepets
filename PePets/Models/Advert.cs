@@ -23,6 +23,7 @@ namespace PePets.Models
             set { _images = JsonConvert.SerializeObject(value); } 
         }
         public int Cost { get; set; }
+        public string PhoneNumber { get; set; }
         public PetDescription PetDescription { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }

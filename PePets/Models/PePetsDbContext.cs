@@ -5,10 +5,7 @@ namespace PePets.Models
 {
     public class PePetsDbContext : IdentityDbContext<User>
     {
-        public PePetsDbContext(DbContextOptions<PePetsDbContext> options) : base(options) 
-        { 
-           // Database.EnsureCreated(); 
-        }
+        public PePetsDbContext(DbContextOptions<PePetsDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

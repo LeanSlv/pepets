@@ -168,6 +168,9 @@ namespace PePets.Migrations
                     b.Property<int>("NumberOfLikes")
                         .HasColumnType("int");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("PublicationDate")
                         .HasColumnType("datetime2");
 
@@ -215,11 +218,11 @@ namespace PePets.Migrations
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Sex")
+                    b.Property<int>("Gender")
                         .HasColumnType("int");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

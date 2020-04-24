@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PePets.Migrations
 {
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,7 +39,13 @@ namespace PePets.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    SecondName = table.Column<string>(nullable: true),
+                    Age = table.Column<int>(nullable: false),
+                    Gender = table.Column<int>(nullable: false),
+                    Location = table.Column<string>(nullable: true),
+                    Avatar = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -65,6 +71,39 @@ namespace PePets.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Adverts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Images = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    Cost = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: true),
+                    Location = table.Column<string>(nullable: true),
+                    NumberOfLikes = table.Column<int>(nullable: false),
+                    Views = table.Column<int>(nullable: false),
+                    PublicationDate = table.Column<DateTime>(nullable: false),
+                    UserId1 = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Adverts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Adverts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Adverts_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -153,75 +192,12 @@ namespace PePets.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserProfiles",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    SecondName = table.Column<string>(nullable: true),
-                    Age = table.Column<int>(nullable: false),
-                    Gender = table.Column<int>(nullable: false),
-                    Location = table.Column<string>(nullable: true),
-                    Avatar = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserProfiles", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserProfiles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Adverts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    Images = table.Column<string>(nullable: true),
-                    Title = table.Column<string>(nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    Cost = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: true),
-                    Location = table.Column<string>(nullable: true),
-                    NumberOfLikes = table.Column<int>(nullable: false),
-                    Views = table.Column<int>(nullable: false),
-                    PublicationDate = table.Column<DateTime>(nullable: false),
-                    UserProfileId = table.Column<Guid>(nullable: true),
-                    UserProfileId1 = table.Column<Guid>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Adverts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Adverts_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Adverts_UserProfiles_UserProfileId",
-                        column: x => x.UserProfileId,
-                        principalTable: "UserProfiles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Adverts_UserProfiles_UserProfileId1",
-                        column: x => x.UserProfileId1,
-                        principalTable: "UserProfiles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PetsDescription",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Sex = table.Column<int>(nullable: false),
-                    Type = table.Column<int>(nullable: false),
+                    Gender = table.Column<int>(nullable: false),
+                    Type = table.Column<string>(nullable: true),
                     Breed = table.Column<string>(nullable: true),
                     Age = table.Column<string>(nullable: true),
                     Color = table.Column<string>(nullable: true),
@@ -244,14 +220,9 @@ namespace PePets.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Adverts_UserProfileId",
+                name: "IX_Adverts_UserId1",
                 table: "Adverts",
-                column: "UserProfileId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Adverts_UserProfileId1",
-                table: "Adverts",
-                column: "UserProfileId1");
+                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -297,11 +268,6 @@ namespace PePets.Migrations
                 table: "PetsDescription",
                 column: "AdvertId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserProfiles_UserId",
-                table: "UserProfiles",
-                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -329,9 +295,6 @@ namespace PePets.Migrations
 
             migrationBuilder.DropTable(
                 name: "Adverts");
-
-            migrationBuilder.DropTable(
-                name: "UserProfiles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
