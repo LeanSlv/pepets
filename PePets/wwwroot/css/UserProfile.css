@@ -6,6 +6,10 @@
     padding: 1em;
 }
 
+.list-adverts-btn {
+    font-size: 20px;
+}
+
 /* Анимация ссылок для списка объявлений */
 .border-bottom-3 {
     border-bottom: solid 3px #019fb6;
@@ -24,13 +28,13 @@
 }
 
 .border-bottom-animation:active:after {
-    transform: scaleX(1);
+    transform: scaleX(0.85);
 }
 
 .adverts-link-active:after {
     display: block;
     content: '';
     border-bottom: solid 3px #019fb6;
-    transform: scaleX(1);
+    transform: scaleX(0.85);
     transition: transform 250ms ease-in-out;
 }
