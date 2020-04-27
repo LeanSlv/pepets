@@ -14,16 +14,18 @@ namespace PePets.Controllers
     {
         private readonly UserRepository _userRepository;
         private readonly IWebHostEnvironment _appEnvironment;
+        private readonly AdvertRepository _advertRepository;
 
-        public UsersController(UserRepository userRepository, IWebHostEnvironment appEnvironment)
+        public UsersController(UserRepository userRepository, IWebHostEnvironment appEnvironment, AdvertRepository advertRepository)
         {
             _userRepository = userRepository;
             _appEnvironment = appEnvironment;
+            _advertRepository = advertRepository;
         }
 
         public IActionResult UserProfile()
         {
-            User currentUser = _userRepository.GetCurrentUser(User);
+            User currentUser = _userRepository.GetCurrentUser(User);         
             return View(currentUser);
         }
 

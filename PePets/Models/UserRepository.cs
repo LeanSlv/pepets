@@ -22,7 +22,7 @@ namespace PePets.Models
 
         public User GetCurrentUser(ClaimsPrincipal currentUserClaims)
         {
-            return _context.Users.Include(x => x.Adverts).Include(x => x.FavoriteAdverts)
+            return _context.Users.Include(x => x.Adverts).ThenInclude(x => x.PetDescription).Include(x => x.FavoriteAdverts).ThenInclude(x => x.PetDescription)
                 .SingleOrDefault(x => x.UserName == currentUserClaims.Identity.Name);
         }
 
