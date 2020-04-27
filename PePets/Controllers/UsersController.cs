@@ -29,29 +29,6 @@ namespace PePets.Controllers
             return View(currentUser);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> EditProfile(string id)
-        {
-            User user = await _userRepository.GetUserById(id);
-            if (user == null)
-                return NotFound();
-
-
-            EditUserProfileViewModel editUserProfileViewModel = new EditUserProfileViewModel
-            {
-                Id = user.Id,
-                FirstName = user.Name,
-                SecondName = user.SecondName,
-                Age = user.Age,
-                Location = user.Location,
-                Gender = user.Gender,
-                Avatar = user.Avatar
-            };
-            
-
-            return View(editUserProfileViewModel);
-        }
-
         [HttpPost]
         public async Task<IActionResult> EditProfile(EditUserProfileViewModel model, IFormFile avatar)
         {

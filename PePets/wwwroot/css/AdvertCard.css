@@ -6,11 +6,6 @@
     border-radius: 25px;
 }
 
-.card-image {
-    max-height: 200px;
-    max-width: 200px;
-}
-
 .block-link {
     position: absolute;
     display: block;

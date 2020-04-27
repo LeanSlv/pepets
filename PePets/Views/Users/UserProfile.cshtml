@@ -4,7 +4,7 @@
         <div class="row">
             <!-- Левая колонка с пунктами меню -->
             <div class="col col-2">
-                <div class="list-group shadow" id="list-tab" role="tablist">
+                <div class="list-group list-group-flush shadow" id="list-tab" role="tablist">
                     <a class="list-group-item list-group-item-action active" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Профиль</a>
                     <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Сообщения</a>
                     <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Настройки</a>
@@ -53,7 +53,7 @@
                                     <div class="border rounded-25 mr-2 ml-2 d-flex justify-content-center mb-2 shadow-on-hover">
                                         <div class="row w-100 align-content-between p-1">
                                             <div class="col col-3 p-0">
-                                                <img src="ava2.jpg" class="dialogs-avatar" height="50" width="50">
+                                                <img src="~/img/user.png" class="dialogs-avatar" height="50" width="50">
                                             </div>
 
                                             <div class="col col-9 text-truncate">
@@ -68,7 +68,7 @@
                                     <div class="border rounded-25 mr-2 ml-2 d-flex justify-content-center mb-2 shadow-on-hover">
                                         <div class="row w-100 align-content-between p-1">
                                             <div class="col col-3 p-0">
-                                                <img src="ava2.jpg" class="dialogs-avatar" height="50" width="50">
+                                                <img src="~/img/user.png" class="dialogs-avatar" height="50" width="50">
                                             </div>
 
                                             <div class="col col-9 text-truncate">
@@ -83,7 +83,7 @@
                                     <div class="border rounded-25 mr-2 ml-2 d-flex justify-content-center mb-2 shadow-on-hover">
                                         <div class="row w-100 align-content-between p-1">
                                             <div class="col col-3 p-0">
-                                                <img src="ava2.jpg" class="dialogs-avatar" height="50" width="50">
+                                                <img src="~/img/user.png" class="dialogs-avatar" height="50" width="50">
                                             </div>
 
                                             <div class="col col-9 text-truncate">
@@ -176,12 +176,15 @@
 
                     <!-- Страница сообщений -->
                     <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
-                        Messages
+                        <div class="text-center text-muted display-4">
+                            Messages <br />
+                            Coming soon...
+                        </div> 
                     </div>
 
                     <!-- Страница настроек -->
                     <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
-                        Settings
+                        @await  Component.InvokeAsync("EditProfile", new EditUserProfileViewModel() { Id = Model.Id })
                     </div>
                 </div>
             </div>
