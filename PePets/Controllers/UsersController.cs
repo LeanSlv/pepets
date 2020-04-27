@@ -14,40 +14,19 @@ namespace PePets.Controllers
     {
         private readonly UserRepository _userRepository;
         private readonly IWebHostEnvironment _appEnvironment;
+        private readonly AdvertRepository _advertRepository;
 
-        public UsersController(UserRepository userRepository, IWebHostEnvironment appEnvironment)
+        public UsersController(UserRepository userRepository, IWebHostEnvironment appEnvironment, AdvertRepository advertRepository)
         {
             _userRepository = userRepository;
             _appEnvironment = appEnvironment;
+            _advertRepository = advertRepository;
         }
 
         public IActionResult UserProfile()
         {
-            User currentUser = _userRepository.GetCurrentUser(User);
+            User currentUser = _userRepository.GetCurrentUser(User);         
             return View(currentUser);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> EditProfile(string id)
-        {
-            User user = await _userRepository.GetUserById(id);
-            if (user == null)
-                return NotFound();
-
-
-            EditUserProfileViewModel editUserProfileViewModel = new EditUserProfileViewModel
-            {
-                Id = user.Id,
-                FirstName = user.Name,
-                SecondName = user.SecondName,
-                Age = user.Age,
-                Location = user.Location,
-                Gender = user.Gender,
-                Avatar = user.Avatar
-            };
-            
-
-            return View(editUserProfileViewModel);
         }
 
         [HttpPost]

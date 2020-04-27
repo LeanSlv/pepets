@@ -1,24 +1,24 @@
 ﻿@model PePets.Models.Advert
 
-    <div class="col-sm-8">
-        <div class="card advertCard">        
+
+        <div class="advertCard rounded-25 p-3 mb-3 shadow-on-hover">        
             <a class="block-link" asp-controller="Advert" asp-action="AdvertReview" asp-route-id=@Model.Id></a> 
             <div class="row">
                 <div class="col-3">
                     @if (Model.Images != null && Model.Images.Length > 0)
                     {
-                        <img src=@Model.Images.First() class="card-image" />
+                        <img src=@Model.Images.First() class="rounded-25 img-fluid" />
                     }
                     else
                     {
-                        <img src="~/img/no-image.png" class="card-image" />
+                        <img src="~/img/no-image.png" class="rounded-25 img-fluid" />
                     }
                 </div>
                 <div class="col-8 description">
                     <div class="row">
                         <div class="col-8">
-                            <h2>@Model.Title</h2>
-                            <p>@Model.Description</p>
+                            <h4 class="text-truncate">@Model.Title</h4>
+                            <p class="text-truncate">@Model.Description</p>
                         </div>
                         <div class="col-4 text-right">
                             <h3>@Model.Cost.ToString("c")</h3>
@@ -60,4 +60,3 @@
                 </div>
             </div>
         </div>
-    </div>

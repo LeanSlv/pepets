@@ -2,15 +2,17 @@
 
 @await Html.PartialAsync("StartPagePartial")
 
-<div id="advertsPage">
-    <div class="text-center">
-        <h1 class="display-4">Все объявления</h1>
-    </div>
+    <div id="advertsPage">
+        <div class="text-center">
+            <h1 class="display-4">Все объявления</h1>
+        </div>
 
-    <div class="row justify-content-center">
-        @foreach (Advert advert in Model)
-        {
-            @await Html.PartialAsync("~/Views/Advert/AdvertCard.cshtml", advert);
-        }
+        <div class="row justify-content-center">
+            @foreach (Advert advert in Model)
+            {
+                <div class="col-sm-8">
+                    @await Html.PartialAsync("~/Views/Advert/AdvertCard.cshtml", advert);
+                </div>
+            }
+        </div>
     </div>
-</div>
