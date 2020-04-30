@@ -41,6 +41,8 @@ namespace PePets.Controllers
                     user.SecondName = model.SecondName;
                     user.Gender = model.Gender;
                     user.Location = model.Location;
+                    user.DateOfBirth = model.DateOfBirth;
+                    user.AboutMe = model.AboutMe;
 
                     if(avatar != null)
                     {

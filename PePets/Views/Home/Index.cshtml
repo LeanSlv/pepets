@@ -11,7 +11,7 @@
             @foreach (Advert advert in Model)
             {
                 <div class="col-sm-8">
-                    @await Html.PartialAsync("~/Views/Advert/AdvertCard.cshtml", advert);
+                    @await Html.PartialAsync("~/Views/Advert/AdvertCard.cshtml", advert)
                 </div>
             }
         </div>

@@ -1,4 +1,6 @@
-﻿namespace PePets.Models
+﻿using System;
+
+namespace PePets.Models
 {
     public class EditUserProfileViewModel
     {
@@ -8,5 +10,7 @@
         public string Location { get; set; }
         public Genders Gender { get; set; }
         public string Avatar { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string AboutMe { get; set; }
     }
 }

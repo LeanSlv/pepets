@@ -104,7 +104,7 @@
                                     <h1>@Model.FirstName @Model.SecondName</h1>
                                     <div class="row mb-2">
                                         <div class="col col-3 text-muted">На сайте с </div>
-                                        <div class="col col-9">Не указано</div>
+                                        <div class="col col-9">@Model.RegistrationDate.ToString("dd.MM.yyyy") г.</div>
                                     </div>
 
                                     <div class="row mb-2">
@@ -114,13 +114,13 @@
 
                                     <div class="row mb-2">
                                         <div class="col col-3 text-muted">Дата рождения: </div>
-                                        <div class="col col-9">Не указано</div>
+                                        <div class="col col-9">@Model.DateOfBirth.ToString("dd.MM.yyyy") г.</div>
                                     </div>
 
                                     <div class="row mb-2">
                                         <div class="col col-3 text-muted">Обо мне: </div>
                                         <div class="col col-9">
-                                            <p>Не указано</p>
+                                            <p>@Model.AboutMe</p>
                                         </div>
                                     </div>
                                 </div>

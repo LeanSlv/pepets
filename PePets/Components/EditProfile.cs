@@ -30,7 +30,9 @@ namespace PePets.Components
                 SecondName = user.SecondName,
                 Location = user.Location,
                 Gender = user.Gender,
-                Avatar = user.Avatar
+                Avatar = user.Avatar,
+                DateOfBirth = user.DateOfBirth,
+                AboutMe = user.AboutMe
             };
 
 
