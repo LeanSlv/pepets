@@ -37,11 +37,12 @@ namespace PePets.Controllers
                 User user = await _userRepository.GetUserById(model.Id);
                 if(user != null)
                 {
-                    user.Name = model.FirstName;
+                    user.FirstName = model.FirstName;
                     user.SecondName = model.SecondName;
-                    user.Age = model.Age;
                     user.Gender = model.Gender;
                     user.Location = model.Location;
+                    user.DateOfBirth = model.DateOfBirth;
+                    user.AboutMe = model.AboutMe;
 
                     if(avatar != null)
                     {

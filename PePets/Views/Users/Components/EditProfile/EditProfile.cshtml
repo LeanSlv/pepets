@@ -34,9 +34,15 @@
             </div>
 
             <div>
-                <label asp-for="Age">Age</label>
-                <input type="number" asp-for="Age" />
-                <span asp-validation-for="Age"></span>
+                <label asp-for="DateOfBirth">Date of Birth</label>
+                <input type="text" asp-for="DateOfBirth" />
+                <span asp-validation-for="DateOfBirth"></span>
+            </div>
+
+            <div>
+                <label asp-for="AboutMe">About me</label>
+                <textarea asp-for="AboutMe"></textarea>
+                <span asp-validation-for="AboutMe"></span>
             </div>
 
             <div>

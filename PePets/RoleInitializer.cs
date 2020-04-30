@@ -22,7 +22,7 @@ namespace PePets
             }
             if (await userManager.FindByNameAsync(adminEmail) == null)
             {
-                User admin = new User { Email = adminEmail, UserName = adminEmail, Name = adminName };
+                User admin = new User { Email = adminEmail, UserName = adminEmail, FirstName = adminName };
                 IdentityResult result = await userManager.CreateAsync(admin, password);
                 if (result.Succeeded)
                 {

@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -60,11 +61,12 @@ namespace PePets.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = new User 
-                { 
-                    Email = model.Email, 
+                User user = new User
+                {
+                    Email = model.Email,
                     UserName = model.Email,
-                    Name = model.Name
+                    FirstName = model.Name,
+                    RegistrationDate = DateTime.Today
                 };
 
                 // добавляем пользователя в БД

@@ -68,7 +68,7 @@ namespace PePets.Controllers
                 ChangeRoleViewModel model = new ChangeRoleViewModel
                 {
                     UserId = user.Id,
-                    Name = user.Name,
+                    Name = user.FirstName,
                     UserRoles = userRoles,
                     AllRoles = allRoles
                 };

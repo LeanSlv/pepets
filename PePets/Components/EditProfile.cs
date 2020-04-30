@@ -26,12 +26,13 @@ namespace PePets.Components
             EditUserProfileViewModel editUserProfileViewModel = new EditUserProfileViewModel
             {
                 Id = user.Id,
-                FirstName = user.Name,
+                FirstName = user.FirstName,
                 SecondName = user.SecondName,
-                Age = user.Age,
                 Location = user.Location,
                 Gender = user.Gender,
-                Avatar = user.Avatar
+                Avatar = user.Avatar,
+                DateOfBirth = user.DateOfBirth,
+                AboutMe = user.AboutMe
             };
 
 

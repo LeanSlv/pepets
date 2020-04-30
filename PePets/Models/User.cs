@@ -8,12 +8,15 @@ namespace PePets.Models
 {
     public class User : IdentityUser
     {
-        public string Name { get; set; }
+        public string FirstName { get; set; }
         public string SecondName { get; set; }
-        public int Age { get; set; }
         public Genders Gender { get; set; }
         public string Location { get; set; }
         public string Avatar { get; set; }
+        public DateTime RegistrationDate { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string AboutMe { get; set; }
+        public double Rating { get; set; }
         public List<Advert> Adverts { get; set; }
         public List<Advert> FavoriteAdverts { get; set; }
     }
