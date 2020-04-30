@@ -64,7 +64,7 @@ namespace PePets.Controllers
                 { 
                     Email = model.Email, 
                     UserName = model.Email,
-                    Name = model.Name
+                    FirstName = model.Name
                 };
 
                 // добавляем пользователя в БД
