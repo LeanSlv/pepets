@@ -1,4 +1,29 @@
-﻿//Плавная прокрутка страницы к тэгу с указанным id
+﻿jQuery(function ($) {
+    $(document).ready(function () {
+        console.log("READY!");
+
+        // Slick слайдер для просмотра фотографий объявления        
+        $('.advert-review-slider-for').slick({
+            slidesToShow: 1,
+            arrows: false,
+            fade: true,
+            cssEase: 'linear',
+            asNavFor: '.advert-review-slider-nav'
+        });
+
+        //TODO: Исправить баг с прокручиванием нижнего слайдера при смене фотографии путем свайпа основной фотографии 
+        $('.advert-review-slider-nav').slick({
+            slidesToShow: 10,
+            slidesToScroll: 1,
+            asNavFor: '.advert-review-slider-for',
+            centerMode: true,
+            centerPadding: '5px',
+            focusOnSelect: true
+        });
+    });
+});
+
+//Плавная прокрутка страницы к тэгу с указанным id
 function SlowScroll(id) {
     var offset = $("nav.navbar").height() + 10;
     $("html, body").animate({

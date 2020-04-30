@@ -1,90 +1,144 @@
 ﻿@model PePets.Models.Advert
 
-<div>
-    <h2>@Model.Title</h2>
-    <p>@Model.Description</p>
-</div>
+    <div class="container">
+        <div class="row">
+            <!-- Колонка с информацией о товаре -->
+            <div class="col col-8">
 
-<div>
-    @foreach (string pathToImage in Model.Images)
-    {
-        <img src=@pathToImage height="200" width="200" />
-    }
-</div>
+                <!-- Заголовок и цена -->
+                <div class="d-flex justify-content-between mb-3 p-2 rounded-lg shadow">
+                    <h3 class="text-truncate">@Model.Title</h3>
+                    <div>
+                        <span class="cost">@Model.Cost</span> <i class="fas fa-ruble-sign"></i>
+                    </div>
+                </div>
 
-<div>
-    <div>
-        <label>Cost: </label>
-        <span>@Model.Cost</span>
+                <!-- Карусель фотографий -->
+                <div class="mb-3 p-3 rounded-lg shadow">
+                    <div class="advert-review-slider-for mb-5">
+                        @foreach (string pathToImage in Model.Images)
+                        {
+                            <div class="d-flex justify-content-center"><img src=@pathToImage class="slider-for-img" /></div>
+                        }
+                    </div>
+
+                    <div class="advert-review-slider-nav">
+                        @foreach (string pathToImage in Model.Images)
+                        {
+                            <div class="d-flex justify-content-center"><img src=@pathToImage class="slider-nav-img" /></div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Информация -->
+                <div>
+                    <!-- Основная информация -->
+                    <div class="mb-3 p-2 rounded-lg shadow">
+                        <div class="row mb-2">
+                            <div class="col col-2 text-muted font-size-17">Категория:</div>
+                            <div class="col col-10 font-size-17">@Model.PetDescription.Type</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col col-2 text-muted font-size-17">Порода:</div>
+                            <div class="col col-10 font-size-17">@Model.PetDescription.Breed</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col col-2 text-muted font-size-17">Окрас:</div>
+                            <div class="col col-10 font-size-17">@Model.PetDescription.Color</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col col-2 text-muted font-size-17">Пол:</div>
+                            @{ if (Model.PetDescription.Gender == Genders.Female)
+                                {
+                                    <div class="col col-10 font-size-17">Женский</div>
+                                }
+                                else if (Model.PetDescription.Gender == Genders.Male)
+                                {
+                                    <div class="col col-10 font-size-17">Мужской</div>
+                                }
+                                else
+                                {
+                                    <div class="col col-10 font-size-17">Не указан</div>
+                                }
+                            }
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col col-2 text-muted font-size-17">Возраст:</div>
+                            <div class="col col-10 font-size-17">@Model.PetDescription.Age</div>
+                        </div>
+                    </div>
+
+                    <!-- Описание -->
+                    <div class="mb-2 p-2 rounded-lg shadow">
+                        <div class="row">
+                            <div class="col col-2 text-muted font-size-17">Описание:</div>
+                            <div class="col col-10">
+                                <p class="font-size-17">@Model.Description</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Дополнительная информация -->
+                    <div class="d-flex justify-content-between p-2 text-muted rounded-lg shadow">
+                        <span>Опубликовано: @Model.PublicationDate.ToString("dd.MM.yyyy") г.</span>
+                        <span>В избранном: @Model.NumberOfLikes</span>
+                        <span>Просмотров: @Model.Views</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Колонка с информацией о продавце -->
+            <div class="col col-4">
+                <div class="rounded-lg shadow">
+                    <div class="row p-2">
+                        <div class="col col-4">
+                            @if (string.IsNullOrEmpty(Model.User.Avatar))
+                            {
+                                <img src="~/img/user.png" alt="user avatar" style="max-height: 100px; max-width: 100px" />
+                            }
+                            else
+                            {
+                                <img src=@Model.User.Avatar alt="user avatar" style="max-height: 100px; max-width: 100px" />
+                            }
+                        </div>
+
+                        <div class="col col-8">
+                            <h5>@Model.User.SecondName @Model.User.SecondName</h5>
+                            <div class="text-center">
+                                <span>@Model.User.Rating / 5</span>
+                            </div>
+
+                            <div class="progress">
+                                @{
+                                    int percent = (int)(Convert.ToDouble(Model.User.Rating) / 5.0 * 100.0);
+                                 }
+                                <div class="progress-bar" role="progressbar" style="width: @percent%" aria-valuenow="@Model.User.Rating" aria-valuemin="0" aria-valuemax="5"></div>
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: @(100 - percent)%" aria-valuenow="@(5 - Model.User.Rating)" aria-valuemin="0" aria-valuemax="5"></div>
+                            </div>
+
+                            <div>
+                                <span>На сайте с @Model.User.RegistrationDate.ToString("dd.MM.yyyy") г.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center p-3">
+                        <div class="mb-3">
+                            <a href="#" class="btn btn-block btn-outline-info">Показать номер</a>
+                        </div>
+
+                        <div>
+                            <a href="#" class="btn btn-block btn-primary">Написать продавцу</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
     </div>
-
-    <div>
-        <label>Location: </label>
-        <span>@Model.Location</span>
-    </div>
-
-    <div>
-        <label>Number of likes: </label>
-        <span>@Model.NumberOfLikes</span>
-    </div>
-
-    <div>
-        <label>Views: </label>
-        <span>@Model.Views</span>
-    </div>
-
-</div>
-
-<div>
-    <h4>Pet description</h4>
-
-    <div>
-        <label>Gender: </label>
-        <span>@Model.PetDescription.Gender</span>
-    </div>
-
-    <div>
-        <label>Type: </label>
-        <span>@Model.PetDescription.Type</span>
-    </div>
-
-    <div>
-        <label>Age: </label>
-        <span>@Model.PetDescription.Age</span>
-    </div>
-
-    <div>
-        <label>Breed: </label>
-        <span>@Model.PetDescription.Breed</span>
-    </div>
-
-    <div>
-        <label>Color: </label>
-        <span>@Model.PetDescription.Color</span>
-    </div>
-</div>
-
-<div>
-    <h4>User profile</h4>
-
-    <div>
-        <label>First name: </label>
-        <span>@Model.User.FirstName</span>
-    </div>
-
-    <div>
-        <label>Second name: </label>
-        <span>@Model.User.SecondName</span>
-    </div>
-
-    <div>
-        @if (string.IsNullOrEmpty(Model.User.Avatar))
-        {
-            <img src="~/img/user.png" alt="user avatar" style="max-height: 100px; max-width: 100px" />
-        }
-        else
-        {
-            <img src=@Model.User.Avatar alt="user avatar" style="max-height: 100px; max-width: 100px" />
-        }
-    </div>
-</div>
