@@ -1,4 +1,4 @@
-п»ї//РџР»Р°РІРЅР°СЏ РїСЂРѕРєСЂСѓС‚РєР° СЃС‚СЂР°РЅРёС†С‹ Рє С‚СЌРіСѓ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј id
+//Плавная прокрутка страницы к тэгу с указанным id
 function SlowScroll(id) {
     var offset = $("nav.navbar").height() + 10;
     $("html, body").animate({
@@ -10,7 +10,7 @@ function SlowScroll(id) {
     return false;
 }
 
-// РџРѕСЏРІР»РµРЅРёРµ С„РѕСЂРјС‹ СЂРµРіРёСЃС‚СЂР°С†РёРё РІ РјРѕРґР°Р»СЊРЅРѕРј РѕРєРЅРµ
+// Появление формы регистрации в модальном окне
 function ShowRegisterForm() {
     $('#LoginForm').hide();
     $('#RegisterForm').show();
@@ -21,7 +21,7 @@ $('#ModalAuth').on('hidden.bs.modal', function (e) {
     $('#LoginForm').show();
 })
 
-// РђРЅРёРјР°С†РёСЏ РєРЅРѕРїРѕРє РїРµСЂРµРєР»СЋС‡РµРЅРёРµ СЃРїРёСЃРєРѕРІ РѕР±СЉСЏРІР»РµРЅРёР№ РІ РїСЂРѕС„РёР»Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+// Анимация кнопок переключение списков объявлений в профиле пользователя
 function LoadMyAdverts() {
     $('#myAdvertsLink').addClass("adverts-link-active").removeClass('border-bottom-animation');
     $('#likesAdvertsLink').removeClass('adverts-link-active').addClass('border-bottom-animation');
@@ -37,3 +37,26 @@ function LoadLikesAdverts() {
     $('#likesAdverts').show();
     $('#myAdverts').hide();
 }
+
+$(document).ready(function () {
+    console.log("READY!");
+
+    // Slick слайдер для просмотра фотографий объявления        
+    $('.advert-review-slider-for').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        fade: true,
+        cssEase: 'linear',
+        asNavFor: '.advert-review-slider-nav'
+    });
+
+    $('.advert-review-slider-nav').slick({
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        asNavFor: '.advert-review-slider-for',
+        centerMode: true,
+        centerPadding: '1px',
+        focusOnSelect: true
+    });
+});
