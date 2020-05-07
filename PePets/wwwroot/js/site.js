@@ -67,19 +67,16 @@ $(document).ready(function () {
 });
 
 // Динамическое заполнение списка пород в зависимости от выбранного вида
-$('#types').change(function () {
+$('#PetDescription_Type').change(function () {
     // получаем выбранный вид
-    var type = $(this).val();
-    console.log("change " + type);
+    var name = $(this).val();
 
     $.ajax({
         type: 'GET',
-        url: '/Advert/GetBreeds?type=' + type,
+        url: '/Advert/LoadBreedsViewComponent?typeName=' + name,
         success: function (data) {
-            console.log("success");
-            console.log(data);
             // заменяем содержимое присланным частичным представлением
-            //$('#breeds').replaceWith(data);
+            $('#PetDescription_Breed').replaceWith(data);
         }
     });
 });

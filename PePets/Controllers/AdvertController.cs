@@ -92,6 +92,12 @@ namespace PePets.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult LoadBreedsViewComponent(string typeName)
+        {
+            return ViewComponent("BreedsList", typeName);
+        }
+
         private string[] SaveImages(Guid advertId, IFormFileCollection images)
         {
             Directory.CreateDirectory($"{_appEnvironment.WebRootPath}/usersFiles/advertsImages/{advertId}");

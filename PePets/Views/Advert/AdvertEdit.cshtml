@@ -123,15 +123,8 @@
                         </div>
 
                         <div class="col col-10 form-group">
-                            <select asp-for="PetDescription.Type" class="custom-select" id="types">
-                                <option>Выберите категорию</option>
-                                <option value="Cats">Кошки</option>
-                                <option value="Dogs">Собаки</option>
-                                <option value="Birds">Птицы</option>
-                                <option value="Rodents">Грызуны</option>
-                                <option value="Fishes">Рыбки</option>
-                                <option value="FarmAnimals">С/х животные</option>
-                                <option value="Other">Другие виды</option>
+                            <select asp-for="PetDescription.Type" class="custom-select">
+                                @await  Component.InvokeAsync("TypesList")
                             </select>
                             <span asp-validation-for="PetDescription.Type" class="text-danger"></span>
                         </div>
@@ -143,11 +136,7 @@
                         </div>
 
                         <div class="col col-10 form-group">
-                            <select id="breeds" name="breeds" asp-for="PetDescription.Breed">
-                                <option value="value1">text1</option>
-                                <option value="value2">text2</option>
-                            </select>
-                            @* Html.DropDownList("breeds", new SelectList(new string[] { "breed 1", "breed 2" }), new { id = "breeds"}) *@
+                            @await Component.InvokeAsync("BreedsList", string.Empty)
                             <span asp-validation-for="PetDescription.Breed" class="text-danger"></span>
                         </div>
                     </div>

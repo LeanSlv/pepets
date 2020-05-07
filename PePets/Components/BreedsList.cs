@@ -16,9 +16,12 @@ namespace PePets.Components
             _breedRepository = breedRepository;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(TypeOfPet type)
+        public async Task<IViewComponentResult> InvokeAsync(string typeName)
         {
-            return View("BreedsList", _breedRepository.GetAllBreedsOfType(type.Id).ToList());
+            if (string.IsNullOrEmpty(typeName))
+                return View("BreedsList", new List<BreedOfPet>());
+                        
+            return View("BreedsList", _breedRepository.GetAllBreedsOfType(typeName).ToList());
         }
     }
 }

@@ -7,7 +7,7 @@
             <tr>
                 <td>
                     <h3>@type.Type</h3>
-                    <div>@await Component.InvokeAsync("BreedsList", type)</div>
+                    <div>@await Component.InvokeAsync("BreedsList", type.Id)</div>
                     <div>
                         <div asp-validation-summary="All" class="text-danger"></div>
 

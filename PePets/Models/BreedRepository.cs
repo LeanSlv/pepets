@@ -19,9 +19,16 @@ namespace PePets.Models
             get { return _context.BreedsOfPet; }
         }
 
-        public IQueryable<BreedOfPet> GetAllBreedsOfType(Guid typeId)
+        public BreedOfPet GetFirstBreed()
         {
-            var breeds = _context.BreedsOfPet.Where(x => x.TypeId == typeId);
+            var breed = _context.BreedsOfPet.First();
+            return breed;
+        }
+
+        public IQueryable<BreedOfPet> GetAllBreedsOfType(string typeName)
+        {
+            var type = _context.TypesOfPet.Single(x => x.Type == typeName);
+            var breeds = _context.BreedsOfPet.Where(x => x.TypeId == type.Id);
             return breeds;
         }
 
