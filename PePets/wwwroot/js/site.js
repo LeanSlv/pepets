@@ -1,3 +1,8 @@
+// URL настройки
+var UrlSettings = {
+    GetBreedsUrl: '@Url.Action("GetBreeds", "Advert", null, Request.Url.Scheme, null)'
+}
+
 //Плавная прокрутка страницы к тэгу с указанным id
 function SlowScroll(id) {
     var offset = $("nav.navbar").height() + 10;
@@ -58,5 +63,23 @@ $(document).ready(function () {
         centerMode: true,
         centerPadding: '1px',
         focusOnSelect: true
+    });
+});
+
+// Динамическое заполнение списка пород в зависимости от выбранного вида
+$('#types').change(function () {
+    // получаем выбранный вид
+    var type = $(this).val();
+    console.log("change " + type);
+
+    $.ajax({
+        type: 'GET',
+        url: '/Advert/GetBreeds?type=' + type,
+        success: function (data) {
+            console.log("success");
+            console.log(data);
+            // заменяем содержимое присланным частичным представлением
+            //$('#breeds').replaceWith(data);
+        }
     });
 });

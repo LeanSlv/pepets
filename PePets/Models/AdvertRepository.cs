@@ -29,7 +29,7 @@ namespace PePets.Models
         {       
             if (entity.Id == default)
             {
-                // Если статьи не существует, то добавляем её
+                // Если объявления не существует, то добавляем её
                 _context.Entry(entity).State = EntityState.Added;
                 _context.Entry(entity.PetDescription).State = EntityState.Added;
             } 
@@ -50,5 +50,6 @@ namespace PePets.Models
             _context.Remove(entity);
             _context.SaveChanges();
         }
+
     }
 }

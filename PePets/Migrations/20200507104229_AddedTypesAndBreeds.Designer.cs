@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PePets.Models;
 
 namespace PePets.Migrations
 {
     [DbContext(typeof(PePetsDbContext))]
-    partial class PePetsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200507104229_AddedTypesAndBreeds")]
+    partial class AddedTypesAndBreeds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -198,25 +200,6 @@ namespace PePets.Migrations
                     b.HasIndex("UserId1");
 
                     b.ToTable("Adverts");
-                });
-
-            modelBuilder.Entity("PePets.Models.BreedOfPet", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Breed")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("TypeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TypeId");
-
-                    b.ToTable("BreedsOfPet");
                 });
 
             modelBuilder.Entity("PePets.Models.PetDescription", b =>
@@ -417,15 +400,6 @@ namespace PePets.Migrations
                     b.HasOne("PePets.Models.User", null)
                         .WithMany("FavoriteAdverts")
                         .HasForeignKey("UserId1");
-                });
-
-            modelBuilder.Entity("PePets.Models.BreedOfPet", b =>
-                {
-                    b.HasOne("PePets.Models.TypeOfPet", "Type")
-                        .WithMany()
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PePets.Models.PetDescription", b =>

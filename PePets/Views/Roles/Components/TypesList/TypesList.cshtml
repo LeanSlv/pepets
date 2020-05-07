@@ -1,0 +1,43 @@
+﻿@model  IEnumerable<PePets.Models.TypeOfPet>
+
+    <h2>Список видов животных</h2>
+    <table class="table">
+        @foreach (TypeOfPet type in Model)
+        {
+            <tr>
+                <td>
+                    <h3>@type.Type</h3>
+                    <div>@await Component.InvokeAsync("BreedsList", type)</div>
+                    <div>
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <form asp-controller="Breed" asp-action="Create" method="post">
+                            <input type="hidden" name="typeId" value=@type.Id />
+                            <div class="form-group">
+                                <label for="breedName">Новая порода</label>
+                                <input name="breedName" class="form-control" />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Добавить породу</button>
+                        </form>
+                    </div>
+                </td>
+                <td>
+                    <form asp-controller="Type" asp-action="Delete" asp-route-id="@type.Id" method="post">
+                        <button class="btn btn-sm btn-danger" type="submit">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+
+    <div>
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <form asp-controller="Type" asp-action="Create" method="post">
+            <div class="form-group">
+                <label for="typeName">Новый вид</label>
+                <input name="typeName" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary">Добавить вид</button>
+        </form>
+    </div>
