@@ -124,12 +124,7 @@
 
                         <div class="col col-10 form-group">
                             <select asp-for="PetDescription.Type" class="custom-select">
-                                <option value="Не указано">Выберите категорию</option>
-                                <option value="Кошки">Кошки</option>
-                                <option value="Собаки">Собаки</option>
-                                <option value="Птицы">Птицы</option>
-                                <option value="Грызуны">Грызуны</option>
-                                <option value="Рыбки">Рыбки</option>
+                                @await  Component.InvokeAsync("TypesList")
                             </select>
                             <span asp-validation-for="PetDescription.Type" class="text-danger"></span>
                         </div>
@@ -141,7 +136,7 @@
                         </div>
 
                         <div class="col col-10 form-group">
-                            <input type="text" asp-for="PetDescription.Breed" class="form-control" />
+                            @await Component.InvokeAsync("BreedsList", string.Empty)
                             <span asp-validation-for="PetDescription.Breed" class="text-danger"></span>
                         </div>
                     </div>

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PePets.Models;
 
 namespace PePets.Migrations
 {
     [DbContext(typeof(PePetsDbContext))]
-    partial class PePetsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200507101551_AddedBreeds")]
+    partial class AddedBreeds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -200,23 +202,36 @@ namespace PePets.Migrations
                     b.ToTable("Adverts");
                 });
 
-            modelBuilder.Entity("PePets.Models.BreedOfPet", b =>
+            modelBuilder.Entity("PePets.Models.Breed", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Breed")
+                    b.Property<string>("Birds")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("TypeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Cats")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Dogs")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FarmAnimals")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Fishes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Other")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Rodents")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TypeId");
-
-                    b.ToTable("BreedsOfPet");
+                    b.ToTable("Breeds");
                 });
 
             modelBuilder.Entity("PePets.Models.PetDescription", b =>
@@ -249,20 +264,6 @@ namespace PePets.Migrations
                         .IsUnique();
 
                     b.ToTable("PetsDescription");
-                });
-
-            modelBuilder.Entity("PePets.Models.TypeOfPet", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TypesOfPet");
                 });
 
             modelBuilder.Entity("PePets.Models.User", b =>
@@ -417,15 +418,6 @@ namespace PePets.Migrations
                     b.HasOne("PePets.Models.User", null)
                         .WithMany("FavoriteAdverts")
                         .HasForeignKey("UserId1");
-                });
-
-            modelBuilder.Entity("PePets.Models.BreedOfPet", b =>
-                {
-                    b.HasOne("PePets.Models.TypeOfPet", "Type")
-                        .WithMany()
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PePets.Models.PetDescription", b =>
