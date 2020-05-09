@@ -87,7 +87,7 @@ namespace PePets.Controllers
 
                     // Содержимое сообщения
                     string subject = "Подтвердите ваш email aдрес для регистрации на сайте PePets.ru";
-                    string message = $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>Подтверить email адрес</a>";
+                    string message = GenerateMessageBody(user.FirstName, callbackUrl);
 
                     // Отправка сообщения пользователю на Email для его подтверждения
                     EmailService emailService = new EmailService();
@@ -134,6 +134,18 @@ namespace PePets.Controllers
                 return RedirectToAction("Index", "Home");
             else
                 return View("Error");
+        }
+
+        private string GenerateMessageBody(string userName, string callbackUrl)
+        {
+            return 
+                "<div>" +
+                    "<div style = 'padding: 0.5em; margin: 0 auto; width: 50%; font-size: 1.2rem; font-family: Arial, Helvetica, sans-serif;'>" +
+                        $"<div style = 'margin-bottom: 0.7em;' > Здравствуйте {userName},</div>" +      
+                        "<div style = 'margin-bottom: 1.5em;' > Для того, чтобы продолжить регистрацию на сайте PePets.ru, пожалуйста, подтвердите ваш email адрес:</div>" +           
+                        $"<a style = 'display: flex; padding: 1.5em; background-color: #587fcc; color: white; justify-content: center; text-decoration: none; border-radius: 25px;' href = '{callbackUrl}' > Подтверить email адрес</a>" +                 
+                     "</div>" +
+                "</div>";
         }
     }
 }
