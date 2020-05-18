@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PePets.Models;
+using PePets.Services;
 
 namespace PePets.Controllers
 {
@@ -73,8 +74,27 @@ namespace PePets.Controllers
                 var result = await _userRepository.SaveUser(user, model.Password);
                 if (result.Succeeded)
                 {
+                    // генерация токена для пользователя
+                    string token = await _userRepository.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.Action
+                        (
+                            "ConfirmEmail",
+                            "Account",
+                            new { userId = user.Id, token = token },
+                            protocol: HttpContext.Request.Scheme
+                        );
+
+                    // Содержимое сообщения
+                    string subject = "Подтвердите ваш email aдрес для регистрации на сайте PePets.ru";
+                    string message = GenerateMessageBody(user.FirstName, callbackUrl);
+
+                    // Отправка сообщения пользователю на Email для его подтверждения
+                    EmailService emailService = new EmailService();
+                    await emailService.SendEmailAsync(model.Email, subject, message);
+
                     // установка куки
                     await _signInManager.SignInAsync(user, false);
+
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -95,6 +115,38 @@ namespace PePets.Controllers
             // удаляем аутентификационные куки
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+                return View("Error");
+
+            User user = await _userRepository.GetUserById(userId);
+            if (user == null)
+                return View("Error");
+
+            var result = await _userRepository.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+                return View("Error");
+        }
+
+        private string GenerateMessageBody(string userName, string callbackUrl)
+        {
+            return 
+                "<div>" +
+                    "<div style = 'padding: 0.5em; margin: 0 auto; width: 50%; font-size: 1.2rem; font-family: Arial, Helvetica, sans-serif;'>" +
+                        $"<div style = 'margin-bottom: 0.7em;' > Здравствуйте {userName},</div>" +      
+                        "<div style = 'margin-bottom: 1.5em;' > Для того, чтобы продолжить регистрацию на сайте PePets.ru, пожалуйста, подтвердите ваш email адрес:</div>" +           
+                        $"<a style = 'display: flex; padding: 1.5em; background-color: #587fcc; color: white; justify-content: center; text-decoration: none; border-radius: 25px;' href = '{callbackUrl}' > Подтверить email адрес</a>" +                 
+                     "</div>" +
+                "</div>";
         }
     }
 }
