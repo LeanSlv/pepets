@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -131,7 +130,9 @@ namespace PePets.Controllers
 
             var result = await _userRepository.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
+            {
                 return RedirectToAction("Index", "Home");
+            }
             else
                 return View("Error");
         }
