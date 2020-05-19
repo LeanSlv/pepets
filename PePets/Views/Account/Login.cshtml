@@ -38,4 +38,7 @@
 
     <div class="modal-footer">
         <!-- Место для кнопок OAuth -->
+        <form method="post" asp-controller="Account" asp-action="GoogleLogin" asp-route-returnUrl="@Model.ReturnUrl">
+            <input class="btn btn-primary" type="submit" value="Google" />
+        </form>
     </div>

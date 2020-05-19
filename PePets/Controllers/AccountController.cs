@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -137,14 +140,62 @@ namespace PePets.Controllers
                 return View("Error");
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult GoogleLogin(string returnUrl = "/")
+        {
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("GoogleLoginCallback",
+                    new { returnUrl = returnUrl })
+            };
+
+            return new ChallengeResult("Google", properties);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> GoogleLoginCallback(string returnUrl)
+        {
+            // Получаем куки после внешней авторизации
+            var info = await HttpContext.AuthenticateAsync(IdentityConstants.ExternalScheme);
+
+            var externalUser = info.Principal;
+            if (externalUser == null)
+                throw new Exception("External authentication error");
+
+            var claims = externalUser.Claims.ToList();
+
+            Claim userEmail = claims.Find(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress");
+            Claim userName = claims.Find(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname");
+
+            User user = await _userRepository.GetUserByEmailAsync(userEmail.Value);
+            IdentityResult saveResult;
+            if (user == null)
+            {
+                user = new User 
+                { 
+                    Email = userEmail.Value, 
+                    UserName = userEmail.Value, 
+                    FirstName = userName.Value, 
+                    EmailConfirmed = true,
+                    RegistrationDate = DateTime.Now
+                };
+                saveResult = await _userRepository.SaveUser(user);                
+            }
+
+            await _signInManager.SignInAsync(user, false);
+
+            return RedirectToAction("Index", "Home");
+        }
+
         private string GenerateMessageBody(string userName, string callbackUrl)
         {
-            return 
+            return
                 "<div>" +
                     "<div style = 'padding: 0.5em; margin: 0 auto; width: 50%; font-size: 1.2rem; font-family: Arial, Helvetica, sans-serif;'>" +
-                        $"<div style = 'margin-bottom: 0.7em;' > Здравствуйте {userName},</div>" +      
-                        "<div style = 'margin-bottom: 1.5em;' > Для того, чтобы продолжить регистрацию на сайте PePets.ru, пожалуйста, подтвердите ваш email адрес:</div>" +           
-                        $"<a style = 'display: flex; padding: 1.5em; background-color: #587fcc; color: white; justify-content: center; text-decoration: none; border-radius: 25px;' href = '{callbackUrl}' > Подтверить email адрес</a>" +                 
+                        $"<div style = 'margin-bottom: 0.7em;' > Здравствуйте {userName},</div>" +
+                        "<div style = 'margin-bottom: 1.5em;' > Для того, чтобы продолжить регистрацию на сайте PePets.ru, пожалуйста, подтвердите ваш email адрес:</div>" +
+                        $"<a style = 'display: flex; padding: 1.5em; background-color: #587fcc; color: white; justify-content: center; text-decoration: none; border-radius: 25px;' href = '{callbackUrl}' > Подтверить email адрес</a>" +
                      "</div>" +
                 "</div>";
         }

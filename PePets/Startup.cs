@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using PePets.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using System;
 
 namespace PePets
 {
@@ -35,6 +32,14 @@ namespace PePets
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<PePetsDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddAuthentication().AddGoogle("Google", googleOptions => {
+                googleOptions.ClientId = "203642452482-pr55ub8jdb5s2aj4485nd80aa0b4vu70.apps.googleusercontent.com";
+                googleOptions.ClientSecret = "O5FtzBJDRSXk-C5mSIEgss9n";
+                googleOptions.CallbackPath = new PathString("/GoogleLoginCallback");
+                googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
+                googleOptions.BackchannelTimeout = TimeSpan.FromSeconds(60);
+            });
 
             services.AddControllersWithViews();
         }
