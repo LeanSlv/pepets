@@ -36,9 +36,41 @@
             </form>
     </div>
 
-    <div class="modal-footer">
+    <div class="modal-footer d-block text-center">
+        <h6>Войдите, используя уже существующий аккаунт в социальных сетях</h6>
+
         <!-- Место для кнопок OAuth -->
-        <form method="post" asp-controller="Account" asp-action="GoogleLogin" asp-route-returnUrl="@Model.ReturnUrl">
-            <input class="btn btn-primary" type="submit" value="Google" />
-        </form>
+        <div class="d-flex justify-content-around mt-3">
+            <div>
+                <form method="post" asp-controller="Account" asp-action="GoogleLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                    <button type="submit" class="border-0 bg-transparent">
+                        <img src="~/img/social icons/google.svg" alt="Google login" width="40" height="40" />
+                    </button>
+                </form>
+            </div>
+
+            <div>
+                <form action="/" method="post">
+                    <button type="submit" class="border-0 bg-transparent">
+                        <img src="~/img/social icons/facebook.svg" alt="Facebook login" width="40" height="40" />
+                    </button>
+                </form>
+            </div>
+
+            <div>
+                <form action="/" method="post">
+                    <button type="submit" class="border-0 bg-transparent">
+                        <img src="~/img/social icons/vk.svg" alt="VK login" width="40" height="40" />
+                    </button>
+                </form>
+            </div>
+
+            <div>
+                <form action="/" method="post">
+                    <button type="submit" class="border-0 bg-transparent">
+                        <img src="~/img/social icons/odnoklassniki.svg" alt="Odnoklassniki login" width="40" height="40" />
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
