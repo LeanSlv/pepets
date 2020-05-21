@@ -142,19 +142,19 @@ namespace PePets.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult GoogleLogin(string returnUrl = "/")
+        public IActionResult ExternalLogin(string providerName, string returnUrl = "/")
         {
             var properties = new AuthenticationProperties
             {
-                RedirectUri = Url.Action("GoogleLoginCallback",
-                    new { returnUrl = returnUrl })
+                RedirectUri = Url.Action("ExternalLoginCallback",
+                    new { providerName = providerName, returnUrl = returnUrl })
             };
 
-            return new ChallengeResult("Google", properties);
+            return new ChallengeResult(providerName, properties);
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> GoogleLoginCallback(string returnUrl)
+        public async Task<IActionResult> ExternalLoginCallback(string providerName, string returnUrl, string code = "")
         {
             // Получаем куки после внешней авторизации
             var info = await HttpContext.AuthenticateAsync(IdentityConstants.ExternalScheme);
@@ -169,7 +169,6 @@ namespace PePets.Controllers
             Claim userFirstName = claims.Find(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname");
             Claim userSecondName = claims.Find(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname");
             Claim userPicture = claims.Find(x => x.Type == "picture");
-            Claim userConfirmedEmail = claims.Find(x => x.Type == "confirmed_email");
 
             User user = await _userRepository.GetUserByEmailAsync(userEmail.Value);
             IdentityResult saveResult;
@@ -181,7 +180,7 @@ namespace PePets.Controllers
                     UserName = userEmail.Value, 
                     FirstName = userFirstName.Value,
                     SecondName = userSecondName.Value,
-                    EmailConfirmed = Convert.ToBoolean(userConfirmedEmail.Value),
+                    EmailConfirmed = true,
                     Avatar = userPicture.Value,
                     RegistrationDate = DateTime.Now
                 };                  
@@ -190,7 +189,7 @@ namespace PePets.Controllers
             {
                 user.FirstName = userFirstName.Value;
                 user.SecondName = userSecondName.Value;
-                user.EmailConfirmed = Convert.ToBoolean(userConfirmedEmail.Value);
+                user.EmailConfirmed = true;
                 user.Avatar = userPicture.Value;
             }
 
