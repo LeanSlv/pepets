@@ -39,8 +39,8 @@ namespace PePets
             services.AddAuthentication()
                 .AddGoogle("Google", googleOptions =>
                 {
-                    googleOptions.ClientId = Configuration.GetSection("GoogleOAuth").GetValue<string>("ClientId");
-                    googleOptions.ClientSecret = Configuration.GetSection("GoogleOAuth").GetValue<string>("ClientSecret");
+                    googleOptions.ClientId = Configuration["GoogleOAuth:ClientId"];
+                    googleOptions.ClientSecret = Configuration["GoogleOAuth:ClientSecret"];
                     googleOptions.CallbackPath = new PathString("/ExternalLoginCallback");
                     googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
                     googleOptions.BackchannelTimeout = TimeSpan.FromSeconds(60);
@@ -55,10 +55,22 @@ namespace PePets
                         return Task.CompletedTask;
                     };
                 })
+                .AddFacebook("Facebook", FacebookOptions =>
+                {
+                    FacebookOptions.ClientId = Configuration["FacebookOAuth:ClientId"];
+                    FacebookOptions.ClientSecret = Configuration["FacebookOAuth:ClientSecret"];
+                })
+                /*
+                .AddOdnoklassniki("Odnoklassniki", OdnoklassnikiOptions => 
+                {
+                    //OdnoklassnikiOptions.ClientId = Configuration["OdnoklassnikiOAuth:ClientId"];
+                    //OdnoklassnikiOptions.ClientSecret = Configuration["OdnoklassnikiOAuth:ClientSecret"];
+                })
+                */
                 .AddVkontakte("VK", VkOptions =>
                 {
-                    VkOptions.ClientId = Configuration.GetSection("VkOAuth").GetValue<string>("ClientId");
-                    VkOptions.ClientSecret = Configuration.GetSection("VkOAuth").GetValue<string>("ClientSecret");
+                    VkOptions.ClientId = Configuration["VkOAuth:ClientId"];
+                    VkOptions.ClientSecret = Configuration["VkOAuth:ClientSecret"];
                     VkOptions.SignInScheme = IdentityConstants.ExternalScheme;
                     VkOptions.BackchannelTimeout = TimeSpan.FromSeconds(60);
                     VkOptions.CallbackPath = new PathString("/signin-vk");
@@ -75,50 +87,7 @@ namespace PePets
 
                         return Task.CompletedTask;
                     };
-                })
-                /*
-                .AddOAuth("VK", options =>
-                {
-                    options.ClientId = Configuration.GetSection("VkOAuth").GetValue<string>("ClientId");
-                    options.ClientSecret = Configuration.GetSection("VkOAuth").GetValue<string>("ClientSecret");
-                    options.SignInScheme = IdentityConstants.ExternalScheme;
-                    options.BackchannelTimeout = TimeSpan.FromSeconds(60);
-
-                    options.CallbackPath = "/signin-vk";
-                    options.AuthorizationEndpoint = "https://oauth.vk.com/authorize?display=page";
-                    options.TokenEndpoint = "https://oauth.vk.com/access_token";
-
-                    options.Scope.Add("email");
-
-                    options.Events.OnCreatingTicket = (context) =>
-                    {
-                        context.Identity.AddClaim(new Claim("access_token", context.AccessToken));
-                        return Task.CompletedTask;
-                    };
-                })
-                
-                .AddVK("VK", VkOptions =>
-                {
-                    VkOptions.ClientId = Configuration.GetSection("VkOAuth").GetValue<string>("ClientId");
-                    VkOptions.ClientSecret = Configuration.GetSection("VkOAuth").GetValue<string>("ClientSecret");
-                    VkOptions.SignInScheme = IdentityConstants.ExternalScheme;
-                    VkOptions.BackchannelTimeout = TimeSpan.FromSeconds(60);
-                    //VkOptions.CallbackPath = new PathString("/ExternalLoginCallback");
-                    VkOptions.CallbackPath = "/signin-vk";
-
-                    VkOptions.Scope.Add("email");
-                    
-                    
-                    VkOptions.Fields.Add("uid");
-                    VkOptions.Fields.Add("first_name");
-                    VkOptions.Fields.Add("last_name");
-
-                    VkOptions.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "uid");
-                    VkOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
-                    VkOptions.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "first_name");
-                    VkOptions.ClaimActions.MapJsonKey(ClaimTypes.Surname, "last_name");
-                    
-                })*/;
+                });
             services.AddControllersWithViews();
         }
 

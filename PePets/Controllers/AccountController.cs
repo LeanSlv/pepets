@@ -147,14 +147,14 @@ namespace PePets.Controllers
             var properties = new AuthenticationProperties
             {
                 RedirectUri = Url.Action("ExternalLoginCallback",
-                    new { providerName = providerName, returnUrl = returnUrl })
+                    new { returnUrl = returnUrl })
             };
 
             return new ChallengeResult(providerName, properties);
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> ExternalLoginCallback(string providerName, string returnUrl, string code = "")
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl)
         {
             // Получаем куки после внешней авторизации
             var info = await HttpContext.AuthenticateAsync(IdentityConstants.ExternalScheme);

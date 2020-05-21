@@ -50,7 +50,7 @@
             </div>
 
             <div>
-                <form method="post" >
+                <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="Facebook" >
                     <button type="submit" class="border-0 bg-transparent">
                         <img src="~/img/social icons/facebook.svg" alt="Facebook login" width="40" height="40" />
                     </button>
@@ -66,7 +66,7 @@
             </div>
 
             <div>
-                <form action="/" method="post">
+                <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="Odnoklassniki" >
                     <button type="submit" class="border-0 bg-transparent">
                         <img src="~/img/social icons/odnoklassniki.svg" alt="Odnoklassniki login" width="40" height="40" />
                     </button>
