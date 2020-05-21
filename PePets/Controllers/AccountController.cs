@@ -158,32 +158,45 @@ namespace PePets.Controllers
         {
             // Получаем куки после внешней авторизации
             var info = await HttpContext.AuthenticateAsync(IdentityConstants.ExternalScheme);
-
             var externalUser = info.Principal;
             if (externalUser == null)
                 throw new Exception("External authentication error");
 
+            // Получаем нужные утверждения с основной информацией о пользователе
             var claims = externalUser.Claims.ToList();
 
             Claim userEmail = claims.Find(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress");
-            Claim userName = claims.Find(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname");
+            Claim userFirstName = claims.Find(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname");
+            Claim userSecondName = claims.Find(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname");
+            Claim userPicture = claims.Find(x => x.Type == "picture");
+            Claim userConfirmedEmail = claims.Find(x => x.Type == "confirmed_email");
 
             User user = await _userRepository.GetUserByEmailAsync(userEmail.Value);
             IdentityResult saveResult;
-            if (user == null)
+            if (user == null) // Если пользователь новый, то создаем и регистрируем его
             {
                 user = new User 
                 { 
                     Email = userEmail.Value, 
                     UserName = userEmail.Value, 
-                    FirstName = userName.Value, 
-                    EmailConfirmed = true,
+                    FirstName = userFirstName.Value,
+                    SecondName = userSecondName.Value,
+                    EmailConfirmed = Convert.ToBoolean(userConfirmedEmail.Value),
+                    Avatar = userPicture.Value,
                     RegistrationDate = DateTime.Now
-                };
-                saveResult = await _userRepository.SaveUser(user);                
+                };                  
+            }
+            else // Иначе обновляем его основную информацию на основе полученных от соц. сети
+            {
+                user.FirstName = userFirstName.Value;
+                user.SecondName = userSecondName.Value;
+                user.EmailConfirmed = Convert.ToBoolean(userConfirmedEmail.Value);
+                user.Avatar = userPicture.Value;
             }
 
-            await _signInManager.SignInAsync(user, false);
+            saveResult = await _userRepository.SaveUser(user);
+            if(saveResult.Succeeded)
+                await _signInManager.SignInAsync(user, false);
 
             return RedirectToAction("Index", "Home");
         }

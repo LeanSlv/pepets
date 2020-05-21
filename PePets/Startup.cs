@@ -1,13 +1,16 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using PePets.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Http;
 using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace PePets
 {
@@ -33,14 +36,27 @@ namespace PePets
                 .AddEntityFrameworkStores<PePetsDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthentication().AddGoogle("Google", googleOptions => {
-                googleOptions.ClientId = "203642452482-pr55ub8jdb5s2aj4485nd80aa0b4vu70.apps.googleusercontent.com";
-                googleOptions.ClientSecret = "O5FtzBJDRSXk-C5mSIEgss9n";
+            services.AddAuthentication().AddGoogle("Google", googleOptions =>
+            {
+                googleOptions.ClientId = Configuration.GetSection("GoogleOAuth").GetValue<string>("ClientId");
+                googleOptions.ClientSecret = Configuration.GetSection("GoogleOAuth").GetValue<string>("ClientSecret");
                 googleOptions.CallbackPath = new PathString("/GoogleLoginCallback");
                 googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
                 googleOptions.BackchannelTimeout = TimeSpan.FromSeconds(60);
-            });
+                googleOptions.Scope.Add("profile");
+                googleOptions.Events.OnCreatingTicket = (context) =>
+                {
+                    JObject userInfo = JObject.Parse(context.User.ToString());
 
+                    // Получаем URL аватарки пользователя и вносим это в утверждение
+                    context.Identity.AddClaim(new Claim("picture", userInfo.GetValue("picture").ToString()));
+
+                    // Вносим утверждение о подтвержденном email адресе пользователя 
+                    context.Identity.AddClaim(new Claim("confirmed_email", userInfo.GetValue("verified_email").ToString()));
+
+                    return Task.CompletedTask;
+                };
+            });
             services.AddControllersWithViews();
         }
 
