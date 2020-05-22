@@ -59,6 +59,18 @@ namespace PePets
                 {
                     FacebookOptions.ClientId = Configuration["FacebookOAuth:ClientId"];
                     FacebookOptions.ClientSecret = Configuration["FacebookOAuth:ClientSecret"];
+
+                    FacebookOptions.Fields.Add("picture.type(large)");
+                    FacebookOptions.Events.OnCreatingTicket = (context) =>
+                    {
+                        JObject userInfo = JObject.Parse(context.User.ToString());
+                        JToken pictureUrl = userInfo.SelectToken("picture").SelectToken("data").SelectToken("url");
+
+                        // Получаем URL аватарки пользователя и вносим это в утверждение
+                        context.Identity.AddClaim(new Claim("picture", pictureUrl.Value<string>()));
+
+                        return Task.CompletedTask;
+                    };
                 })
                 /*
                 .AddOdnoklassniki("Odnoklassniki", OdnoklassnikiOptions => 
