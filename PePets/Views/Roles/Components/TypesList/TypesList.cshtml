@@ -1,43 +1,75 @@
-﻿@model  IEnumerable<PePets.Models.TypeOfPet>
+﻿@model IEnumerable<PePets.Models.TypeOfPet>
 
     <h2>Список видов животных</h2>
-    <table class="table">
-        @foreach (TypeOfPet type in Model)
-        {
-            <tr>
-                <td>
-                    <h3>@type.Type</h3>
-                    <div>@await Component.InvokeAsync("BreedsList", type.Id)</div>
-                    <div>
-                        <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="p-1 overflow-auto shadow admin-panel">
+        <!-- Список видов -->
+        <div class="accordion" id="accordionTypes">
+            <!-- Список пород одного типа -->
+            @foreach (TypeOfPet type in Model)
+            {
+                <div class="card">
 
-                        <form asp-controller="Breed" asp-action="Create" method="post">
-                            <input type="hidden" name="typeId" value=@type.Id />
-                            <div class="form-group">
-                                <label for="breedName">Новая порода</label>
-                                <input name="breedName" class="form-control" />
+                    <!-- Заголовок вида -->
+                    <div class="card-header" id=@("heading_" + type.Type)>
+                        <div class="row align-items-center">
+                            <div class="col col-9">
+                                <button class="btn text-left w-100" type="button" data-toggle="collapse" data-target=@("#collapse_" + @type.Id) aria-expanded="true" aria-controls=@("collapse_" + @type.Id)>
+                                    <h5><i class="fas fa-caret-down"></i> @type.Type</h5>
+                                </button>
                             </div>
-                            <button type="submit" class="btn btn-primary">Добавить породу</button>
-                        </form>
+                            <div class="col col-3">
+                                <form asp-controller="Type" asp-action="Delete" asp-route-id="@type.Id" method="post">
+                                    <button class="btn btn-sm btn-danger w-100" type="submit">Удалить</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                </td>
-                <td>
-                    <form asp-controller="Type" asp-action="Delete" asp-route-id="@type.Id" method="post">
-                        <button class="btn btn-sm btn-danger" type="submit">Удалить</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </table>
 
-    <div>
-        <div asp-validation-summary="All" class="text-danger"></div>
+                    <!-- Список пород -->
+                    <div id=@("collapse_" + @type.Id) class="collapse" aria-labelledby=@("heading_" + type.Type) data-parent="#accordionTypes">
+                        <div class="card-body">
+                            @await Component.InvokeAsync("BreedsList", type.Id)
 
-        <form asp-controller="Type" asp-action="Create" method="post">
-            <div class="form-group">
+                            <!-- Добавление новой породы -->
+                            <div>
+                                <div asp-validation-summary="All" class="text-danger"></div>
+
+                                <form asp-controller="Breed" asp-action="Create" method="post">
+                                    <input type="hidden" name="typeId" value=@type.Id />
+                                    <label for="breedName">Новая порода</label>
+                                    <div class="row">
+                                        <div class="col col-9 form-group">
+                                            <input name="breedName" class="form-control" placeholder="Название новой породы" />
+                                        </div>
+
+                                        <div class="col col-3">
+                                            <button type="submit" class="btn btn-primary">Добавить</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Добавление нового вида -->
+        <div>
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <form asp-controller="Type" asp-action="Create" method="post">
                 <label for="typeName">Новый вид</label>
-                <input name="typeName" class="form-control" />
-            </div>
-            <button type="submit" class="btn btn-primary">Добавить вид</button>
-        </form>
+                <div class="row">
+                    <div class="col col-9 form-group">
+                        <input name="typeName" class="form-control" placeholder="Название нового вида" />
+                    </div>
+
+                    <div class="col col-3">
+                        <button type="submit" class="btn btn-primary">Добавить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
     </div>

@@ -20,7 +20,7 @@ namespace PePets.Components
         {
             if (string.IsNullOrEmpty(typeName))
                 return View("BreedsList", new List<BreedOfPet>());
-                        
+
             return View("BreedsList", _breedRepository.GetAllBreedsOfType(typeName).ToList());
         }
     }

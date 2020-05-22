@@ -14,28 +14,17 @@ namespace PePets.Models
             _context = context;
         }
 
-        public IQueryable<BreedOfPet> Breeds
-        {
-            get { return _context.BreedsOfPet; }
-        }
+        public IQueryable<BreedOfPet> Breeds { get { return _context.BreedsOfPet; } }
 
-        public BreedOfPet GetFirstBreed()
-        {
-            var breed = _context.BreedsOfPet.First();
-            return breed;
-        }
+        public BreedOfPet GetFirstBreed() => _context.BreedsOfPet.First();
 
         public IQueryable<BreedOfPet> GetAllBreedsOfType(string typeName)
         {
-            var type = _context.TypesOfPet.Single(x => x.Type == typeName);
-            var breeds = _context.BreedsOfPet.Where(x => x.TypeId == type.Id);
-            return breeds;
+            TypeOfPet type = _context.TypesOfPet.Single(x => x.Type == typeName);
+            return _context.BreedsOfPet.Where(x => x.TypeId == type.Id);
         }
 
-        public BreedOfPet FindBreedById(Guid id)
-        {
-            return _context.BreedsOfPet.SingleOrDefault(x => x.Id == id);
-        }
+        public BreedOfPet FindBreedById(Guid id) => _context.BreedsOfPet.SingleOrDefault(x => x.Id == id);
 
         public bool SaveBreed(BreedOfPet breed)
         {
