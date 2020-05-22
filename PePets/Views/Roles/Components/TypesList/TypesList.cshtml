@@ -28,7 +28,7 @@
                     <!-- Список пород -->
                     <div id=@("collapse_" + @type.Id) class="collapse" aria-labelledby=@("heading_" + type.Type) data-parent="#accordionTypes">
                         <div class="card-body">
-                            @await Component.InvokeAsync("BreedsList", type.Id)
+                            @await Component.InvokeAsync("BreedsList", type.Type)
 
                             <!-- Добавление новой породы -->
                             <div>
