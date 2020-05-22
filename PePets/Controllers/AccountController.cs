@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -137,14 +140,74 @@ namespace PePets.Controllers
                 return View("Error");
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult ExternalLogin(string providerName, string returnUrl = "/")
+        {
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("ExternalLoginCallback",
+                    new { returnUrl = returnUrl })
+            };
+
+            return new ChallengeResult(providerName, properties);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl)
+        {
+            // Получаем куки после внешней авторизации
+            var info = await HttpContext.AuthenticateAsync(IdentityConstants.ExternalScheme);
+            var externalUser = info.Principal;
+            if (externalUser == null)
+                throw new Exception("External authentication error");
+
+            // Получаем нужные утверждения с основной информацией о пользователе
+            var claims = externalUser.Claims.ToList();
+
+            Claim userEmail = claims.Find(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress");
+            Claim userFirstName = claims.Find(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname");
+            Claim userSecondName = claims.Find(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname");
+            Claim userPicture = claims.Find(x => x.Type == "picture");
+
+            User user = await _userRepository.GetUserByEmailAsync(userEmail.Value);
+            IdentityResult saveResult;
+            if (user == null) // Если пользователь новый, то создаем и регистрируем его
+            {
+                user = new User 
+                { 
+                    Email = userEmail.Value, 
+                    UserName = userEmail.Value, 
+                    FirstName = userFirstName.Value,
+                    SecondName = userSecondName.Value,
+                    EmailConfirmed = true,
+                    Avatar = userPicture.Value,
+                    RegistrationDate = DateTime.Now
+                };                  
+            }
+            else // Иначе обновляем его основную информацию на основе полученных от соц. сети
+            {
+                user.FirstName = userFirstName.Value;
+                user.SecondName = userSecondName.Value;
+                user.EmailConfirmed = true;
+                user.Avatar = userPicture.Value;
+            }
+
+            saveResult = await _userRepository.SaveUser(user);
+            if(saveResult.Succeeded)
+                await _signInManager.SignInAsync(user, false);
+
+            return RedirectToAction("Index", "Home");
+        }
+
         private string GenerateMessageBody(string userName, string callbackUrl)
         {
-            return 
+            return
                 "<div>" +
                     "<div style = 'padding: 0.5em; margin: 0 auto; width: 50%; font-size: 1.2rem; font-family: Arial, Helvetica, sans-serif;'>" +
-                        $"<div style = 'margin-bottom: 0.7em;' > Здравствуйте {userName},</div>" +      
-                        "<div style = 'margin-bottom: 1.5em;' > Для того, чтобы продолжить регистрацию на сайте PePets.ru, пожалуйста, подтвердите ваш email адрес:</div>" +           
-                        $"<a style = 'display: flex; padding: 1.5em; background-color: #587fcc; color: white; justify-content: center; text-decoration: none; border-radius: 25px;' href = '{callbackUrl}' > Подтверить email адрес</a>" +                 
+                        $"<div style = 'margin-bottom: 0.7em;' > Здравствуйте {userName},</div>" +
+                        "<div style = 'margin-bottom: 1.5em;' > Для того, чтобы продолжить регистрацию на сайте PePets.ru, пожалуйста, подтвердите ваш email адрес:</div>" +
+                        $"<a style = 'display: flex; padding: 1.5em; background-color: #587fcc; color: white; justify-content: center; text-decoration: none; border-radius: 25px;' href = '{callbackUrl}' > Подтверить email адрес</a>" +
                      "</div>" +
                 "</div>";
         }

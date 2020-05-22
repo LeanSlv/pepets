@@ -21,7 +21,7 @@ namespace PePets.Components
         {
             User user = _userRepository.GetCurrentUser(userClaims);
             if (user == null)
-                return View();
+                return View("AvatarPartial", "/img/user.png");
 
             if (string.IsNullOrEmpty(user.Avatar))
                 return View("AvatarPartial", "/img/user.png");

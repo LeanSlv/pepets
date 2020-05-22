@@ -36,6 +36,41 @@
             </form>
     </div>
 
-    <div class="modal-footer">
+    <div class="modal-footer d-block text-center">
+        <h6>Войдите, используя уже существующий аккаунт в социальных сетях</h6>
+
         <!-- Место для кнопок OAuth -->
+        <div class="d-flex justify-content-around mt-3">
+            <div>
+                <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="Google" asp-route-returnUrl="@Model.ReturnUrl">
+                    <button type="submit" class="border-0 bg-transparent">
+                        <img src="~/img/social icons/google.svg" alt="Google login" width="40" height="40" />
+                    </button>
+                </form>
+            </div>
+
+            <div>
+                <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="Facebook" >
+                    <button type="submit" class="border-0 bg-transparent">
+                        <img src="~/img/social icons/facebook.svg" alt="Facebook login" width="40" height="40" />
+                    </button>
+                </form>
+            </div>
+
+            <div>
+                <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="VK" asp-route-returnUrl="@Model.ReturnUrl">
+                    <button type="submit" class="border-0 bg-transparent">
+                        <img src="~/img/social icons/vk.svg" alt="VK login" width="40" height="40" />
+                    </button>
+                </form>
+            </div>
+
+            <div>
+                <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="Odnoklassniki" >
+                    <button type="submit" class="border-0 bg-transparent">
+                        <img src="~/img/social icons/odnoklassniki.svg" alt="Odnoklassniki login" width="40" height="40" />
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
