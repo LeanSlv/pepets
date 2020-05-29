@@ -197,7 +197,7 @@ namespace PePets.Controllers
             if(saveResult.Succeeded)
                 await _signInManager.SignInAsync(user, false);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(returnUrl);
         }
 
         private string GenerateMessageBody(string userName, string callbackUrl)
