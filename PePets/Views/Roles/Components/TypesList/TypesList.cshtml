@@ -34,12 +34,12 @@
                             <div>
                                 <div asp-validation-summary="All" class="text-danger"></div>
 
-                                <form asp-controller="Breed" asp-action="Create" method="post">
+                                <form asp-controller="Breed" asp-action="Create" method="post" id="newBreed">
                                     <input type="hidden" name="typeId" value=@type.Id />
                                     <label for="breedName">Новая порода</label>
                                     <div class="row">
                                         <div class="col col-9 form-group">
-                                            <input name="breedName" class="form-control" placeholder="Название новой породы" />
+                                            <input name="breedName" class="form-control" placeholder="Название новой породы" required />
                                         </div>
 
                                         <div class="col col-3">
@@ -62,7 +62,7 @@
                 <label for="typeName">Новый вид</label>
                 <div class="row">
                     <div class="col col-9 form-group">
-                        <input name="typeName" class="form-control" placeholder="Название нового вида" />
+                        <input name="typeName" class="form-control" placeholder="Название нового вида" required />
                     </div>
 
                     <div class="col col-3">
