@@ -46,7 +46,7 @@ namespace PePets.Models
             else
             {
                 return await _userManager.UpdateAsync(user);
-            }           
+            }
         }
 
         public async Task<IdentityResult> Delete(User user) =>
@@ -63,5 +63,8 @@ namespace PePets.Models
 
         public async Task<bool> IsEmailConfirmedAsync(User user) => 
             await _userManager.IsEmailConfirmedAsync(user);
+
+        public async Task<bool> CheckPasswordAsync(User user, string password) =>
+            await _userManager.CheckPasswordAsync(user, password);
     }
 }

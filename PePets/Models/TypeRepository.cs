@@ -15,10 +15,7 @@ namespace PePets.Models
             _context = context;
         }
 
-        public IQueryable<TypeOfPet> Types
-        {
-            get { return _context.TypesOfPet; }
-        }
+        public IQueryable<TypeOfPet> Types { get { return _context.TypesOfPet; } }
 
         public bool SaveType(TypeOfPet type)
         {
@@ -38,15 +35,10 @@ namespace PePets.Models
             return true;
         }
 
-        public TypeOfPet FindTypeById(Guid id)
-        {
-            return _context.TypesOfPet.SingleOrDefault(x => x.Id == id);
-        }
+        public TypeOfPet FindTypeById(Guid id) => _context.TypesOfPet.SingleOrDefault(x => x.Id == id);
 
-        public TypeOfPet FindTypeByName(string typeName)
-        {
-            return _context.TypesOfPet.SingleOrDefault(x => x.Type == typeName);
-        }
+        public TypeOfPet FindTypeByName(string typeName) => 
+            _context.TypesOfPet.SingleOrDefault(x => x.Type == typeName);
 
         public void DeleteType(TypeOfPet type)
         {

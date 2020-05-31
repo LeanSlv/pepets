@@ -42,7 +42,7 @@
         <!-- Место для кнопок OAuth -->
         <div class="d-flex justify-content-around mt-3">
             <div>
-                <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="Google" asp-route-returnUrl="@Model.ReturnUrl">
+                <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="Google" asp-route-returnUrl="@Model.ReturnUrl" >
                     <button type="submit" class="border-0 bg-transparent">
                         <img src="~/img/social icons/google.svg" alt="Google login" width="40" height="40" />
                     </button>
@@ -50,7 +50,7 @@
             </div>
 
             <div>
-                <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="Facebook" >
+                <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="Facebook" asp-route-returnUrl="@Model.ReturnUrl" >
                     <button type="submit" class="border-0 bg-transparent">
                         <img src="~/img/social icons/facebook.svg" alt="Facebook login" width="40" height="40" />
                     </button>
@@ -66,7 +66,7 @@
             </div>
 
             <div>
-                <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="Odnoklassniki" >
+                <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="Odnoklassniki" asp-route-returnUrl="@Model.ReturnUrl" >
                     <button type="submit" class="border-0 bg-transparent">
                         <img src="~/img/social icons/odnoklassniki.svg" alt="Odnoklassniki login" width="40" height="40" />
                     </button>

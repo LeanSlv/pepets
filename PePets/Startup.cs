@@ -32,7 +32,14 @@ namespace PePets
             services.AddTransient<BreedRepository>();
             services.AddTransient<TypeRepository>();
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>(opts =>
+            {
+                opts.Password.RequiredLength = 6;   // минимальная длина
+                opts.Password.RequireNonAlphanumeric = false;   // требуются ли не алфавитно-цифровые символы
+                opts.Password.RequireLowercase = false; // требуются ли символы в нижнем регистре
+                opts.Password.RequireUppercase = false; // требуются ли символы в верхнем регистре
+                opts.Password.RequireDigit = false; // требуются ли цифры
+            })
                 .AddEntityFrameworkStores<PePetsDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -59,6 +66,8 @@ namespace PePets
                 {
                     FacebookOptions.ClientId = Configuration["FacebookOAuth:ClientId"];
                     FacebookOptions.ClientSecret = Configuration["FacebookOAuth:ClientSecret"];
+                    FacebookOptions.SignInScheme = IdentityConstants.ExternalScheme;
+                    FacebookOptions.BackchannelTimeout = TimeSpan.FromSeconds(60);
 
                     FacebookOptions.Fields.Add("picture.type(large)");
                     FacebookOptions.Events.OnCreatingTicket = (context) =>
@@ -72,13 +81,26 @@ namespace PePets
                         return Task.CompletedTask;
                     };
                 })
-                /*
                 .AddOdnoklassniki("Odnoklassniki", OdnoklassnikiOptions => 
                 {
-                    //OdnoklassnikiOptions.ClientId = Configuration["OdnoklassnikiOAuth:ClientId"];
-                    //OdnoklassnikiOptions.ClientSecret = Configuration["OdnoklassnikiOAuth:ClientSecret"];
+                    OdnoklassnikiOptions.ClientId = Configuration["OdnoklassnikiOAuth:ClientId"];
+                    OdnoklassnikiOptions.ClientSecret = Configuration["OdnoklassnikiOAuth:ClientSecret"];
+                    OdnoklassnikiOptions.PublicSecret = Configuration["OdnoklassnikiOAuth:ApplicationKey"];
+                    OdnoklassnikiOptions.SignInScheme = IdentityConstants.ExternalScheme;
+                    OdnoklassnikiOptions.BackchannelTimeout = TimeSpan.FromSeconds(60);
+
+                    OdnoklassnikiOptions.Scope.Add("GET_EMAIL");
+
+                    OdnoklassnikiOptions.Events.OnCreatingTicket = (context) =>
+                    {
+                        JObject userInfo = JObject.Parse(context.User.ToString());
+
+                        // Получаем URL аватарки пользователя и вносим это в утверждение
+                        context.Identity.AddClaim(new Claim("picture", userInfo.GetValue("pic_3").ToString()));
+
+                        return Task.CompletedTask;
+                    };
                 })
-                */
                 .AddVkontakte("VK", VkOptions =>
                 {
                     VkOptions.ClientId = Configuration["VkOAuth:ClientId"];

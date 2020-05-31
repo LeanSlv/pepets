@@ -37,7 +37,7 @@ namespace PePets.Controllers
                 if (result.Succeeded)
                 {
                     // проверяем, принадлежит ли URL приложению
-                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                    if (!string.IsNullOrEmpty(model.ReturnUrl))
                     {
                         return Redirect(model.ReturnUrl);
                     }
@@ -142,7 +142,7 @@ namespace PePets.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult ExternalLogin(string providerName, string returnUrl = "/")
+        public IActionResult ExternalLogin(string providerName, string returnUrl = null)
         {
             var properties = new AuthenticationProperties
             {
@@ -196,8 +196,11 @@ namespace PePets.Controllers
             saveResult = await _userRepository.SaveUser(user);
             if(saveResult.Succeeded)
                 await _signInManager.SignInAsync(user, false);
-
-            return RedirectToAction("Index", "Home");
+            // проверяем, принадлежит ли URL приложению
+            if (!string.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+            else
+                return RedirectToAction("Index", "Home");
         }
 
         private string GenerateMessageBody(string userName, string callbackUrl)

@@ -16,6 +16,10 @@
 }
 
 /* Слайдер */
+.slick-slide {
+    outline: none;
+}
+
 .advert-review-slider-nav {
     padding: 0px 15px;
 }
@@ -26,6 +30,7 @@
 }
 
 .slider-nav-img {
+    cursor: pointer;
     height: 100px;
     width: 100px;
 }
@@ -36,17 +41,20 @@
     top: 50%;
     z-index: 2;
     font-size: 0;
-    width: 40px;
-    height: 40px;
-    border: 0;
+    width: 30px;
+    height: 30px;
+    border: 1;
+    border-radius: 50%;
 }
 
 .advert-review-slider-nav .slick-arrow.slick-prev {
+    outline: none;
     left: 0;
     background: url('~/img/left-arrow.svg') 0 0 / 100% no-repeat;
 }
 
 .advert-review-slider-nav .slick-arrow.slick-next {
+    outline: none;
     right: 0;
     background: url('~/img/right-arrow.svg') 0 0 / 100% no-repeat;
 }
