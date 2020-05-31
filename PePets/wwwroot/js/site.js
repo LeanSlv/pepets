@@ -3,30 +3,38 @@ var UrlSettings = {
     GetBreedsUrl: '@Url.Action("GetBreeds", "Advert", null, Request.Url.Scheme, null)'
 }
 
-//Плавная прокрутка страницы к тэгу с указанным id
+// Slick слайдер для просмотра фотографий объявления
 jQuery(function ($) {
     $(document).ready(function () {
         console.log("READY!");
    
         $('.advert-review-slider-for').slick({
             slidesToShow: 1,
+            slidesToScroll: 1,
             arrows: false,
             fade: true,
-            cssEase: 'linear',
+            infinite: false,
+            useTransform: true,
             asNavFor: '.advert-review-slider-nav'
         });
-
         $('.advert-review-slider-nav').slick({
-            slidesToShow: 10,
-            slidesToScroll: 1,
+            slidesToShow: 5,
+            slidesToScroll: 5,
             asNavFor: '.advert-review-slider-for',
-            centerMode: true,
-            centerPadding: '5px',
+            dots: false,
+            infinite: false,
             focusOnSelect: true
+        });
+
+        $('a[data-slide]').click(function (e) {
+            e.preventDefault();
+            var slideno = $(this).data('slide');
+            $('.advert-review-slider-nav').slick('slickGoTo', slideno - 1);
         });
     });
 });
 
+//Плавная прокрутка страницы к тэгу с указанным id
 function SlowScroll(id) {
     var offset = $("nav.navbar").height() + 10;
     $("html, body").animate({
