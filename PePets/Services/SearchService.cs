@@ -2,7 +2,6 @@
 using PePets.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace PePets.Services
@@ -26,15 +25,15 @@ namespace PePets.Services
         // Индексирование объявления
         public async Task<IndexResponse> IndexPost(Advert post)
         {
-            // Получение массива базовых слов
-            string[] titleLemmaWords = _morphyService.Lemmatize(post.Title);
-            string[] descriptionLemmaWords = _morphyService.Lemmatize(post.Description);
+            // Получение нормализованной формы для индексации
+            string title = _morphyService.GetGeneralText(post.Title);
+            string description = _morphyService.GetGeneralText(post.Description);
 
             PostIndex postIndex = new PostIndex
             {
                 Id = post.Id,
-                Title = string.Join(' ', titleLemmaWords),
-                Description = string.Join(' ', descriptionLemmaWords)
+                Title = string.Join(' ', title),
+                Description = string.Join(' ', description)
             };
 
             return await _elasticClient.IndexDocumentAsync(postIndex);
@@ -43,11 +42,8 @@ namespace PePets.Services
         // Поиск по объявлениям (возвращает список id найденных объявлений)
         public async Task<List<Guid>> Search(string searchText)
         {
-            // Получение массива базовых слов
-            string[] searchLemmaWords = _morphyService.Lemmatize(searchText);
-
-            // Формирование строки поиска из базовых слов
-            string search = string.Join(' ', searchLemmaWords);
+            // Получение нормализованной формы для поиска
+            string search = _morphyService.GetGeneralText(searchText);
 
             // Запрос поиска
             var response = await _elasticClient.SearchAsync<PostIndex>(s => s

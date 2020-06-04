@@ -8,29 +8,52 @@ namespace PePets.Services
     {
         private MorphAnalyzer morph;
 
-        private Dictionary<string, int> profile = new Dictionary<string, int> 
+        private Dictionary<string, int> profile = new Dictionary<string, int>
         {
-            // Служебные части речи //
-            { "ПРЕДЛ", 0 },
-            { "СОЮЗ", 0 },
-            { "МЕЖД", 0 },
-            { "ВВОДН", 0 },
-            { "ЧАСТ", 0 },
-            { "МС", 0 },
-
-            // Наиболее значимые части речи //
+            // Наиболее значимые части речи
             { "сущ", 5 },
+            { "гл", 5 },
             { "инф_гл", 5 },
             { "прил", 3 },
-            { "нар", 3 },
+            { "кр_прил", 3 },
+            { "комп", 3 },
+            { "прич", 3 },
+            { "кр_прич", 3 },
+            { "деепр", 3 },
+            { "нареч", 3 },
 
-            // Остальные части речи //
-            { "DEFAULT", 1 }
+            // Служебные части речи 
+            { "предл", 0 },
+            { "союз", 0 },
+            { "межд", 0 },
+            { "числ", 0 },
+            { "част", 0 },
+            { "мест", 0 },
+            { "предик", 0 },
+            { "пункт", 0 },
+            { "цифра", 0 },
+            { "рим_цифр", 0 },
+
+            // Неизвестные части речи 
+            { "неизв", 1 }
         };
 
         public MorphyService()
         {
             morph = new MorphAnalyzer(withLemmatization: true);
+        }
+
+        // Преобразование текста к нормализованному виду для индексации и поиска
+        public string GetGeneralText(string text)
+        {
+            // Получение массива базовых слов
+            string[] textLemmas = Lemmatize(text);
+
+            // Очистка массива слов от ненужных слов
+            string[] cleanWords = ClearWords(textLemmas);
+
+            // Формирование строки из базовых слов
+            return string.Join(' ', cleanWords);
         }
 
         // Получение массива слов из текста
@@ -62,6 +85,33 @@ namespace PePets.Services
             }
 
             return lemmaWords.ToArray();
+        }
+
+        // Очистка массива слов от ненужных
+        private string[] ClearWords(string[] words)
+        {
+            List<string> newWords = new List<string>();
+            foreach (string word in words)
+            {
+                if (Validate(word))
+                    newWords.Add(word);
+            }
+
+            return newWords.ToArray();
+        }
+
+        // Валидация слова
+        private bool Validate(string word)
+        {
+            if (word == "купить" || word == "продать")
+                return false;
+
+            var result = morph.Parse(new string[] { word }).ToArray();
+            string partOfSpeech = result[0].BestTag["чр"];
+            if (profile[partOfSpeech] == 0)
+                return false;
+
+            return true;
         }
     }
 }
