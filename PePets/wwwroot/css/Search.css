@@ -33,3 +33,9 @@
 .search_btn:hover {
     color: #019fb6;
 }
+
+.search:hover .search_input,
+.search_input:focus,
+.search_input:valid {
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.25);
+}
