@@ -1,4 +1,4 @@
-﻿@model IQueryable<PePets.Models.Advert>
+﻿@model List<PePets.Models.Advert>
 
 @await Html.PartialAsync("StartPagePartial")
 
@@ -10,8 +10,8 @@
         <div class="row justify-content-center mb-3">
             <div class="col col-sm-10">
                 <div class="search w-100">
-                    <form action="post" >
-                        <input type="text" class="search_input" placeholder="Поиск..." required>
+                    <form method="post" asp-controller="Search" asp-action="Search">
+                        <input type="text" class="search_input" name="input" placeholder="Поиск..." required>
                         <button type="submit" class="search_btn"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
