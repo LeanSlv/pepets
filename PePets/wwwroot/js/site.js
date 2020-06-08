@@ -88,3 +88,19 @@ $('#PetDescription_Type').change(function () {
         }
     });
 });
+
+// Динамический поиск
+$('#search_form').submit(function (event) {
+    event.preventDefault();
+    var input_value = $('.search_input').val();
+
+    $.ajax({
+        type: 'GET',
+        url: '/Search/Search?input=' + input_value,
+        success: function (data) {
+            console.log('YES!');
+            // заменяем содержимое присланным частичным представлением
+            $('#posts').replaceWith(data);
+        }
+    });
+});

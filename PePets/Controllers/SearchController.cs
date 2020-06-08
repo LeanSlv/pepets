@@ -23,7 +23,7 @@ namespace PePets.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Search(string input)
         {
             List<Guid> ids = await _searchService.Search(input);
@@ -32,7 +32,7 @@ namespace PePets.Controllers
             foreach (Guid id in ids)
                 adverts.Add(_advertRepository.GetAdvertById(id));
 
-            return View("/Views/Home/Index.cshtml", adverts);
+            return ViewComponent("AdvertsList", adverts);
         }
     }
 }
