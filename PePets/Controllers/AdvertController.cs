@@ -40,6 +40,9 @@ namespace PePets.Controllers
         public IActionResult AdvertEdit(Guid id)
         {
             Advert advert = id == default ? new Advert() : _advertRepository.GetAdvertById(id);
+            if (User.Identity.Name != advert.User.UserName)
+                return NotFound();
+
             return View(advert);
         }
 
@@ -61,16 +64,13 @@ namespace PePets.Controllers
             advert.PublicationDate = DateTime.Now;
 
             // Кто создал объявление
-            User currentUser = _userRepository.GetCurrentUser(User);
-            advert.User = currentUser;
-            currentUser.Adverts.Add(advert);
+            await _userRepository.AddAdvert(User, advert);
 
-            // Сохранение сущностей в БД
+            // Сохранение объявления в БД
             _advertRepository.SaveAdvert(advert);
-            await _userRepository.SaveUser(currentUser);
 
             // Индексирование данных
-            var result = await _searchService.IndexPost(advert);
+            await _searchService.IndexPost(advert);
 
             return RedirectToAction("Index", "Home");
         }
@@ -92,6 +92,14 @@ namespace PePets.Controllers
             await _searchService.DeleteIndex(id.ToString());
 
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public async Task Like(Guid id)
+        {
+            Advert advert = _advertRepository.GetAdvertById(id);
+            _advertRepository.LikeAdvert(advert);
+            await _userRepository.AddFavoriteAdvert(User, advert);
         }
 
         [HttpGet]

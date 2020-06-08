@@ -17,7 +17,7 @@ namespace PePets.Models
 
         public IQueryable<Advert> GetAdverts()
         {
-            return _context.Adverts.Include(x => x.PetDescription);
+            return _context.Adverts.Include(i => i.PetDescription).Include(i => i.User);
         }
 
         public Advert GetAdvertById(Guid id)
@@ -51,5 +51,11 @@ namespace PePets.Models
             _context.SaveChanges();
         }
 
+        public void LikeAdvert(Advert advert)
+        {
+            advert.NumberOfLikes += 1;
+            _context.Entry(advert).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
     }
 }

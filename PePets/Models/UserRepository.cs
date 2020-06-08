@@ -66,5 +66,19 @@ namespace PePets.Models
 
         public async Task<bool> CheckPasswordAsync(User user, string password) =>
             await _userManager.CheckPasswordAsync(user, password);
+
+        public async Task AddAdvert(ClaimsPrincipal claims, Advert advert)
+        {
+            User user = GetCurrentUser(claims);
+            user.Adverts.Add(advert);
+            await _userManager.UpdateAsync(user);
+        }
+
+        public async Task AddFavoriteAdvert(ClaimsPrincipal claims, Advert advert)
+        {
+            User user = GetCurrentUser(claims);
+            user.FavoriteAdverts.Add(advert);
+            await _userManager.UpdateAsync(user);
+        }
     }
 }
