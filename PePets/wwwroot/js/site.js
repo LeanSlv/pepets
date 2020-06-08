@@ -1,8 +1,3 @@
-// URL настройки
-var UrlSettings = {
-    GetBreedsUrl: '@Url.Action("GetBreeds", "Advert", null, Request.Url.Scheme, null)'
-}
-
 // Slick слайдер дл€ просмотра фотографий объ€влени€
 jQuery(function ($) {
     $(document).ready(function () {
@@ -98,7 +93,6 @@ $('#search_form').submit(function (event) {
         type: 'GET',
         url: '/Search/Search?input=' + input_value,
         success: function (data) {
-            console.log('YES!');
             // замен€ем содержимое присланным частичным представлением
             $('#posts').replaceWith(data);
         }

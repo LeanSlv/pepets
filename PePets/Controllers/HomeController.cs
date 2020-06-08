@@ -20,7 +20,7 @@ namespace PePets.Controllers
         public IActionResult Index()
         {
             var adverts = _advertRepository.GetAdverts();
-            return View(adverts.ToList<Advert>());
+            return View(adverts.ToList());
         }
 
         public IActionResult Privacy()
