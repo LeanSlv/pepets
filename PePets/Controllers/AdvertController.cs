@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using PePets.Services;
 
 namespace PePets.Controllers
 {
@@ -18,12 +19,14 @@ namespace PePets.Controllers
         private readonly UserRepository _userRepository;
         IWebHostEnvironment _appEnvironment;
         private readonly int maxImagesCount;
+        private readonly SearchService _searchService;
 
-        public AdvertController(AdvertRepository advertRepository, UserRepository userRepository, IWebHostEnvironment appEnvironment)
+        public AdvertController(AdvertRepository advertRepository, UserRepository userRepository, IWebHostEnvironment appEnvironment, SearchService searchService)
         {
             _advertRepository = advertRepository;
             _userRepository = userRepository;
             _appEnvironment = appEnvironment;
+            _searchService = searchService;
             maxImagesCount = 10;
         }
 
@@ -66,21 +69,27 @@ namespace PePets.Controllers
             _advertRepository.SaveAdvert(advert);
             await _userRepository.SaveUser(currentUser);
 
+            // Индексирование данных
+            var result = await _searchService.IndexPost(advert);
+
             return RedirectToAction("Index", "Home");
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult DeleteAdvert(Guid id)
+        public async Task<IActionResult> DeleteAdvert(Guid id)
         {
             Advert advertToDelete = _advertRepository.GetAdvertById(id);
 
-            //Удаление изображений с сервера
+            // Удаление изображений с сервера
             if(advertToDelete.Images.Length > 0)
                 DeleteAllImages(advertToDelete.Images);
 
-            //Удаление записи в БД
+            // Удаление записи в БД
             _advertRepository.DeleteAdvert(advertToDelete);
+
+            // Удаление индекса
+            await _searchService.DeleteIndex(id.ToString());
 
             return RedirectToAction("Index", "Home");
         }

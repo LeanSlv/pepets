@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Linq;
 using PePets.Models;
+using PePets.Services;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace PePets
             services.AddTransient<UserRepository>();
             services.AddTransient<BreedRepository>();
             services.AddTransient<TypeRepository>();
+            services.AddSingleton<SearchService>();
 
             services.AddIdentity<User, IdentityRole>(opts =>
             {

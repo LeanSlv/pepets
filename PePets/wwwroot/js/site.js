@@ -1,8 +1,3 @@
-// URL настройки
-var UrlSettings = {
-    GetBreedsUrl: '@Url.Action("GetBreeds", "Advert", null, Request.Url.Scheme, null)'
-}
-
 // Slick слайдер для просмотра фотографий объявления
 jQuery(function ($) {
     $(document).ready(function () {
@@ -85,6 +80,21 @@ $('#PetDescription_Type').change(function () {
         success: function (data) {
             // заменяем содержимое присланным частичным представлением
             $('#PetDescription_Breed').replaceWith(data);
+        }
+    });
+});
+
+// Динамический поиск
+$('#search_form').submit(function (event) {
+    event.preventDefault();
+    var input_value = $('.search_input').val();
+
+    $.ajax({
+        type: 'GET',
+        url: '/Search/Search?input=' + input_value,
+        success: function (data) {
+            // заменяем содержимое присланным частичным представлением
+            $('#posts').replaceWith(data);
         }
     });
 });
