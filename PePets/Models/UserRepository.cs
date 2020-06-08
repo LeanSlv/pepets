@@ -22,7 +22,8 @@ namespace PePets.Models
 
         public User GetCurrentUser(ClaimsPrincipal currentUserClaims)
         {
-            return _context.Users.Include(x => x.Adverts).ThenInclude(x => x.PetDescription).Include(x => x.FavoriteAdverts).ThenInclude(x => x.PetDescription)
+            return _context.Users.Include(x => x.Adverts).ThenInclude(x => x.PetDescription)
+                .Include(x => x.FavoriteAdverts).ThenInclude(x => x.PetDescription)
                 .SingleOrDefault(x => x.UserName == currentUserClaims.Identity.Name);
         }
 
@@ -79,6 +80,19 @@ namespace PePets.Models
             User user = GetCurrentUser(claims);
             user.FavoriteAdverts.Add(advert);
             await _userManager.UpdateAsync(user);
+        }
+
+        public bool IsFavoriteAdvert(ClaimsPrincipal claims, Guid id)
+        {
+            User user = GetCurrentUser(claims);
+            List<Advert> favoriteAdverts = user.FavoriteAdverts;
+            foreach(Advert favoriteAdvert in favoriteAdverts)
+            {
+                if (favoriteAdvert.Id == id)
+                    return true;
+            }
+
+            return false;
         }
     }
 }

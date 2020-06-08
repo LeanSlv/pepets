@@ -1,5 +1,6 @@
 ﻿@model PePets.Models.Advert
 
+@inject PePets.Models.UserRepository _userRepository
 
         <div class="advertCard rounded-25 p-3 mb-3 shadow-on-hover">        
             <a class="block-link" asp-controller="Advert" asp-action="AdvertReview" asp-route-id=@Model.Id></a> 
@@ -42,8 +43,14 @@
                     <div class="crud-block">
                         <div class="btn-crud">
                             <a asp-controller="Advert" asp-action="Like" asp-route-id=@Model.Id class="btn-like text-decoration-none">
-                                <i class="far fa-heart unlike"></i>
-                                <!-- <i class="fas fa-heart like"></i> -->
+                                @if (_userRepository.IsFavoriteAdvert(User, Model.Id))
+                                {
+                                    <i class="fas fa-heart like"></i>
+                                }
+                                else
+                                {
+                                    <i class="far fa-heart unlike"></i>
+                                }
                             </a>    
                         </div>
                         @if (Model.User.UserName == User.Identity.Name)

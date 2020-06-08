@@ -146,6 +146,7 @@
 
                                         @foreach (Advert advert in Model.Adverts)
                                         {
+                                            advert.User = Model;
                                             <div class="col col-11">
                                                 <!-- Карточка объявления -->
                                                 @await Html.PartialAsync("~/Views/Advert/AdvertCard.cshtml", advert)
@@ -155,10 +156,11 @@
                                     </div>
 
                                     <!-- Список понравившихся объявлений -->
-                                    <div class="row justify-content-center d-none" id="likesAdverts">
+                                    <div class="row justify-content-center" id="likesAdverts">
 
                                         @foreach (Advert advert in Model.FavoriteAdverts)
                                         {
+                                            advert.User = Model;
                                             <div class="col col-11">
                                                 <!-- Карточка объявления -->
                                                 @await Html.PartialAsync("~/Views/Advert/AdvertCard.cshtml", advert)

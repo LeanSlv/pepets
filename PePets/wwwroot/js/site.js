@@ -104,9 +104,7 @@ $('.btn-like').click(function (event) {
     event.preventDefault();
     var that = $(this);
     var href = that[0].href;
-    console.log($(this).children());
 
-    
     $.ajax({
         type: 'GET',
         url: href,
