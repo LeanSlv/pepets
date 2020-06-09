@@ -27,8 +27,10 @@ namespace PePets.Models
                 .SingleOrDefault(x => x.UserName == currentUserClaims.Identity.Name);
         }
 
-        public async Task<User> GetUserById(string userId) => 
-            await _userManager.FindByIdAsync(userId);
+        public async Task<User> GetUserById(string userId)
+        {
+            return await _context.Users.Include(i => i.Adverts).ThenInclude(ti => ti.PetDescription).SingleOrDefaultAsync(s => s.Id == userId);
+        }
 
         public async Task<User> GetUserByEmailAsync(string email) =>
             await _userManager.FindByNameAsync(email);

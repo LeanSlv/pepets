@@ -23,10 +23,21 @@ namespace PePets.Controllers
             _advertRepository = advertRepository;
         }
 
-        public IActionResult UserProfile()
+        public async Task<IActionResult> UserProfile(string id = null)
         {
-            User currentUser = _userRepository.GetCurrentUser(User);         
-            return View(currentUser);
+            User user;
+            if(string.IsNullOrEmpty(id))
+            {
+                user = _userRepository.GetCurrentUser(User);
+                ViewBag.CurrentUser = true;
+            }
+            else
+            {
+                user = await _userRepository.GetUserById(id);
+                ViewBag.CurrentUser = false;
+            }
+
+            return View(user);
         }
 
         [HttpPost]

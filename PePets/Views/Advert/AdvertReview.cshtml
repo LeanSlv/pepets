@@ -95,37 +95,41 @@
             <!-- Колонка с информацией о продавце -->
             <div class="col col-4">
                 <div class="rounded-lg shadow">
-                    <div class="row p-2">
-                        <div class="col col-4">
-                            @if (string.IsNullOrEmpty(Model.User.Avatar))
-                            {
-                                <img src="~/img/user.png" alt="user avatar" style="max-height: 100px; max-width: 100px" />
-                            }
-                            else
-                            {
-                                <img src=@Model.User.Avatar alt="user avatar" style="max-height: 100px; max-width: 100px" />
-                            }
+                    <a asp-controller="Users" asp-action="UserProfile" asp-route-id=@Model.User.Id class="text-dark text-decoration-none w-100">
+                        <div class="row p-2">
+
+                            <div class="col col-4">
+                                @if (string.IsNullOrEmpty(Model.User.Avatar))
+                                {
+                                    <img src="~/img/user.png" alt="user avatar" style="max-height: 100px; max-width: 100px" />
+                                }
+                                else
+                                {
+                                    <img src=@Model.User.Avatar alt="user avatar" style="max-height: 100px; max-width: 100px" />
+                                }
+                            </div>
+
+                            <div class="col col-8">
+                                <h5>@Model.User.FirstName @Model.User.SecondName</h5>
+                                <div class="text-center">
+                                    <span>@Model.User.Rating / 5</span>
+                                </div>
+
+                                <div class="progress">
+                                    @{
+                                        int percent = (int)(Convert.ToDouble(Model.User.Rating) / 5.0 * 100.0);
+                                    }
+                                    <div class="progress-bar" role="progressbar" style="width: @percent%" aria-valuenow="@Model.User.Rating" aria-valuemin="0" aria-valuemax="5"></div>
+                                    <div class="progress-bar bg-danger" role="progressbar" style="width: @(100 - percent)%" aria-valuenow="@(5 - Model.User.Rating)" aria-valuemin="0" aria-valuemax="5"></div>
+                                </div>
+
+                                <div>
+                                    <span>На сайте с @Model.User.RegistrationDate.ToString("dd.MM.yyyy") г.</span>
+                                </div>
+                            </div>
+
                         </div>
-
-                        <div class="col col-8">
-                            <h5>@Model.User.FirstName @Model.User.SecondName</h5>
-                            <div class="text-center">
-                                <span>@Model.User.Rating / 5</span>
-                            </div>
-
-                            <div class="progress">
-                                @{
-                                    int percent = (int)(Convert.ToDouble(Model.User.Rating) / 5.0 * 100.0);
-                                 }
-                                <div class="progress-bar" role="progressbar" style="width: @percent%" aria-valuenow="@Model.User.Rating" aria-valuemin="0" aria-valuemax="5"></div>
-                                <div class="progress-bar bg-danger" role="progressbar" style="width: @(100 - percent)%" aria-valuenow="@(5 - Model.User.Rating)" aria-valuemin="0" aria-valuemax="5"></div>
-                            </div>
-
-                            <div>
-                                <span>На сайте с @Model.User.RegistrationDate.ToString("dd.MM.yyyy") г.</span>
-                            </div>
-                        </div>
-                    </div>
+                    </a>
 
                     <div class="text-center p-3">
                         <div class="mb-3">
