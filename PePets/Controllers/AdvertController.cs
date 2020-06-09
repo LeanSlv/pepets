@@ -33,13 +33,17 @@ namespace PePets.Controllers
         public IActionResult AdvertReview(Guid id)
         {
             Advert advert = _advertRepository.GetAdvertById(id);
+            _advertRepository.addViewToAdvert(advert);
             return View(advert);
         }
 
         [Authorize]
         public IActionResult AdvertEdit(Guid id)
         {
-            Advert advert = id == default ? new Advert() : _advertRepository.GetAdvertById(id);
+            if (id == default)
+                return View(new Advert());
+
+            Advert advert = _advertRepository.GetAdvertById(id);
             if (User.Identity.Name != advert.User.UserName)
                 return NotFound();
 

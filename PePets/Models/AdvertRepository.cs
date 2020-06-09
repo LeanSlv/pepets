@@ -64,5 +64,12 @@ namespace PePets.Models
             _context.Entry(advert).State = EntityState.Modified;
             _context.SaveChanges();
         }
+
+        public void addViewToAdvert(Advert advert)
+        {
+            advert.Views += 1;
+            _context.Entry(advert).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
     }
 }

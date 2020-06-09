@@ -63,3 +63,7 @@
 .advertCard:hover .crud-block, .block-link {
     display: block;
 }
+
+.btn-delete {
+    padding: 0;
+}
