@@ -1,5 +1,6 @@
 ﻿@model PePets.Models.Advert
 
+@inject PePets.Models.UserRepository _userRepository
 
         <div class="advertCard rounded-25 p-3 mb-3 shadow-on-hover">        
             <a class="block-link" asp-controller="Advert" asp-action="AdvertReview" asp-route-id=@Model.Id></a> 
@@ -21,7 +22,7 @@
                             <p class="text-truncate">@Model.Description</p>
                         </div>
                         <div class="col-4 text-right">
-                            <h3>@Model.Cost.ToString("c")</h3>
+                            <h3>@Model.Cost <i class="fas fa-ruble-sign"></i></h3>
                         </div>
                     </div>
                     <hr noshade>
@@ -41,21 +42,31 @@
                 <div class="col-1 text-right">
                     <div class="crud-block">
                         <div class="btn-crud">
-                            <a href="#" class="btn-like text-decoration-none">
-                                <i class="far fa-heart"></i>
-                            </a>
+                            <a asp-controller="Advert" asp-action="Like" asp-route-id=@Model.Id class="btn-like text-decoration-none">
+                                @if (User.Identity.IsAuthenticated && _userRepository.IsFavoriteAdvert(User, Model.Id))
+                                {
+                                    <i class="fas fa-heart like"></i>
+                                }
+                                else
+                                {
+                                    <i class="far fa-heart unlike"></i>
+                                }
+                            </a>    
                         </div>
-                        <div class="btn-crud">
-                            <a asp-controller="Advert" asp-action="AdvertEdit" asp-route-id="@Model.Id" class="btn-edit text-decoration-none">
-                                <i class="far fa-edit"></i>
-                            </a>
-                        </div>
-                        <div class="btn-crud">
-                            <form method="post" asp-controller="Advert" asp-action="DeleteAdvert">
-                                <input type="hidden" value="@Model.Id" name="Id" />
-                                <button class="btn-delete border-0 bg-white" type="submit"><i class="far fa-trash-alt"></i></button>
-                            </form>
-                        </div>
+                        @if (Model.User.UserName == User.Identity.Name)
+                        {
+                            <div class="btn-crud">
+                                <a asp-controller="Advert" asp-action="AdvertEdit" asp-route-id=@Model.Id class="btn-edit text-decoration-none">
+                                    <i class="far fa-edit"></i>
+                                </a>
+                            </div>
+                            <div class="btn-crud">
+                                <form method="post" asp-controller="Advert" asp-action="DeleteAdvert">
+                                    <input type="hidden" value=@Model.Id name="Id" />
+                                    <button class="btn-delete border-0 bg-white" type="submit"><i class="far fa-trash-alt"></i></button>
+                                </form>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

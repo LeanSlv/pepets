@@ -38,3 +38,7 @@
     transform: scaleX(0.85);
     transition: transform 250ms ease-in-out;
 }
+
+#likesAdverts {
+    display: none;
+}

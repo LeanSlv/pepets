@@ -28,6 +28,11 @@
     display: none;
 }
 
+.fa-heart.fas {
+    color: rgb(240, 83, 83);
+}
+
+.fas, 
 .far {
     font-size: 22px;
 }
@@ -57,4 +62,8 @@
 
 .advertCard:hover .crud-block, .block-link {
     display: block;
+}
+
+.btn-delete {
+    padding: 0;
 }

@@ -98,3 +98,28 @@ $('#search_form').submit(function (event) {
         }
     });
 });
+
+// Добавление объявления в избранное
+$('.btn-like').click(function (event) {
+    event.preventDefault();
+    var that = $(this);
+    var href = that[0].href;
+
+    $.ajax({
+        type: 'GET',
+        url: href,
+        success: function (data) {
+            if (data) {
+                // Замена на закрашенную иконку
+                that.children(".fa-heart").removeClass("far");
+                that.children(".fa-heart").addClass("fas");
+            }
+            else {
+                // Замена на незакрашенную иконку
+                that.children(".fa-heart").removeClass("fas");
+                that.children(".fa-heart").addClass("far");
+            }
+        }
+    });
+    
+})
