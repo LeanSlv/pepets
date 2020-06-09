@@ -43,7 +43,7 @@
                     <div class="crud-block">
                         <div class="btn-crud">
                             <a asp-controller="Advert" asp-action="Like" asp-route-id=@Model.Id class="btn-like text-decoration-none">
-                                @if (_userRepository.IsFavoriteAdvert(User, Model.Id))
+                                @if (User.Identity.IsAuthenticated && _userRepository.IsFavoriteAdvert(User, Model.Id))
                                 {
                                     <i class="fas fa-heart like"></i>
                                 }

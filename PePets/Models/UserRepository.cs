@@ -82,6 +82,13 @@ namespace PePets.Models
             await _userManager.UpdateAsync(user);
         }
 
+        public async Task DeleteFavoriteAdvert(ClaimsPrincipal claims, Advert advert)
+        {
+            User user = GetCurrentUser(claims);
+            user.FavoriteAdverts.Remove(advert);
+            await _userManager.UpdateAsync(user);
+        }
+
         public bool IsFavoriteAdvert(ClaimsPrincipal claims, Guid id)
         {
             User user = GetCurrentUser(claims);

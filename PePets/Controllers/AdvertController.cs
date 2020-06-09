@@ -95,11 +95,25 @@ namespace PePets.Controllers
         }
 
         [HttpGet]
-        public async Task Like(Guid id)
+        public async Task<bool> Like(Guid id)
         {
             Advert advert = _advertRepository.GetAdvertById(id);
-            _advertRepository.LikeAdvert(advert);
-            await _userRepository.AddFavoriteAdvert(User, advert);
+
+            // Если объявление уже добавленно в избранное,
+            if (_userRepository.IsFavoriteAdvert(User, id))
+            {
+                // то удаляем его,
+                _advertRepository.UnlikeAdvert(advert);
+                await _userRepository.DeleteFavoriteAdvert(User, advert);
+                return false;
+            }
+            else
+            {
+                // иначе добавляем в избранное.
+                _advertRepository.LikeAdvert(advert);
+                await _userRepository.AddFavoriteAdvert(User, advert);
+                return true;
+            }  
         }
 
         [HttpGet]

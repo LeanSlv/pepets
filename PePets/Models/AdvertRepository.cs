@@ -57,5 +57,12 @@ namespace PePets.Models
             _context.Entry(advert).State = EntityState.Modified;
             _context.SaveChanges();
         }
+
+        public void UnlikeAdvert(Advert advert)
+        {
+            advert.NumberOfLikes -= 1;
+            _context.Entry(advert).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
     }
 }
