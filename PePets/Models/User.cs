@@ -17,6 +17,7 @@ namespace PePets.Models
         public DateTime DateOfBirth { get; set; }
         public string AboutMe { get; set; }
         public double Rating { get; set; }
+        public List<User> AlreadyRatedUsers { get; set; }
         public List<Advert> Adverts { get; set; }
         public List<Advert> FavoriteAdverts { get; set; }
     }

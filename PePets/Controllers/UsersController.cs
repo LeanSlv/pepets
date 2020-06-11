@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -128,6 +129,18 @@ namespace PePets.Controllers
                 }
             }
             return PartialView(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Rate(int rating, string userId, string returnUrl = null)
+        {
+            User currentUser = _userRepository.GetCurrentUser(User);
+            User user = await _userRepository.GetUserById(userId);
+
+            await _userRepository.RateUser(rating, user, currentUser);
+
+            return Redirect(returnUrl);
         }
     }
 }

@@ -103,5 +103,42 @@ namespace PePets.Models
 
             return false;
         }
+
+        public async Task<List<User>> GetAlreadyRatedUsers(User user)
+        {
+            User userWithAlreadyRatedUsers = await _context.Users.Include(i => i.AlreadyRatedUsers).SingleOrDefaultAsync(sor => sor.Id == user.Id);
+            
+            return userWithAlreadyRatedUsers.AlreadyRatedUsers;
+        }
+
+        public async Task<bool> CanCurrentUserRate(ClaimsPrincipal currentUserClaims, User user)
+        {
+            User currentUser = GetCurrentUser(currentUserClaims);
+            List<User> alreadyRatedUsers = await GetAlreadyRatedUsers(user);
+
+            foreach (User alreadyRatedUser in alreadyRatedUsers)
+            {
+                if (alreadyRatedUser.Id == currentUser.Id)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public async Task RateUser(int rating, User user, User currentUser)
+        {
+            List<User> alreadyRateUsers = await GetAlreadyRatedUsers(user);
+
+            user.Rating = Math.Round(RecountRating(user.Rating, alreadyRateUsers.Count, rating), 2);
+
+            user.AlreadyRatedUsers.Add(currentUser);
+
+            await _userManager.UpdateAsync(user);
+        }
+
+        private double RecountRating(double oldRating, int countVoters, int newRating)
+        {
+            return (oldRating * countVoters + newRating) / (countVoters + 1);
+        }
     }
 }
