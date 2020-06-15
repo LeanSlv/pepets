@@ -1,8 +1,8 @@
-// Slick слайдер дл€ просмотра фотографий объ€влени€
 jQuery(function ($) {
     $(document).ready(function () {
         console.log("READY!");
-   
+
+        // Slick слайдер дл€ просмотра фотографий объ€влени€
         $('.advert-review-slider-for').slick({
             slidesToShow: 1,
             slidesToScroll: 1,
@@ -25,6 +25,16 @@ jQuery(function ($) {
             e.preventDefault();
             var slideno = $(this).data('slide');
             $('.advert-review-slider-nav').slick('slickGoTo', slideno - 1);
+        });
+
+        // ”добное окно выбора даты
+        $('#input_date').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 1901,
+            locale: {
+                format: 'DD.MM.YYYY'
+            }
         });
     });
 });
@@ -121,5 +131,4 @@ $('.btn-like').click(function (event) {
             }
         }
     });
-    
 })

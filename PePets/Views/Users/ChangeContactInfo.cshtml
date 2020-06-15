@@ -1,0 +1,55 @@
+﻿@model PePets.Models.ChangeContactInfoViewModel
+
+    <div class="form-section rounded shadow">
+        <span class="form-section-title">Контактная информация</span>
+
+        <form action="/" method="POST">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="input-group-underlined">
+                <input type="text" class="input-underlined" asp-for="Location" required>
+                <label class="input-label">Город</label>
+                <span class="input-bar"></span>
+                <span class="input-helper">Введите свой город</span>
+                <span asp-validation-for="Location"></span>
+            </div>
+
+            <div class="input-group-underlined">
+                <input type="text" class="input-underlined" asp-for="PhoneNumber" required>
+                <label class="input-label">Телефон</label>
+                <span class="input-bar"></span>
+                <span class="input-helper">Введите свой номер телефона</span>
+                <span asp-validation-for="PhoneNumber"></span>
+            </div>
+
+            <div class="input-group-underlined">
+                <input type="text" id="input_date" asp-for="DateOfBirth" value="01.01.2000" class="input-underlined">
+                <label class="input-label">Дата рождения</label>
+                <span class="input-bar"></span>
+                <span class="input-helper">Укажите свою дату рождения</span>
+                <span asp-validation-for="DateOfBirth"></span>
+            </div>
+
+            <div class="input-group-underlined">
+                <select class="input-underlined" asp-for="Gender">
+                    <option value=@Enum.Parse(typeof(Genders), "NotChosen")>Выберите пол</option>
+                    <option value=@Enum.Parse(typeof(Genders), "Male")>Мужской</option>
+                    <option value=@Enum.Parse(typeof(Genders), "Female")>Женский</option>
+                </select>
+                <label class="input-label">Пол</label>
+                <span class="input-bar"></span>
+                <span class="input-helper">Введите свой пол</span>
+                <span asp-validation-for="Gender"></span>
+            </div>
+
+            <div class="input-group-underlined">
+                <textarea class="textarea-underlined" placeholder=" " asp-for="AboutMe"></textarea>
+                <label class="input-label">Обо мне</label>
+                <span class="input-bar"></span>
+                <span class="input-helper">Расскажите о себе</span>
+                <span asp-validation-for="AboutMe"></span>
+            </div>
+
+            <button type="submit" class="btn btn-outline-dark">Сохранить</button>
+        </form>
+    </div>

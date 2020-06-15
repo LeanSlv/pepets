@@ -24,6 +24,7 @@ namespace PePets.Controllers
             _advertRepository = advertRepository;
         }
 
+        [HttpGet]
         public async Task<IActionResult> UserProfile(string id = null)
         {
             User user;
@@ -39,6 +40,17 @@ namespace PePets.Controllers
             }
 
             return View(user);
+        }
+
+        [HttpGet]
+        public IActionResult EditProfile()
+        {
+            User currentUser = _userRepository.GetCurrentUser(User);
+            if (currentUser == null)
+                return NotFound();
+
+
+            return View(currentUser);
         }
 
         [HttpPost]
