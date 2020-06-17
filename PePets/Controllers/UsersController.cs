@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using PePets.Models;
 
 namespace PePets.Controllers
@@ -25,6 +24,7 @@ namespace PePets.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> UserProfile(string id = null)
         {
             User user;
@@ -43,6 +43,7 @@ namespace PePets.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult EditProfile()
         {
             User currentUser = _userRepository.GetCurrentUser(User);
@@ -53,57 +54,115 @@ namespace PePets.Controllers
             return View(currentUser);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> EditProfile(EditUserProfileViewModel model, IFormFile avatar)
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> ChangePersonalData(string id)
         {
-            if(ModelState.IsValid)
+            User user = await _userRepository.GetUserById(id);
+            if (user == null)
+                return NotFound();
+
+            ChangePersonalDataViewModel model = new ChangePersonalDataViewModel { Id = user.Id };
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChangePersonalData(ChangePersonalDataViewModel changePersonalData, IFormFile upload_avatar)
+        {
+            if (ModelState.IsValid)
             {
-                User user = await _userRepository.GetUserById(model.Id);
+                User user = await _userRepository.GetUserById(changePersonalData.Id);
                 if(user != null)
                 {
-                    user.FirstName = model.FirstName;
-                    user.SecondName = model.SecondName;
-                    user.Gender = model.Gender;
-                    user.Location = model.Location;
-                    user.DateOfBirth = model.DateOfBirth;
-                    user.AboutMe = model.AboutMe;
+                    user.FirstName = changePersonalData.FirstName;
+                    user.SecondName = changePersonalData.SecondName;
 
-                    if(avatar != null)
+                    if(upload_avatar != null)
                     {
-                        // Добавление аватарки
+                        // Удаление старой аватарки
+                        if (user.Avatar.Contains("/usersFiles/avatars/"))
+                        {
+                            string directoryName = Path.GetDirectoryName(_appEnvironment.WebRootPath + user.Avatar);
+                            try
+                            {
+                                Directory.Delete(directoryName, true);
+                            }
+                            catch (DirectoryNotFoundException dirNotFound)
+                            {
+                                throw new Exception(dirNotFound.Message);
+                            }
+                        }
+
+                        // Добавление новой аватарки
                         using (var fileStream = new FileStream($"{_appEnvironment.WebRootPath}/usersFiles/avatars/avatar_{user.Id}.png", FileMode.Create, FileAccess.Write))
                         {
-                            avatar.CopyTo(fileStream);
+                            upload_avatar.CopyTo(fileStream);
                             user.Avatar = $"/usersFiles/avatars/avatar_{user.Id}.png";
                         }
-                    } 
+                    }
 
                     var result = await _userRepository.SaveUser(user);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("UserProfile");
+                        return RedirectToAction("EditProfile");
                     }
+
                     foreach (var error in result.Errors)
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
             }
-            return View(model);
-        }
 
-        [HttpPost]
-        public async Task<ActionResult> Delete(string id)
-        {
-            User user = await _userRepository.GetUserById(id);
-            if (user != null)
-            {
-                var result = await _userRepository.Delete(user);
-            }
-            return RedirectToAction("Index", "Roles");
+            return PartialView(changePersonalData);
         }
 
         [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> ChangeContactInfo(string id)
+        {
+            User user = await _userRepository.GetUserById(id);
+            if (user == null)
+                return NotFound();
+
+            ChangeContactInfoViewModel model = new ChangeContactInfoViewModel { Id = user.Id };
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChangeContactInfo(ChangeContactInfoViewModel changeContactInfo)
+        {
+            if(ModelState.IsValid)
+            {
+                User user = await _userRepository.GetUserById(changeContactInfo.Id);
+                if(user != null)
+                {
+                    user.Location = changeContactInfo.Location;
+                    user.PhoneNumber = changeContactInfo.PhoneNumber;
+                    user.Gender = changeContactInfo.Gender;
+                    user.DateOfBirth = changeContactInfo.DateOfBirth;
+                    user.AboutMe = changeContactInfo.AboutMe;
+
+                    var result = await _userRepository.SaveUser(user);
+                    if(result.Succeeded)
+                    {
+                        RedirectToAction("EditProfile");
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
+
+            return PartialView(changeContactInfo);
+        }
+
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> ChangePassword(string id)
         {
             User user = await _userRepository.GetUserById(id);
@@ -115,17 +174,18 @@ namespace PePets.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel changePassword)
         {
             if (ModelState.IsValid)
             {
-                User user = await _userRepository.GetUserById(model.Id);
+                User user = await _userRepository.GetUserById(changePassword.Id);
                 if (user != null)
                 {
-                    var result = await _userRepository.ChangePassword(user, model.OldPassword, model.NewPassword);
+                    var result = await _userRepository.ChangePassword(user, changePassword.OldPassword, changePassword.NewPassword);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("UserProfile", "Users");
+                        return RedirectToAction("EditProfile");
                     }
                     else
                     {
@@ -140,7 +200,19 @@ namespace PePets.Controllers
                     ModelState.AddModelError(string.Empty, "Пользователь не найден");
                 }
             }
-            return PartialView(model);
+            return PartialView(changePassword);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult> Delete(string id)
+        {
+            User user = await _userRepository.GetUserById(id);
+            if (user != null)
+            {
+                var result = await _userRepository.Delete(user);
+            }
+            return RedirectToAction("Index", "Roles");
         }
 
         [HttpPost]

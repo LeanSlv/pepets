@@ -132,3 +132,11 @@ $('.btn-like').click(function (event) {
         }
     });
 })
+
+// Замена аватарки на странице редактирования профиля
+$('#upload-avatar').change(function () {
+    let avatar = this.files[0];
+    let image_url = window.URL.createObjectURL(avatar);
+    let img = '<img src=' + image_url + ' height="200" width="200" id="change_avatar" />'
+    $('#change_avatar').replaceWith(img);
+})

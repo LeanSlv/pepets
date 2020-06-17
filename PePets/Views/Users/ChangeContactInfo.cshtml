@@ -3,7 +3,7 @@
     <div class="form-section rounded shadow">
         <span class="form-section-title">Контактная информация</span>
 
-        <form action="/" method="POST">
+        <form asp-controller="Users" asp-action="ChangeContactInfo" method="POST">
             <input type="hidden" asp-for="Id" />
 
             <div class="input-group-underlined">
