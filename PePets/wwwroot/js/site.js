@@ -140,3 +140,17 @@ $('#upload-avatar').change(function () {
     let img = '<img src=' + image_url + ' height="200" width="200" id="change_avatar" />'
     $('#change_avatar').replaceWith(img);
 })
+
+// switch для номера телефона на странице создания и редактирования объявления
+$('#phoneSwitch').change(function (event) {
+    if ($(this).is(':checked')) {
+        $('#inputPhone').attr('disabled', true);
+        $('#countries_phone').attr('disabled', true);
+    }
+    else {
+        $('#inputPhone').removeAttr('disabled', false);
+        $('#countries_phone').removeAttr('disabled', false);
+    }
+
+    
+});

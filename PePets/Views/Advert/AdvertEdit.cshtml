@@ -147,16 +147,26 @@
                         </div>
 
                         <div class="col col-10 form-group">
+
+                            <div class="row mb-1">
+                                <div class="col col-5">
+                                    <div class="custom-control custom-switch p-0">
+                                        <input type="checkbox" class="custom-control-input" id="phoneSwitch" name="phoneNumberSwitch">
+                                        <label class="custom-control-label" for="phoneSwitch">Указать мой телефон из профиля</label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-row">
                                 <div class="col-2">
                                     <select id="countries_phone" class="form-control bfh-countries" data-country="RU"></select>
                                 </div>
 
                                 <div class="col-3">
-                                    <input type="text" asp-for="PhoneNumber" class="form-control bfh-phone" data-country="countries_phone">
+                                    <input type="text" asp-for="PhoneNumber" class="form-control bfh-phone" data-country="countries_phone" id="inputPhone">
                                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                 </div>
-                            </div>               
+                            </div>
                         </div>
                     </div>
 
