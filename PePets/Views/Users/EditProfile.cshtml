@@ -1,0 +1,48 @@
+﻿@model PePets.Models.User
+
+    <div class="container">
+        <div class="row">
+            <!-- Левая колонка с пунктами меню -->
+            <div class="col col-2">
+                <div class="list-group list-group-flush shadow">
+                    <a class="list-group-item list-group-item-action" asp-action="UserProfile" asp-controller="Users">Профиль</a>
+                    <a class="list-group-item list-group-item-action" href="#">Сообщения</a>
+                    <a class="list-group-item list-group-item-action active" asp-action="EditProfile" asp-controller="Users">Настройки</a>
+                </div>
+            </div>
+
+            <div class="col col-10">
+                <div class="row justify-content-center">
+                    <div class="col col-12">
+                        @await Html.PartialAsync("ChangePersonalData", new ChangePersonalDataViewModel
+                        {
+                            Id = Model.Id,
+                            Avatar = Model.Avatar,
+                            FirstName = Model.FirstName,
+                            SecondName = Model.SecondName
+                        })
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col col-12">
+                        @await Html.PartialAsync("ChangeContactInfo", new ChangeContactInfoViewModel
+                        {
+                            Id = Model.Id,
+                            Location = Model.Location,
+                            PhoneNumber = Model.PhoneNumber,
+                            DateOfBirth = Model.DateOfBirth,
+                            Gender = Model.Gender,
+                            AboutMe = Model.AboutMe
+                        })
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col col-12">
+                        @await Html.PartialAsync("ChangePassword", new ChangePasswordViewModel { Id = Model.Id })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

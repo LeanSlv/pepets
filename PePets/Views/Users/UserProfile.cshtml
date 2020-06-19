@@ -4,280 +4,260 @@
 
 <div class="container">
     <div class="row">
+        <!-- Левая колонка с пунктами меню -->
+        <div class="col col-2">
+            <div class="list-group list-group-flush shadow">
+                @if (ViewBag.CurrentUser)
+                {
+                    <a class="list-group-item list-group-item-action active" asp-action="UserProfile" asp-controller="Users">Профиль</a>
+                }
+                else
+                {
+                    <a class="list-group-item list-group-item-action" asp-action="UserProfile" asp-controller="Users">Профиль</a>
+                }
 
-        @if (ViewBag.CurrentUser)
-        {
-            <!-- Левая колонка с пунктами меню -->
-            <div class="col col-2">
-                <div class="list-group list-group-flush shadow" id="list-tab" role="tablist">
-                    <a class="list-group-item list-group-item-action active" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Профиль</a>
-                    <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Сообщения</a>
-                    <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Настройки</a>
-                </div>
+                <a class="list-group-item list-group-item-action" href="#">Сообщения</a>
+                <a class="list-group-item list-group-item-action" asp-action="EditProfile" asp-controller="Users">Настройки</a>
             </div>
-        }
-        else
-        {
-            <div class="col col-2"></div>
-        }
+        </div>
+        
         <div class="col col-10">
-            <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
-                    <div class="row">
-                        <!-- Средняя колонка для аватарки и диалогов под ней -->
-                        <div class="col col-3">
-                            <div class="mb-3 rounded-lg shadow">
-                                @if (string.IsNullOrEmpty(Model.Avatar))
+            <div class="row">
+                <!-- Средняя колонка для аватарки и диалогов под ней -->
+                <div class="col col-3">
+                    <div class="mb-3 rounded-lg shadow">
+                        @if (string.IsNullOrEmpty(Model.Avatar))
+                        {
+                            <img src="~/img/user.png" class="img-thumbnail w-100 h-100">
+                        }
+                        else
+                        {
+                            <img src=@Model.Avatar class="img-thumbnail w-100 h-100">
+                        }
+
+                    </div>
+
+                    <!-- Поле рейтинга -->
+                    <div class="border rounded-lg text-center mb-3 rating shadow">
+                        <h5>Рейтинг</h5>
+
+                        <div>
+                            <span>@Model.Rating / 5</span>
+                        </div>
+
+                        <div class="p-1">
+                            <div class="progress">
+                                @{
+                                    int percent = (int)(Convert.ToDouble(Model.Rating) / 5.0 * 100.0);
+                                }
+                                <div class="progress-bar" role="progressbar" style="width: @percent%" aria-valuenow="@Model.Rating" aria-valuemin="0" aria-valuemax="5"></div>
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: @(100 - percent)%" aria-valuenow="@(5 - Model.Rating)" aria-valuemin="0" aria-valuemax="5"></div>
+                            </div>
+                        </div>
+
+                        @if (User.Identity.IsAuthenticated &&
+                           !ViewBag.CurrentUser &&
+                           await _userRepository.CanCurrentUserRate(User, Model))
+                        {
+                            <div class="m-2">
+                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#ratingModal">
+                                    Оценить продавца
+                                </button>
+                            </div>
+
+                            <!-- Модальное окно для оценки продавца -->
+                            <div class="modal fade" id="ratingModal" tabindex="-1" role="dialog" aria-labelledby="rating" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="rating">Оцените продавца</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                        <form method="post" asp-controller="Users" asp-action="Rate">
+                                            <input type="hidden" name="returnUrl" value=@Context.Request.GetDisplayUrl() />
+                                            <input type="hidden" name="userId" value=@Model.Id />
+
+                                            <div class="modal-body d-flex justify-content-center">
+                                                <fieldset class="modal__rating">
+                                                    <div class="rating__group">
+                                                        <input class="rating__input" type="radio" name="rating" id="rating-1" value="1" checked>
+                                                        <label class="rating__star" for="rating-1" aria-label="Ужасно"></label>
+
+                                                        <input class="rating__input" type="radio" name="rating" id="rating-2" value="2">
+                                                        <label class="rating__star" for="rating-2" aria-label="Сносно"></label>
+
+                                                        <input class="rating__input" type="radio" name="rating" id="rating-3" value="3">
+                                                        <label class="rating__star" for="rating-3" aria-label="Нормально"></label>
+
+                                                        <input class="rating__input" type="radio" name="rating" id="rating-4" value="4">
+                                                        <label class="rating__star" for="rating-4" aria-label="Хорошо"></label>
+
+                                                        <input class="rating__input" type="radio" name="rating" id="rating-5" value="5">
+                                                        <label class="rating__star" for="rating-5" aria-label="Отлично"></label>
+
+                                                        <div class="rating__focus"></div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Оценить</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    @if (ViewBag.CurrentUser)
+                    {
+                        <!-- Колонка с диалогами (максиум 5 штук) -->
+                        <div class="border rounded-lg text-center dialogs shadow">
+                            <h5>Диалоги</h5>
+
+                            <!-- Диалог -->
+                            <div class="border rounded-25 mr-2 ml-2 d-flex justify-content-center mb-2 shadow-on-hover">
+                                <div class="row w-100 align-content-between p-1">
+                                    <div class="col col-3 p-0">
+                                        <img src="~/img/user.png" class="dialogs-avatar" height="50" width="50">
+                                    </div>
+
+                                    <div class="col col-9 text-truncate">
+                                        <span class="font-weight-bold">Имя фамилия</span>
+                                        <br>
+                                        <span class="font-weight-light">Сообщение Сообщение Сообщение</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Диалог -->
+                            <div class="border rounded-25 mr-2 ml-2 d-flex justify-content-center mb-2 shadow-on-hover">
+                                <div class="row w-100 align-content-between p-1">
+                                    <div class="col col-3 p-0">
+                                        <img src="~/img/user.png" class="dialogs-avatar" height="50" width="50">
+                                    </div>
+
+                                    <div class="col col-9 text-truncate">
+                                        <span class="font-weight-bold">Имя фамилия</span>
+                                        <br>
+                                        <span class="font-weight-light">Сообщение Сообщение Сообщение</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Диалог -->
+                            <div class="border rounded-25 mr-2 ml-2 d-flex justify-content-center mb-2 shadow-on-hover">
+                                <div class="row w-100 align-content-between p-1">
+                                    <div class="col col-3 p-0">
+                                        <img src="~/img/user.png" class="dialogs-avatar" height="50" width="50">
+                                    </div>
+
+                                    <div class="col col-9 text-truncate">
+                                        <span class="font-weight-bold">Имя фамилия</span>
+                                        <br>
+                                        <span class="font-weight-light">Сообщение Сообщение Сообщение</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    }
+                </div>
+
+                <!-- Правая колонка для основной информации -->
+                <div class="col col-9">
+                    <!-- Дополнительная информация -->
+                    <div class="mb-3 p-2 rounded-lg shadow">
+                        <h1>@Model.FirstName @Model.SecondName</h1>
+                        <div class="row mb-2">
+                            <div class="col col-3 text-muted">На сайте с </div>
+                            <div class="col col-9">@Model.RegistrationDate.ToString("dd.MM.yyyy") г.</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col col-3 text-muted">Город: </div>
+                            <div class="col col-9">@Model.Location</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col col-3 text-muted">Дата рождения: </div>
+                            <div class="col col-9">@Model.DateOfBirth.ToString("dd.MM.yyyy") г.</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col col-3 text-muted">Обо мне: </div>
+                            <div class="col col-9">
+                                <p>@Model.AboutMe</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Список объявлений (мои объявления и понравившиеся) -->
+                    <div class="rounded-lg shadow">
+
+                        <!-- Кнопки выбора -->
+                        <div class="mb-3">
+                            <div class="row text-center list-adverts-btn">
+                                @if (ViewBag.CurrentUser)
                                 {
-                                    <img src="~/img/user.png" class="img-thumbnail w-100 h-100">
+                                    <div class="col col-6 p-2">
+                                        <a class="text-decoration-none text-dark adverts-link-active" href="javascript://0" id="myAdvertsLink" onclick="LoadMyAdverts()">Мои объявления</a>
+                                    </div>
+
+                                    <div class="col col-6 p-2">
+                                        <a class="text-decoration-none text-dark border-bottom-animation" href="javascript://0" id="likesAdvertsLink" onclick="LoadLikesAdverts()">Понравившиеся объявления</a>
+                                    </div>
                                 }
                                 else
                                 {
-                                    <img src=@Model.Avatar class="img-thumbnail w-100 h-100">
-                                }
-
-                            </div>
-
-                            <!-- Поле рейтинга -->
-                            <div class="border rounded-lg text-center mb-3 rating shadow">
-                                <h5>Рейтинг</h5>
-
-                                <div>
-                                    <span>@Model.Rating / 5</span>
-                                </div>
-
-                                <div class="p-1">
-                                    <div class="progress">
-                                        @{
-                                            int percent = (int)(Convert.ToDouble(Model.Rating) / 5.0 * 100.0);
-                                        }
-                                        <div class="progress-bar" role="progressbar" style="width: @percent%" aria-valuenow="@Model.Rating" aria-valuemin="0" aria-valuemax="5"></div>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: @(100 - percent)%" aria-valuenow="@(5 - Model.Rating)" aria-valuemin="0" aria-valuemax="5"></div>
-                                    </div>
-                                </div>
-
-                                @if (User.Identity.IsAuthenticated && 
-                                    !ViewBag.CurrentUser && 
-                                    await _userRepository.CanCurrentUserRate(User, Model))
-                                {
-                                    <div class="m-2">
-                                        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#ratingModal">
-                                            Оценить продавца
-                                        </button>
-                                    </div>
-
-                                    <!-- Модальное окно для оценки продавца -->
-                                    <div class="modal fade" id="ratingModal" tabindex="-1" role="dialog" aria-labelledby="rating" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="rating">Оцените продавца</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-
-                                                <form method="post" asp-controller="Users" asp-action="Rate">
-                                                    <input type="hidden" name="returnUrl" value=@Context.Request.GetDisplayUrl() />
-                                                    <input type="hidden" name="userId" value=@Model.Id />
-
-                                                    <div class="modal-body d-flex justify-content-center">
-                                                        <fieldset class="modal__rating">
-                                                            <div class="rating__group">
-                                                                <input class="rating__input" type="radio" name="rating" id="rating-1" value="1" checked>
-                                                                <label class="rating__star" for="rating-1" aria-label="Ужасно"></label>
-
-                                                                <input class="rating__input" type="radio" name="rating" id="rating-2" value="2">
-                                                                <label class="rating__star" for="rating-2" aria-label="Сносно"></label>
-
-                                                                <input class="rating__input" type="radio" name="rating" id="rating-3" value="3">
-                                                                <label class="rating__star" for="rating-3" aria-label="Нормально"></label>
-
-                                                                <input class="rating__input" type="radio" name="rating" id="rating-4" value="4">
-                                                                <label class="rating__star" for="rating-4" aria-label="Хорошо"></label>
-
-                                                                <input class="rating__input" type="radio" name="rating" id="rating-5" value="5">
-                                                                <label class="rating__star" for="rating-5" aria-label="Отлично"></label>
-
-                                                                <div class="rating__focus"></div>
-                                                            </div>
-                                                        </fieldset>
-                                                    </div>
-
-                                                    <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-primary">Оценить</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
+                                    <div class="col col-12 p-2">
+                                        <span class="adverts-link-active">Объявления</span>
                                     </div>
                                 }
                             </div>
+                        </div>
 
-                            @if (ViewBag.CurrentUser)
+                        <!-- Список объявлений пользователя -->
+                        <div class="row justify-content-center" id="myAdverts">
+
+                            @foreach (Advert advert in Model.Adverts)
                             {
-                                <!-- Колонка с диалогами (максиум 5 штук) -->
-                                <div class="border rounded-lg text-center dialogs shadow">
-                                    <h5>Диалоги</h5>
-
-                                    <!-- Диалог -->
-                                    <div class="border rounded-25 mr-2 ml-2 d-flex justify-content-center mb-2 shadow-on-hover">
-                                        <div class="row w-100 align-content-between p-1">
-                                            <div class="col col-3 p-0">
-                                                <img src="~/img/user.png" class="dialogs-avatar" height="50" width="50">
-                                            </div>
-
-                                            <div class="col col-9 text-truncate">
-                                                <span class="font-weight-bold">Имя фамилия</span>
-                                                <br>
-                                                <span class="font-weight-light">Сообщение Сообщение Сообщение</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Диалог -->
-                                    <div class="border rounded-25 mr-2 ml-2 d-flex justify-content-center mb-2 shadow-on-hover">
-                                        <div class="row w-100 align-content-between p-1">
-                                            <div class="col col-3 p-0">
-                                                <img src="~/img/user.png" class="dialogs-avatar" height="50" width="50">
-                                            </div>
-
-                                            <div class="col col-9 text-truncate">
-                                                <span class="font-weight-bold">Имя фамилия</span>
-                                                <br>
-                                                <span class="font-weight-light">Сообщение Сообщение Сообщение</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Диалог -->
-                                    <div class="border rounded-25 mr-2 ml-2 d-flex justify-content-center mb-2 shadow-on-hover">
-                                        <div class="row w-100 align-content-between p-1">
-                                            <div class="col col-3 p-0">
-                                                <img src="~/img/user.png" class="dialogs-avatar" height="50" width="50">
-                                            </div>
-
-                                            <div class="col col-9 text-truncate">
-                                                <span class="font-weight-bold">Имя фамилия</span>
-                                                <br>
-                                                <span class="font-weight-light">Сообщение Сообщение Сообщение</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                advert.User = Model;
+                                <div class="col col-11">
+                                    <!-- Карточка объявления -->
+                                    @await Html.PartialAsync("~/Views/Advert/AdvertCard.cshtml", advert)
                                 </div>
-
                             }
+
                         </div>
 
-                        <!-- Правая колонка для основной информации -->
-                        <div class="col col-9">
-                            <!-- Дополнительная информация -->
-                            <div class="mb-3 p-2 rounded-lg shadow">
-                                <h1>@Model.FirstName @Model.SecondName</h1>
-                                <div class="row mb-2">
-                                    <div class="col col-3 text-muted">На сайте с </div>
-                                    <div class="col col-9">@Model.RegistrationDate.ToString("dd.MM.yyyy") г.</div>
-                                </div>
+                        @if (ViewBag.CurrentUser)
+                        {
+                            <!-- Список понравившихся объявлений -->
+                            <div class="row justify-content-center" id="likesAdverts">
 
-                                <div class="row mb-2">
-                                    <div class="col col-3 text-muted">Город: </div>
-                                    <div class="col col-9">@Model.Location</div>
-                                </div>
-
-                                <div class="row mb-2">
-                                    <div class="col col-3 text-muted">Дата рождения: </div>
-                                    <div class="col col-9">@Model.DateOfBirth.ToString("dd.MM.yyyy") г.</div>
-                                </div>
-
-                                <div class="row mb-2">
-                                    <div class="col col-3 text-muted">Обо мне: </div>
-                                    <div class="col col-9">
-                                        <p>@Model.AboutMe</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Список объявлений (мои объявления и понравившиеся) -->
-                            <div class="rounded-lg shadow">
-
-                                <!-- Кнопки выбора -->
-                                <div class="mb-3">
-                                    <div class="row text-center list-adverts-btn">
-                                        @if (ViewBag.CurrentUser)
-                                        {
-                                            <div class="col col-6 p-2">
-                                                <a class="text-decoration-none text-dark adverts-link-active" href="javascript://0" id="myAdvertsLink" onclick="LoadMyAdverts()">Мои объявления</a>
-                                            </div>
-
-                                            <div class="col col-6 p-2">
-                                                <a class="text-decoration-none text-dark border-bottom-animation" href="javascript://0" id="likesAdvertsLink" onclick="LoadLikesAdverts()">Понравившиеся объявления</a>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="col col-12 p-2">
-                                                <span class="adverts-link-active">Объявления</span>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-
-                                <!-- Список объявлений пользователя -->
-                                <div class="row justify-content-center" id="myAdverts">
-
-                                    @foreach (Advert advert in Model.Adverts)
-                                    {
-                                        advert.User = Model;
-                                        <div class="col col-11">
-                                            <!-- Карточка объявления -->
-                                            @await Html.PartialAsync("~/Views/Advert/AdvertCard.cshtml", advert)
-                                        </div>
-                                    }
-
-                                </div>
-
-                                @if (ViewBag.CurrentUser)
+                                @foreach (Advert advert in Model.FavoriteAdverts)
                                 {
-                                    <!-- Список понравившихся объявлений -->
-                                    <div class="row justify-content-center" id="likesAdverts">
-
-                                        @foreach (Advert advert in Model.FavoriteAdverts)
-                                        {
-                                            advert.User = Model;
-                                            <div class="col col-11">
-                                                <!-- Карточка объявления -->
-                                                @await Html.PartialAsync("~/Views/Advert/AdvertCard.cshtml", advert)
-                                            </div>
-                                        }
-
+                                    advert.User = Model;
+                                    <div class="col col-11">
+                                        <!-- Карточка объявления -->
+                                        @await Html.PartialAsync("~/Views/Advert/AdvertCard.cshtml", advert)
                                     </div>
                                 }
+
                             </div>
-
-                        </div>
-
+                        }
                     </div>
+
                 </div>
 
-                @if (ViewBag.CurrentUser)
-                {
-                    <!-- Страница сообщений -->
-                    <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
-                        <div class="text-center text-muted display-4">
-                            Messages <br />
-                            Coming soon...
-                        </div>
-                    </div>
-
-                    <!-- Страница настроек -->
-                    <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
-                        @await Component.InvokeAsync("EditProfile", new EditUserProfileViewModel() { Id = Model.Id })
-                    </div>
-                }
             </div>
         </div>
-
     </div>
 </div>
