@@ -54,16 +54,23 @@ namespace PePets.Controllers
         [RequestSizeLimit(31457280)] // 30 Мб
         public async Task<IActionResult> AdvertEdit(Advert advert, string phoneNumberSwitch, IFormFileCollection images)
         {
+            if (phoneNumberSwitch == "on")
+            {
+                User user = _userRepository.GetCurrentUser(User);
+                if (string.IsNullOrEmpty(user.PhoneNumber))
+                {
+                    ModelState.AddModelError(nameof(advert.PhoneNumber), "В вашем профиле не указан номер телефона, заполните поле самостоятельно");
+                }
+                else
+                {
+                    advert.PhoneNumber = user.PhoneNumber;
+                }
+            }
+
             if (images.Count > maxImagesCount)
                 ModelState.AddModelError(nameof(advert.Images), "Нельзя загружать больше 10 изображений");
             if (!ModelState.IsValid)
                 return View(advert);
-
-            if(phoneNumberSwitch == "on")
-            {
-                User user = _userRepository.GetCurrentUser(User);
-                advert.PhoneNumber = user.PhoneNumber;
-            }
 
             _advertRepository.SaveAdvert(advert);
 
