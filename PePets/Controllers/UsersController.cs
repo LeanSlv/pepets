@@ -83,10 +83,10 @@ namespace PePets.Controllers
                         // Удаление старой аватарки
                         if (user.Avatar.Contains("/usersFiles/avatars/"))
                         {
-                            string directoryName = Path.GetDirectoryName(_appEnvironment.WebRootPath + user.Avatar);
+                            string directoryName = Path.GetDirectoryName(_appEnvironment.WebRootPath + user.Avatar);                          
                             try
                             {
-                                Directory.Delete(directoryName, true);
+                                System.IO.File.Delete(directoryName);
                             }
                             catch (DirectoryNotFoundException dirNotFound)
                             {
