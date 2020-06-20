@@ -67,8 +67,12 @@ namespace PePets.Controllers
                 }
             }
 
+            if(string.IsNullOrEmpty(advert.PhoneNumber) || advert.PhoneNumber.Length < 12)
+                ModelState.AddModelError(nameof(advert.PhoneNumber), "Укажите номер телефона");
+
             if (images.Count > maxImagesCount)
                 ModelState.AddModelError(nameof(advert.Images), "Нельзя загружать больше 10 изображений");
+
             if (!ModelState.IsValid)
                 return View(advert);
 

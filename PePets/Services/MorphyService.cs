@@ -46,6 +46,9 @@ namespace PePets.Services
         // Преобразование текста к нормализованному виду для индексации и поиска
         public string GetGeneralText(string text)
         {
+            if (string.IsNullOrEmpty(text))
+                return string.Empty;
+
             // Получение массива базовых слов
             string[] textLemmas = Lemmatize(text);
 
