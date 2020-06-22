@@ -119,13 +119,14 @@ namespace PePets.Controllers
         public async Task<bool> Like(Guid id)
         {
             Advert advert = _advertRepository.GetAdvertById(id);
+            User currentUser = _userRepository.GetCurrentUser(User);
 
             // Если объявление уже добавленно в избранное,
             if (_userRepository.IsFavoriteAdvert(User, id))
             {
                 // то удаляем его,
                 _advertRepository.UnlikeAdvert(advert);
-                await _userRepository.DeleteFavoriteAdvert(User, advert);
+                await _userRepository.DeleteFavoriteAdvert(currentUser, advert);
                 return false;
             }
             else

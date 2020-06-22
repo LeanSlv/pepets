@@ -203,13 +203,20 @@ namespace PePets.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
             User user = await _userRepository.GetUserById(id);
             if (user != null)
             {
-                var result = await _userRepository.Delete(user);
+                foreach (Advert advert in user.Adverts)
+                    _advertRepository.DeleteAdvert(advert);
+
+                foreach(Advert advert in user.FavoriteAdverts)
+                    _advertRepository.UnlikeAdvert(advert);       
+
+                await _userRepository.Delete(user);
             }
+
             return RedirectToAction("Index", "Roles");
         }
 
