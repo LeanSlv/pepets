@@ -1,7 +1,5 @@
 jQuery(function ($) {
     $(document).ready(function () {
-        console.log("READY!");
-
         // Slick слайдер дл€ просмотра фотографий объ€влени€
         $('.advert-review-slider-for').slick({
             slidesToShow: 1,
@@ -53,13 +51,13 @@ function SlowScroll(id) {
 
 // ѕо€вление формы регистрации в модальном окне
 function ShowRegisterForm() {
-    $('#LoginForm').hide();
-    $('#RegisterForm').show();
+    $('#loginModalForm').hide();
+    $('#registerModalForm').show();
 }
 
 $('#ModalAuth').on('hidden.bs.modal', function (e) {
-    $('#RegisterForm').hide();
-    $('#LoginForm').show();
+    $('#registerModalForm').hide();
+    $('#loginModalForm').show();
 })
 
 // јнимаци€ кнопок переключение списков объ€влений в профиле пользовател€
@@ -151,6 +149,35 @@ $('#phoneSwitch').change(function (event) {
         $('#inputPhone').removeAttr('disabled', false);
         $('#countries_phone').removeAttr('disabled', false);
     }
+});
 
-    
+// ¬ход на сайт
+$('#loginForm').submit(function (event) {
+    event.preventDefault();
+    var loginForm = $(this);
+
+    $.ajax({
+        type: 'POST',
+        url: '/Account/Login/',
+        data: loginForm.serialize(),
+        success: function (data) {
+            $('#LoginModalForm').replaceWith(data);
+        }
+    });
+});
+
+// –егистраци€ на сайте
+$('#registerForm').submit(function (event) {
+    event.preventDefault();
+    var registerForm = $(this);
+
+    $.ajax({
+        type: 'POST',
+        url: '/Account/Register/',
+        data: registerForm.serialize(),
+        success: function (data) {
+            $('#registerModalForm').replaceWith(data);
+            $('#registerModalForm').show();
+        }
+    });
 });

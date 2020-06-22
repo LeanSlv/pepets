@@ -22,9 +22,9 @@ namespace PePets.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login()
         {
-            return PartialView(new Login { ReturnUrl = returnUrl });
+            return PartialView();
         }
 
         [HttpPost]

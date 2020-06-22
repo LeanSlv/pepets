@@ -54,16 +54,12 @@
     </nav>
 </header>
 
-<div class="modal fade" id="ModalAuth" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="ModalAuth" tabindex="-1" role="dialog" aria-labelledby="AuthLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div id="LoginForm">
                 @await Html.PartialAsync("../Account/Login.cshtml", new PePets.Models.Login() { ReturnUrl = Context.Request.GetDisplayUrl() })
-            </div>
 
-            <div id="RegisterForm" style="display: none">
                 @await Html.PartialAsync("../Account/Register.cshtml", new PePets.Models.Register())
-            </div>
         </div>
     </div>
 </div>
