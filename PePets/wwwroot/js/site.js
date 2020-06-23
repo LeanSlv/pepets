@@ -155,6 +155,7 @@ $('#phoneSwitch').change(function (event) {
 $('#loginForm').submit(function (event) {
     event.preventDefault();
     var loginForm = $(this);
+
     $.ajax({
         type: 'POST',
         url: '/Account/Login/',

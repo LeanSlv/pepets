@@ -36,15 +36,7 @@ namespace PePets.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
-                    // проверяем, принадлежит ли URL приложению
-                    if (!string.IsNullOrEmpty(model.ReturnUrl))
-                    {
-                        return Redirect(model.ReturnUrl);
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -142,19 +134,18 @@ namespace PePets.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult ExternalLogin(string providerName, string returnUrl = null)
+        public IActionResult ExternalLogin(string providerName)
         {
             var properties = new AuthenticationProperties
             {
-                RedirectUri = Url.Action("ExternalLoginCallback",
-                    new { returnUrl = returnUrl })
+                RedirectUri = Url.Action("ExternalLoginCallback")
             };
 
             return new ChallengeResult(providerName, properties);
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl)
+        public async Task<IActionResult> ExternalLoginCallback()
         {
             // Получаем куки после внешней авторизации
             var info = await HttpContext.AuthenticateAsync(IdentityConstants.ExternalScheme);
@@ -196,11 +187,8 @@ namespace PePets.Controllers
             saveResult = await _userRepository.SaveUser(user);
             if(saveResult.Succeeded)
                 await _signInManager.SignInAsync(user, false);
-            // проверяем, принадлежит ли URL приложению
-            if (!string.IsNullOrEmpty(returnUrl))
-                return Redirect(returnUrl);
-            else
-                return RedirectToAction("Index", "Home");
+
+            return RedirectToAction("Index", "Home");
         }
 
         private string GenerateMessageBody(string userName, string callbackUrl)
