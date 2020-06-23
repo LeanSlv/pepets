@@ -155,13 +155,17 @@ $('#phoneSwitch').change(function (event) {
 $('#loginForm').submit(function (event) {
     event.preventDefault();
     var loginForm = $(this);
-
     $.ajax({
         type: 'POST',
         url: '/Account/Login/',
         data: loginForm.serialize(),
         success: function (data) {
-            $('#LoginModalForm').replaceWith(data);
+            if (data.startsWith('<!DOCTYPE html>')) {
+                window.location.href = '/';
+            }
+            else {
+                $('#loginModalForm').replaceWith(data);
+            }
         }
     });
 });
@@ -176,8 +180,13 @@ $('#registerForm').submit(function (event) {
         url: '/Account/Register/',
         data: registerForm.serialize(),
         success: function (data) {
-            $('#registerModalForm').replaceWith(data);
-            $('#registerModalForm').show();
+            if (data.startsWith('<!DOCTYPE html>')) {
+                window.location.href = '/';
+            }
+            else {
+                $('#registerModalForm').replaceWith(data);
+                $('#registerModalForm').show();
+            }
         }
     });
 });

@@ -48,7 +48,7 @@ namespace PePets.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                    ModelState.AddModelError(nameof(model.Password), "Неправильный логин и (или) пароль");
                 }
             }
             return PartialView(model);
@@ -74,7 +74,7 @@ namespace PePets.Controllers
                 };
 
                 // добавляем пользователя в БД
-                var result = await _userRepository.SaveUser(user, model.Password);
+                var result = await _userRepository.SaveUser(user, model.NewPassword);
                 if (result.Succeeded)
                 {
                     // генерация токена для пользователя
