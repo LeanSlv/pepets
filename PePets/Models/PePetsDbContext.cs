@@ -11,17 +11,17 @@ namespace PePets.Models
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Advert>().
+            modelBuilder.Entity<Post>().
                 Property(t => t._images).HasColumnName("Images");
 
             modelBuilder.Entity<User>()
-                .HasMany(u => u.Adverts)
+                .HasMany(u => u.Posts)
                 .WithOne(a => a.User).HasForeignKey(a => a.UserId);
         }
 
-        public DbSet<Advert> Adverts { get; set; }
-        public DbSet<PetDescription> PetsDescription { get; set; }
-        public DbSet<TypeOfPet> TypesOfPet { get; set; }
-        public DbSet<BreedOfPet> BreedsOfPet { get; set; }
+        public virtual DbSet<Post> Posts { get; set; }
+        public virtual DbSet<PetDescription> PetsDescription { get; set; }
+        public virtual DbSet<TypeOfPet> TypesOfPet { get; set; }
+        public virtual DbSet<BreedOfPet> BreedsOfPet { get; set; }
     }
 }

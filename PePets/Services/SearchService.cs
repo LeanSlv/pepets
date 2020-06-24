@@ -23,7 +23,7 @@ namespace PePets.Services
         }
 
         // Индексирование объявления
-        public async Task<IndexResponse> IndexPost(Advert post)
+        public async Task<IndexResponse> IndexPost(Post post)
         {
             // Получение нормализованной формы для индексации
             string title = _morphyService.GetGeneralText(post.Title);

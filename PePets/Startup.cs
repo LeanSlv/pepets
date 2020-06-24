@@ -28,7 +28,7 @@ namespace PePets
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<PePetsDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("PePetsDbContext")));
-            services.AddTransient<AdvertRepository>();
+            services.AddTransient<PostRepository>();
             services.AddTransient<UserRepository>();
             services.AddTransient<BreedRepository>();
             services.AddTransient<TypeRepository>();

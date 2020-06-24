@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<PePets.Models.TypeOfPet>
 
-<option>Выберите категорию</option>
+<option value="">Выберите категорию</option>
 @foreach (TypeOfPet type in Model)
 {
     <option value=@type.Type>@type.Type</option>

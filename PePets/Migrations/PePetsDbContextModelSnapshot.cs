@@ -150,7 +150,58 @@ namespace PePets.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("PePets.Models.Advert", b =>
+            modelBuilder.Entity("PePets.Models.BreedOfPet", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Breed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("TypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("BreedsOfPet");
+                });
+
+            modelBuilder.Entity("PePets.Models.PetDescription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Age")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Breed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId")
+                        .IsUnique();
+
+                    b.ToTable("PetsDescription");
+                });
+
+            modelBuilder.Entity("PePets.Models.Post", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -197,58 +248,7 @@ namespace PePets.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Adverts");
-                });
-
-            modelBuilder.Entity("PePets.Models.BreedOfPet", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Breed")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("TypeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TypeId");
-
-                    b.ToTable("BreedsOfPet");
-                });
-
-            modelBuilder.Entity("PePets.Models.PetDescription", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AdvertId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Age")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Breed")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdvertId")
-                        .IsUnique();
-
-                    b.ToTable("PetsDescription");
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("PePets.Models.TypeOfPet", b =>
@@ -413,17 +413,6 @@ namespace PePets.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PePets.Models.Advert", b =>
-                {
-                    b.HasOne("PePets.Models.User", "UserFavorites")
-                        .WithMany("FavoriteAdverts")
-                        .HasForeignKey("UserFavoritesId");
-
-                    b.HasOne("PePets.Models.User", "User")
-                        .WithMany("Adverts")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("PePets.Models.BreedOfPet", b =>
                 {
                     b.HasOne("PePets.Models.TypeOfPet", "Type")
@@ -435,11 +424,22 @@ namespace PePets.Migrations
 
             modelBuilder.Entity("PePets.Models.PetDescription", b =>
                 {
-                    b.HasOne("PePets.Models.Advert", "Advert")
+                    b.HasOne("PePets.Models.Post", "Post")
                         .WithOne("PetDescription")
-                        .HasForeignKey("PePets.Models.PetDescription", "AdvertId")
+                        .HasForeignKey("PePets.Models.PetDescription", "PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PePets.Models.Post", b =>
+                {
+                    b.HasOne("PePets.Models.User", "UserFavorites")
+                        .WithMany("FavoritePosts")
+                        .HasForeignKey("UserFavoritesId");
+
+                    b.HasOne("PePets.Models.User", "User")
+                        .WithMany("Posts")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("PePets.Models.User", b =>

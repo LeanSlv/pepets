@@ -10,12 +10,12 @@ namespace PePets.Controllers
     public class SearchController : Controller
     {
         private readonly SearchService _searchService;
-        private readonly AdvertRepository _advertRepository;
+        private readonly PostRepository _postRepository;
 
-        public SearchController(SearchService searchService, AdvertRepository advertRepository)
+        public SearchController(SearchService searchService, PostRepository postRepository)
         {
             _searchService = searchService;
-            _advertRepository = advertRepository;
+            _postRepository = postRepository;
         }
 
         public IActionResult Index()
@@ -28,11 +28,11 @@ namespace PePets.Controllers
         {
             List<Guid> ids = await _searchService.Search(input);
 
-            List<Advert> adverts = new List<Advert>();
+            var posts = new List<Post>();
             foreach (Guid id in ids)
-                adverts.Add(_advertRepository.GetAdvertById(id));
+                posts.Add(_postRepository.GetPostById(id));
 
-            return ViewComponent("AdvertsList", adverts);
+            return ViewComponent("PostsList", posts);
         }
     }
 }

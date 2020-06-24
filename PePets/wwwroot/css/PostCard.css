@@ -16,7 +16,7 @@
     z-index: 1;
 }
 
-.advertCard:hover {
+.postCard:hover {
     box-shadow: 3px 3px 8px rgba(0,0,0,0.25);
 }
 
@@ -60,7 +60,7 @@
     display: none;
 }
 
-.advertCard:hover .crud-block, .block-link {
+.postCard:hover .crud-block, .block-link {
     display: block;
 }
 

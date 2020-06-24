@@ -9,18 +9,18 @@ namespace PePets.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly AdvertRepository _advertRepository;
+        private readonly PostRepository _postRepository;
 
-        public HomeController(ILogger<HomeController> logger, AdvertRepository advertRepository)
+        public HomeController(ILogger<HomeController> logger, PostRepository postRepository)
         {
             _logger = logger;
-            _advertRepository = advertRepository;
+            _postRepository = postRepository;
         }
 
         public IActionResult Index()
         {
-            var adverts = _advertRepository.GetAdverts();
-            return View(adverts.ToList());
+            var posts = _postRepository.GetPosts();
+            return View(posts.ToList());
         }
 
         public IActionResult Privacy()

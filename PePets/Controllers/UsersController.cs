@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using PePets.Models;
 
 namespace PePets.Controllers
@@ -14,13 +13,13 @@ namespace PePets.Controllers
     {
         private readonly UserRepository _userRepository;
         private readonly IWebHostEnvironment _appEnvironment;
-        private readonly AdvertRepository _advertRepository;
+        private readonly PostRepository _postRepository;
 
-        public UsersController(UserRepository userRepository, IWebHostEnvironment appEnvironment, AdvertRepository advertRepository)
+        public UsersController(UserRepository userRepository, IWebHostEnvironment appEnvironment, PostRepository postRepository)
         {
             _userRepository = userRepository;
             _appEnvironment = appEnvironment;
-            _advertRepository = advertRepository;
+            _postRepository = postRepository;
         }
 
         [HttpGet]
@@ -208,11 +207,11 @@ namespace PePets.Controllers
             User user = await _userRepository.GetUserById(id);
             if (user != null)
             {
-                foreach (Advert advert in user.Adverts)
-                    _advertRepository.DeleteAdvert(advert);
+                foreach (Post post in user.Posts)
+                    _postRepository.DeletePost(post);
 
-                foreach(Advert advert in user.FavoriteAdverts)
-                    _advertRepository.UnlikeAdvert(advert);       
+                foreach(Post post in user.FavoritePosts)
+                    _postRepository.UnlikePost(post);       
 
                 await _userRepository.Delete(user);
             }

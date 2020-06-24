@@ -20,7 +20,7 @@ namespace PePets.Models
 
         public IQueryable<BreedOfPet> GetAllBreedsOfType(string typeName)
         {
-            TypeOfPet type = _context.TypesOfPet.Single(x => x.Type == typeName);
+            TypeOfPet type = _context.TypesOfPet.FirstOrDefault(x => x.Type == typeName);
             return _context.BreedsOfPet.Where(x => x.TypeId == type.Id);
         }
 

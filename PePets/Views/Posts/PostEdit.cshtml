@@ -1,4 +1,4 @@
-﻿@model PePets.Models.Advert
+﻿@model PePets.Models.Post
 
 <div class="text-center">
     @if (Model.Id == default)
@@ -13,7 +13,7 @@
     <div>
         <div class="row">
             <div class="col col-9">
-                <form asp-controller="Advert" asp-action="AdvertEdit" method="post" enctype="multipart/form-data">
+                <form asp-controller="Posts" asp-action="PostEdit" method="post" enctype="multipart/form-data">
                     <input type="hidden" asp-for="Id" />
                     @if (Model.PetDescription != null)
                     {

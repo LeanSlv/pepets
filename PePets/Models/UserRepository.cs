@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace PePets.Models
@@ -22,14 +21,14 @@ namespace PePets.Models
 
         public User GetCurrentUser(ClaimsPrincipal currentUserClaims)
         {
-            return _context.Users.Include(x => x.Adverts).ThenInclude(x => x.PetDescription)
-                .Include(x => x.FavoriteAdverts).ThenInclude(x => x.PetDescription)
+            return _context.Users.Include(x => x.Posts).ThenInclude(x => x.PetDescription)
+                .Include(x => x.FavoritePosts).ThenInclude(x => x.PetDescription)
                 .SingleOrDefault(x => x.UserName == currentUserClaims.Identity.Name);
         }
 
         public async Task<User> GetUserById(string userId)
         {
-            return await _context.Users.Include(i => i.Adverts).ThenInclude(ti => ti.PetDescription).Include(i => i.AlreadyRatedUsers).SingleOrDefaultAsync(s => s.Id == userId);
+            return await _context.Users.Include(i => i.Posts).ThenInclude(ti => ti.PetDescription).Include(i => i.AlreadyRatedUsers).SingleOrDefaultAsync(s => s.Id == userId);
         }
 
         public async Task<User> GetUserByEmailAsync(string email) =>
@@ -70,33 +69,33 @@ namespace PePets.Models
         public async Task<bool> CheckPasswordAsync(User user, string password) =>
             await _userManager.CheckPasswordAsync(user, password);
 
-        public async Task AddAdvert(ClaimsPrincipal claims, Advert advert)
+        public async Task AddPost(ClaimsPrincipal claims, Post post)
         {
             User user = GetCurrentUser(claims);
-            user.Adverts.Add(advert);
+            user.Posts.Add(post);
             await _userManager.UpdateAsync(user);
         }
 
-        public async Task AddFavoriteAdvert(ClaimsPrincipal claims, Advert advert)
+        public async Task AddFavoritePost(ClaimsPrincipal claims, Post post)
         {
             User user = GetCurrentUser(claims);
-            user.FavoriteAdverts.Add(advert);
+            user.FavoritePosts.Add(post);
             await _userManager.UpdateAsync(user);
         }
 
-        public async Task DeleteFavoriteAdvert(User user, Advert advert)
+        public async Task DeleteFavoritePost(User user, Post post)
         {
-            user.FavoriteAdverts.Remove(advert);
+            user.FavoritePosts.Remove(post);
             await _userManager.UpdateAsync(user);
         }
 
-        public bool IsFavoriteAdvert(ClaimsPrincipal claims, Guid id)
+        public bool IsFavoritePost(ClaimsPrincipal claims, Guid id)
         {
             User user = GetCurrentUser(claims);
-            List<Advert> favoriteAdverts = user.FavoriteAdverts;
-            foreach(Advert favoriteAdvert in favoriteAdverts)
+            List<Post> favoritePosts = user.FavoritePosts;
+            foreach(Post favoritePost in favoritePosts)
             {
-                if (favoriteAdvert.Id == id)
+                if (favoritePost.Id == id)
                     return true;
             }
 

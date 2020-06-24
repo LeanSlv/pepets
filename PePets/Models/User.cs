@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PePets.Models
 {
@@ -18,14 +16,14 @@ namespace PePets.Models
         public string AboutMe { get; set; }
         public double Rating { get; set; }
         public List<User> AlreadyRatedUsers { get; set; }
-        public List<Advert> Adverts { get; set; }
-        public List<Advert> FavoriteAdverts { get; set; }
+        public List<Post> Posts { get; set; }
+        public List<Post> FavoritePosts { get; set; }
 
         public User()
         {
             AlreadyRatedUsers = new List<User>();
-            Adverts = new List<Advert>();
-            FavoriteAdverts = new List<Advert>();
+            Posts = new List<Post>();
+            FavoritePosts = new List<Post>();
         }
     }
 }

@@ -6,7 +6,7 @@
     padding: 1em;
 }
 
-.list-adverts-btn {
+.list-posts-btn {
     font-size: 20px;
 }
 
@@ -31,7 +31,7 @@
     transform: scaleX(0.85);
 }
 
-.adverts-link-active:after {
+.posts-link-active:after {
     display: block;
     content: '';
     border-bottom: solid 3px #019fb6;
@@ -39,6 +39,6 @@
     transition: transform 250ms ease-in-out;
 }
 
-#likesAdverts {
+#likesPosts {
     display: none;
 }

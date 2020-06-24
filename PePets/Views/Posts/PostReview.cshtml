@@ -1,4 +1,4 @@
-﻿@model PePets.Models.Advert
+﻿@model PePets.Models.Post
 
     <div class="container">
         <div class="row">
@@ -15,14 +15,14 @@
 
                 <!-- Карусель фотографий -->
                 <div class="mb-3 p-3 rounded-lg shadow">
-                    <div class="advert-review-slider-for mb-5">
+                    <div class="post-review-slider-for mb-5">
                         @foreach (string pathToImage in Model.Images)
                         {
                             <div class="d-flex justify-content-center"><img src=@pathToImage class="slider-for-img" /></div>
                         }
                     </div>
 
-                    <div class="advert-review-slider-nav">
+                    <div class="post-review-slider-nav">
                         @foreach (string pathToImage in Model.Images)
                         {
                             <div class="d-flex justify-content-center"><img src=@pathToImage class="slider-nav-img" /></div>

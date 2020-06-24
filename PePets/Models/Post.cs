@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PePets.Models
 {
-    public class Advert
+    public class Post
     {
         internal string _images { get; set; }
 

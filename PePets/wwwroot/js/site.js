@@ -1,19 +1,19 @@
 jQuery(function ($) {
     $(document).ready(function () {
         // Slick слайдер дл€ просмотра фотографий объ€влени€
-        $('.advert-review-slider-for').slick({
+        $('.post-review-slider-for').slick({
             slidesToShow: 1,
             slidesToScroll: 1,
             arrows: false,
             fade: true,
             infinite: false,
             useTransform: true,
-            asNavFor: '.advert-review-slider-nav'
+            asNavFor: '.post-review-slider-nav'
         });
-        $('.advert-review-slider-nav').slick({
+        $('.post-review-slider-nav').slick({
             slidesToShow: 5,
             slidesToScroll: 5,
-            asNavFor: '.advert-review-slider-for',
+            asNavFor: '.post-review-slider-for',
             dots: false,
             infinite: false,
             focusOnSelect: true
@@ -22,7 +22,7 @@ jQuery(function ($) {
         $('a[data-slide]').click(function (e) {
             e.preventDefault();
             var slideno = $(this).data('slide');
-            $('.advert-review-slider-nav').slick('slickGoTo', slideno - 1);
+            $('.post-review-slider-nav').slick('slickGoTo', slideno - 1);
         });
 
         // ”добное окно выбора даты
@@ -61,20 +61,20 @@ $('#ModalAuth').on('hidden.bs.modal', function (e) {
 })
 
 // јнимаци€ кнопок переключение списков объ€влений в профиле пользовател€
-function LoadMyAdverts() {
-    $('#myAdvertsLink').addClass("adverts-link-active").removeClass('border-bottom-animation');
-    $('#likesAdvertsLink').removeClass('adverts-link-active').addClass('border-bottom-animation');
+function LoadMyPosts() {
+    $('#myPostsLink').addClass("posts-link-active").removeClass('border-bottom-animation');
+    $('#likesPostsLink').removeClass('posts-link-active').addClass('border-bottom-animation');
 
-    $('#myAdverts').show();
-    $('#likesAdverts').hide();
+    $('#myPosts').show();
+    $('#likesPosts').hide();
 }
 
-function LoadLikesAdverts() {
-    $('#likesAdvertsLink').addClass("adverts-link-active").removeClass("border-bottom-animation");
-    $('#myAdvertsLink').removeClass('adverts-link-active').addClass('border-bottom-animation');
+function LoadLikesPosts() {
+    $('#likesPostsLink').addClass("posts-link-active").removeClass("border-bottom-animation");
+    $('#myPostsLink').removeClass('posts-link-active').addClass('border-bottom-animation');
 
-    $('#likesAdverts').show();
-    $('#myAdverts').hide();
+    $('#likesPosts').show();
+    $('#myPosts').hide();
 }
 
 // ƒинамическое заполнение списка пород в зависимости от выбранного вида
@@ -84,7 +84,7 @@ $('#PetDescription_Type').change(function () {
 
     $.ajax({
         type: 'GET',
-        url: '/Advert/LoadBreedsViewComponent?typeName=' + name,
+        url: '/Posts/LoadBreedsViewComponent?typeName=' + name,
         success: function (data) {
             // замен€ем содержимое присланным частичным представлением
             $('#PetDescription_Breed').replaceWith(data);

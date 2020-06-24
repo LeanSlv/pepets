@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace PePets.Components
 {
-    public class AdvertsList : ViewComponent
+    public class PostsList : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync(List<Advert> adverts)
+        public async Task<IViewComponentResult> InvokeAsync(List<Post> posts)
         {
-            return View("AdvertsList", adverts);
+            return View("PostsList", posts);
         }
     }
 }
