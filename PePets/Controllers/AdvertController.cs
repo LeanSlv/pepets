@@ -52,10 +52,27 @@ namespace PePets.Controllers
 
         [HttpPost]
         [RequestSizeLimit(31457280)] // 30 Мб
-        public async Task<IActionResult> AdvertEdit(Advert advert, IFormFileCollection images)
+        public async Task<IActionResult> AdvertEdit(Advert advert, string phoneNumberSwitch, IFormFileCollection images)
         {
+            if (phoneNumberSwitch == "on")
+            {
+                User user = _userRepository.GetCurrentUser(User);
+                if (string.IsNullOrEmpty(user.PhoneNumber))
+                {
+                    ModelState.AddModelError(nameof(advert.PhoneNumber), "В вашем профиле не указан номер телефона, заполните поле самостоятельно");
+                }
+                else
+                {
+                    advert.PhoneNumber = user.PhoneNumber;
+                }
+            }
+
+            if(string.IsNullOrEmpty(advert.PhoneNumber) || advert.PhoneNumber.Length < 12)
+                ModelState.AddModelError(nameof(advert.PhoneNumber), "Укажите номер телефона");
+
             if (images.Count > maxImagesCount)
                 ModelState.AddModelError(nameof(advert.Images), "Нельзя загружать больше 10 изображений");
+
             if (!ModelState.IsValid)
                 return View(advert);
 
@@ -102,13 +119,14 @@ namespace PePets.Controllers
         public async Task<bool> Like(Guid id)
         {
             Advert advert = _advertRepository.GetAdvertById(id);
+            User currentUser = _userRepository.GetCurrentUser(User);
 
             // Если объявление уже добавленно в избранное,
             if (_userRepository.IsFavoriteAdvert(User, id))
             {
                 // то удаляем его,
                 _advertRepository.UnlikeAdvert(advert);
-                await _userRepository.DeleteFavoriteAdvert(User, advert);
+                await _userRepository.DeleteFavoriteAdvert(currentUser, advert);
                 return false;
             }
             else

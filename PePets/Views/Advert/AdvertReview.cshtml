@@ -133,7 +133,26 @@
 
                     <div class="text-center p-3">
                         <div class="mb-3">
-                            <a href="#" class="btn btn-block btn-outline-info">Показать номер</a>
+                            <button type="button" class="btn btn-block btn-outline-info" data-toggle="modal" data-target="#phoneModal">
+                                Показать номер
+                            </button>
+                        </div>
+
+                        <!-- Модальное окно для отображения номера -->
+                        <div class="modal fade" id="phoneModal" tabindex="-1" role="dialog" aria-labelledby="phoneModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header text-center">
+                                        <h5 class="modal-title" id="phoneModalLabel">Номер продавца</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4 class="font-weight-bold">@Model.PhoneNumber</h4>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div>

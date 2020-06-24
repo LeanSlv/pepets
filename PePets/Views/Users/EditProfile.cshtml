@@ -1,11 +1,12 @@
 ﻿@model PePets.Models.User
+@inject PePets.Models.UserRepository _userRepository
 
     <div class="container">
         <div class="row">
             <!-- Левая колонка с пунктами меню -->
             <div class="col col-2">
                 <div class="list-group list-group-flush shadow">
-                    <a class="list-group-item list-group-item-action" asp-action="UserProfile" asp-controller="Users">Профиль</a>
+                    <a class="list-group-item list-group-item-action" asp-action="UserProfile" asp-controller="Users" asp-route-id=@_userRepository.GetCurrentUser(User).Id>Мой профиль</a>
                     <a class="list-group-item list-group-item-action" href="#">Сообщения</a>
                     <a class="list-group-item list-group-item-action active" asp-action="EditProfile" asp-controller="Users">Настройки</a>
                 </div>

@@ -25,19 +25,17 @@ namespace PePets.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> UserProfile(string id = null)
+        public async Task<IActionResult> UserProfile(string id)
         {
-            User user;
-            if(string.IsNullOrEmpty(id))
-            {
-                user = _userRepository.GetCurrentUser(User);
+            User user = await _userRepository.GetUserById(id);
+            if (user == null)
+                return NotFound();
+
+            User currentUser = _userRepository.GetCurrentUser(User);
+            if (currentUser.Id == id)
                 ViewBag.CurrentUser = true;
-            }
             else
-            {
-                user = await _userRepository.GetUserById(id);
                 ViewBag.CurrentUser = false;
-            }
 
             return View(user);
         }
@@ -205,13 +203,20 @@ namespace PePets.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
             User user = await _userRepository.GetUserById(id);
             if (user != null)
             {
-                var result = await _userRepository.Delete(user);
+                foreach (Advert advert in user.Adverts)
+                    _advertRepository.DeleteAdvert(advert);
+
+                foreach(Advert advert in user.FavoriteAdverts)
+                    _advertRepository.UnlikeAdvert(advert);       
+
+                await _userRepository.Delete(user);
             }
+
             return RedirectToAction("Index", "Roles");
         }
 

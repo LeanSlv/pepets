@@ -19,10 +19,10 @@ namespace PePets.Models
         [Required(ErrorMessage = "Не указан пароль")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Длина пароля должна быть больше 5 и меньше 100 символов")]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Пароль введен неверно")]
+        [Compare("NewPassword", ErrorMessage = "Пароли не совпадают")]
         public string ConfirmPassword { get; set; }
     }
 }

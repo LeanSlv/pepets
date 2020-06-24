@@ -34,13 +34,13 @@ namespace PePets
             services.AddTransient<TypeRepository>();
             services.AddSingleton<SearchService>();
 
-            services.AddIdentity<User, IdentityRole>(opts =>
+            services.AddIdentity<User, IdentityRole>(options =>
             {
-                opts.Password.RequiredLength = 6;   // минимальная длина
-                opts.Password.RequireNonAlphanumeric = false;   // требуются ли не алфавитно-цифровые символы
-                opts.Password.RequireLowercase = false; // требуются ли символы в нижнем регистре
-                opts.Password.RequireUppercase = false; // требуются ли символы в верхнем регистре
-                opts.Password.RequireDigit = false; // требуются ли цифры
+                options.Password.RequiredLength = 6;   // минимальная длина
+                options.Password.RequireNonAlphanumeric = false;   // требуются ли не алфавитно-цифровые символы
+                options.Password.RequireLowercase = false; // требуются ли символы в нижнем регистре
+                options.Password.RequireUppercase = false; // требуются ли символы в верхнем регистре
+                options.Password.RequireDigit = true; // требуются ли цифры
             })
                 .AddEntityFrameworkStores<PePetsDbContext>()
                 .AddDefaultTokenProviders();

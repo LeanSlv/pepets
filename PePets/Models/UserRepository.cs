@@ -29,7 +29,7 @@ namespace PePets.Models
 
         public async Task<User> GetUserById(string userId)
         {
-            return await _context.Users.Include(i => i.Adverts).ThenInclude(ti => ti.PetDescription).SingleOrDefaultAsync(s => s.Id == userId);
+            return await _context.Users.Include(i => i.Adverts).ThenInclude(ti => ti.PetDescription).Include(i => i.AlreadyRatedUsers).SingleOrDefaultAsync(s => s.Id == userId);
         }
 
         public async Task<User> GetUserByEmailAsync(string email) =>
@@ -84,9 +84,8 @@ namespace PePets.Models
             await _userManager.UpdateAsync(user);
         }
 
-        public async Task DeleteFavoriteAdvert(ClaimsPrincipal claims, Advert advert)
+        public async Task DeleteFavoriteAdvert(User user, Advert advert)
         {
-            User user = GetCurrentUser(claims);
             user.FavoriteAdverts.Remove(advert);
             await _userManager.UpdateAsync(user);
         }

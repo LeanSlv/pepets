@@ -1,7 +1,5 @@
 jQuery(function ($) {
     $(document).ready(function () {
-        console.log("READY!");
-
         // Slick слайдер для просмотра фотографий объявления
         $('.advert-review-slider-for').slick({
             slidesToShow: 1,
@@ -53,13 +51,13 @@ function SlowScroll(id) {
 
 // Появление формы регистрации в модальном окне
 function ShowRegisterForm() {
-    $('#LoginForm').hide();
-    $('#RegisterForm').show();
+    $('#loginModalForm').hide();
+    $('#registerModalForm').show();
 }
 
 $('#ModalAuth').on('hidden.bs.modal', function (e) {
-    $('#RegisterForm').hide();
-    $('#LoginForm').show();
+    $('#registerModalForm').hide();
+    $('#loginModalForm').show();
 })
 
 // Анимация кнопок переключение списков объявлений в профиле пользователя
@@ -140,3 +138,56 @@ $('#upload-avatar').change(function () {
     let img = '<img src=' + image_url + ' height="200" width="200" id="change_avatar" />'
     $('#change_avatar').replaceWith(img);
 })
+
+// switch для номера телефона на странице создания и редактирования объявления
+$('#phoneSwitch').change(function (event) {
+    if ($(this).is(':checked')) {
+        $('#inputPhone').attr('disabled', true);
+        $('#countries_phone').attr('disabled', true);
+    }
+    else {
+        $('#inputPhone').removeAttr('disabled', false);
+        $('#countries_phone').removeAttr('disabled', false);
+    }
+});
+
+// Вход на сайт
+$('#loginForm').submit(function (event) {
+    event.preventDefault();
+    var loginForm = $(this);
+
+    $.ajax({
+        type: 'POST',
+        url: '/Account/Login/',
+        data: loginForm.serialize(),
+        success: function (data) {
+            if (data.startsWith('<!DOCTYPE html>')) {
+                window.location.href = '/';
+            }
+            else {
+                $('#loginModalForm').replaceWith(data);
+            }
+        }
+    });
+});
+
+// Регистрация на сайте
+$('#registerForm').submit(function (event) {
+    event.preventDefault();
+    var registerForm = $(this);
+
+    $.ajax({
+        type: 'POST',
+        url: '/Account/Register/',
+        data: registerForm.serialize(),
+        success: function (data) {
+            if (data.startsWith('<!DOCTYPE html>')) {
+                window.location.href = '/';
+            }
+            else {
+                $('#registerModalForm').replaceWith(data);
+                $('#registerModalForm').show();
+            }
+        }
+    });
+});
