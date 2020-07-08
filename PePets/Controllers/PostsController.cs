@@ -12,6 +12,9 @@ using PePets.Repositories;
 
 namespace PePets.Controllers
 {
+    /// <summary>
+    /// Контроллер для управления объявлениями.
+    /// </summary>
     public class PostsController : Controller
     {
         private readonly IPostRepository _postRepository;
@@ -29,6 +32,11 @@ namespace PePets.Controllers
             maxImagesCount = 10;
         }
 
+        /// <summary>
+        /// Метод подгружает объявление для его подробного просмотра.
+        /// </summary>
+        /// <param name="id">Идентификатор объявления, которое необходимо просмотреть.</param>
+        /// <returns>Представление определенного объявления.</returns>
         [HttpGet]
         public async Task<IActionResult> ReviewPost(Guid id)
         {
@@ -37,6 +45,10 @@ namespace PePets.Controllers
             return View(post);
         }
 
+        /// <summary>
+        /// Метод подгружает страницу для создания объявления.
+        /// </summary>
+        /// <returns>Представление создания нового объявления.</returns>
         [HttpGet]
         [Authorize]
         public IActionResult CreatePost()
@@ -44,6 +56,16 @@ namespace PePets.Controllers
             return View(new Post());
         }
 
+        /// <summary>
+        /// Метод создает новое объявление.
+        /// </summary>
+        /// <param name="post">Модель объявлния, которое нужно создать.</param>
+        /// <param name="phoneNumberSwitch">Информация со свитча, нужно ли указывать телефон из профиля пользователя.</param>
+        /// <param name="images">Коллекция фотографий, которые нужно добавить к объявлению.</param>
+        /// <returns>
+        /// При удачном создании объявления редирект на главную страницу, при неудачном - представление создания
+        /// объявления с ошибками, возникшими при создании объявления.
+        /// </returns>
         [HttpPost]
         [RequestSizeLimit(31457280)] // 30 Мб
         public async Task<IActionResult> CreatePost(Post post, string phoneNumberSwitch, IFormFileCollection images)
@@ -79,6 +101,11 @@ namespace PePets.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Метод подгружает страницу редактирования определенного объявления.
+        /// </summary>
+        /// <param name="id">Идентификатор объявления, которое нужно отредактировать.</param>
+        /// <returns>Представление редактирования определенного объявления.</returns>
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> EditPost(Guid id)
@@ -89,6 +116,17 @@ namespace PePets.Controllers
 
             return View("CreatePost", post);
         }
+
+        /// <summary>
+        /// Метод редактирования определенного объявление.
+        /// </summary>
+        /// <param name="post">Модель объявлния, которое нужно отредактировать.</param>
+        /// <param name="phoneNumberSwitch">Информация со свитча, нужно ли указывать телефон из профиля пользователя.</param>
+        /// <param name="images">Коллекция фотографий, которые нужно добавить к объявлению.</param>
+        /// <returns>
+        /// При удачном редактировании объявления редирект на главную страницу, при неудачном - представление
+        /// редактирования объявления с ошибками, возникшими при редактировании.
+        /// </returns>
         [HttpPost]
         [RequestSizeLimit(31457280)] // 30 Мб
         public async Task<IActionResult> EditPost(Post post, string phoneNumberSwitch, IFormFileCollection images)
@@ -115,6 +153,11 @@ namespace PePets.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Метод удаляет определенное объявление.
+        /// </summary>
+        /// <param name="id">Идентификатор объявления, которое нужно удалить.</param>
+        /// <returns>Редирект на главную страницу.</returns>
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> DeletePost(Guid id)
@@ -134,6 +177,11 @@ namespace PePets.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Метод добавляет или удаляет объявление в избранное.
+        /// </summary>
+        /// <param name="id">Идентификатор объявления.</param>
+        /// <returns>Если объявление удалено из избранного - false, если добавлено - true.</returns>
         [HttpGet]
         public async Task<bool> Like(Guid id)
         {

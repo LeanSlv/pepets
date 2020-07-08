@@ -10,6 +10,9 @@ using PePets.Repositories;
 
 namespace PePets.Controllers
 {
+    /// <summary>
+    /// Контроллер для управления пользователями.
+    /// </summary>
     public class UsersController : Controller
     {
         private readonly IUserRepository _userRepository;
@@ -23,6 +26,14 @@ namespace PePets.Controllers
             _postRepository = postRepository;
         }
 
+        /// <summary>
+        /// Метод подгружает страницу профиля определенного пользователя.
+        /// </summary>
+        /// <param name="id">Идентификатор пользователя.</param>
+        /// <returns>
+        /// Если пользователь найден, то представление страницы профиля, если не найден - страница с 
+        /// ошибкой о том, что страница не найдена.
+        /// </returns>
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> UserProfile(string id)
@@ -40,6 +51,13 @@ namespace PePets.Controllers
             return View(user);
         }
 
+        /// <summary>
+        /// Метод подгружает страницу редактирования профиля текущего пользователя.
+        /// </summary>
+        /// <returns>
+        /// Если пользователь найден, то возвращает представление редактирования профиля, иначе - страница с ошибкой
+        /// о том, что страница не найдена.
+        /// </returns>
         [HttpGet]
         [Authorize]
         public IActionResult EditProfile()
@@ -52,6 +70,14 @@ namespace PePets.Controllers
             return View(currentUser);
         }
 
+        /// <summary>
+        /// Метод подгружает окно редактирования персональных данных пользователя.
+        /// </summary>
+        /// <param name="id">Идентификатор пользователя, чьи данные редактируются</param>
+        /// <returns>
+        /// Если пользователь найден, то возвращает частичное представление редактирования персональных данных 
+        /// пользователя, иначе - страница с ошибкой о том, что страница не найдена.
+        /// </returns>
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> ChangePersonalData(string id)
@@ -64,6 +90,12 @@ namespace PePets.Controllers
             return PartialView(model);
         }
 
+        /// <summary>
+        /// Метод редактирует персональные данные пользователя.
+        /// </summary>
+        /// <param name="changePersonalData">Модель для редактирования персональных данных пользователя.</param>
+        /// <param name="upload_avatar">Фотография для аватарки пользователя.</param>
+        /// <returns>Возвращает страницу редактирования профиля.</returns>
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> ChangePersonalData(ChangePersonalDataViewModel changePersonalData, IFormFile upload_avatar)
@@ -116,6 +148,14 @@ namespace PePets.Controllers
             return PartialView(changePersonalData);
         }
 
+        /// <summary>
+        /// Метод подгружает окно редактирования контактной информации пользователя.
+        /// </summary>
+        /// <param name="id">Идентификатор пользователя, чью контактную информацию надо редактировать.</param>
+        /// <returns>
+        /// Если пользователь найден, то возвращает частичное представление редактирования контактной информации 
+        /// пользователя, иначе - страница с ошибкой о том, что страница не найдена.
+        /// </returns>
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> ChangeContactInfo(string id)
@@ -128,6 +168,11 @@ namespace PePets.Controllers
             return PartialView(model);
         }
 
+        /// <summary>
+        /// Метод редактирует контактную информацию пользователя.
+        /// </summary>
+        /// <param name="changeContactInfo">Модель для редактирования контактной информации пользователя.</param>
+        /// <returns>Возвращает страницу редактирования профиля.</returns>
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> ChangeContactInfo(ChangeContactInfoViewModel changeContactInfo)
@@ -159,6 +204,14 @@ namespace PePets.Controllers
             return PartialView(changeContactInfo);
         }
 
+        /// <summary>
+        /// Метод подгружает окно изменения пароля пользователя.
+        /// </summary>
+        /// <param name="id">Идентификатор пользователя, чей пароль надо изменить.</param>
+        /// <returns>
+        /// Если пользователь найден, то возвращает частичное представление изменения пароля пользователя, иначе - 
+        /// страница с ошибкой о том, что страница не найдена.
+        /// </returns>
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> ChangePassword(string id)
@@ -171,6 +224,11 @@ namespace PePets.Controllers
             return PartialView(model);
         }
 
+        /// <summary>
+        /// Метод изменяет пароль пользователя.
+        /// </summary>
+        /// <param name="changePassword">Модель для изменения пароля пользователя.</param>
+        /// <returns>Возвращает страницу редактирования профиля.</returns>
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel changePassword)
@@ -201,6 +259,11 @@ namespace PePets.Controllers
             return PartialView(changePassword);
         }
 
+        /// <summary>
+        /// Метод удаляет пользователя.
+        /// </summary>
+        /// <param name="id">Идентификатор пользователя, которого надо удалить.</param>
+        /// <returns>Возвращает страницу панели администрирования.</returns>
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Delete(string id)
@@ -220,6 +283,13 @@ namespace PePets.Controllers
             return RedirectToAction("Index", "Roles");
         }
 
+        /// <summary>
+        /// Метод ставит оценку пользователю.
+        /// </summary>
+        /// <param name="rating">Оценка пользователя.</param>
+        /// <param name="userId">Идентификатор пользователя, которого оценивают.</param>
+        /// <param name="returnUrl">Url-адрес, куда произойдет редирект после выполнения метода.</param>
+        /// <returns>Редирект по переданному url-адресу.</returns>
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Rate(int rating, string userId, string returnUrl = null)

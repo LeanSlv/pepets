@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace PePets.Controllers
 {
+    /// <summary>
+    /// Контроллер для управления породами животных.
+    /// </summary>
     public class BreedController : Controller
     {
         private readonly IBreedRepository _breedRepository;
@@ -17,8 +20,20 @@ namespace PePets.Controllers
             _typeRepository = typeRepository;
         }
 
-        public IActionResult Index() => View();
+        public IActionResult Index() 
+        {
+            return View();
+        }
 
+        /// <summary>
+        /// Метод создает новую породу для определенного типа животного.
+        /// </summary>
+        /// <param name="typeId">Идентификатор типа животного, для которого создается новая порода.</param>
+        /// <param name="breedName">Название новой породы.</param>
+        /// <returns>
+        /// При удачном создании редирект на страницу панели администрирования, при неудачном - возвращает
+        /// частичное представление с ошибками создания породы.
+        /// </returns>
         public async Task<IActionResult> Create(Guid typeId, string breedName)
         {
             if (!string.IsNullOrEmpty(breedName))
@@ -44,6 +59,11 @@ namespace PePets.Controllers
             return PartialView(breedName);
         }
 
+        /// <summary>
+        /// Метод удаляет определенную породу из списка.
+        /// </summary>
+        /// <param name="id">Идентификатор породы, которую нужно удалить.</param>
+        /// <returns>Редирект на страницу панели администрирования.</returns>
         public async Task<IActionResult> Delete (Guid id)
         {
             var breed = await _breedRepository.GetByIdAsync(id);
@@ -53,6 +73,11 @@ namespace PePets.Controllers
             return RedirectToAction("Index", "Roles");
         }
 
+        /// <summary>
+        /// Метод загружает компонент списка пород для определенного типа животного.
+        /// </summary>
+        /// <param name="typeName">Название типа животного, для которого нужно загрузить список пород.</param>
+        /// <returns>Компонент списка пород для определенного типа животного.</returns>
         [HttpGet]
         public IActionResult LoadBreedsViewComponent(string typeName)
         {

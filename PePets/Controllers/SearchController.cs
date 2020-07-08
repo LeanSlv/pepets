@@ -8,6 +8,9 @@ using PePets.Repositories;
 
 namespace PePets.Controllers
 {
+    /// <summary>
+    /// Контроллер для управления поиском.
+    /// </summary>
     public class SearchController : Controller
     {
         private readonly SearchService _searchService;
@@ -24,6 +27,11 @@ namespace PePets.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Метод производит поиск по объявлениям на основе строки поиска.
+        /// </summary>
+        /// <param name="input">Строка поиска.</param>
+        /// <returns>Список найденных объявлений.</returns>
         [HttpGet]
         public async Task<IActionResult> Search(string input)
         {

@@ -13,25 +13,38 @@ using PePets.Services;
 
 namespace PePets.Controllers
 {
+    /// <summary>
+    /// Контроллер для управлением авторизации/регистрации пользователей.
+    /// </summary>
     public class AccountController : Controller
     {
         private readonly IUserRepository _userRepository;
         private readonly SignInManager<User> _signInManager;
-        private readonly IConfiguration _configuration;
-        
+        private readonly EmailService _emailService;
+
         public AccountController(IUserRepository userRepository, SignInManager<User> signInManager, IConfiguration configuration)
         {
             _userRepository = userRepository;
             _signInManager = signInManager;
-            _configuration = configuration;
+            _emailService = new EmailService(configuration["CompanyEmailAuth:Login"], configuration["CompanyEmailAuth:Password"]);
         }
 
+        /// <summary>
+        /// Метод для GET запроса авторизации пользователя.
+        /// </summary>
+        /// <returns>Частичное представление окна авторизации пользователя.</returns>
         [HttpGet]
         public IActionResult Login()
         {
             return PartialView();
         }
 
+        /// <summary>
+        /// Метод для POST запроса авторизации пользователя, авторизует пользователя на сайте, используя логин и пароль.
+        /// </summary>
+        /// <param name="model">Модель для авторизации пользователя.</param>
+        /// <returns>При удачной авторизации происходит редирект на главную страницу, при неудачной - возвращает 
+        /// частичное представление окна авторизации с ошибками авторизации.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(Login model)
@@ -52,12 +65,25 @@ namespace PePets.Controllers
             return PartialView(model);
         }
 
+        /// <summary>
+        /// Метод для GET запроса регистрации пользователя.
+        /// </summary>
+        /// <returns>Частичное представление окна регистрации пользователя.</returns>
         [HttpGet]
         public IActionResult Register()
         {
             return PartialView();
         }
 
+        /// <summary>
+        /// Метод для POST запроса регистрации пользователя, регистрирует пользователя на сайте, используя 
+        /// имя, логин и пароль.
+        /// </summary>
+        /// <param name="model">Модель для регистрации пользователя.</param>
+        /// <returns>
+        /// При удачной регистрации происходит редирект на главную страницу, при неудачной - возвращает 
+        /// частичное представление окна авторизации с ошибками регистрации.
+        /// </returns>
         [HttpPost]
         public async Task<IActionResult> Register(Register model)
         {
@@ -71,13 +97,14 @@ namespace PePets.Controllers
                     RegistrationDate = DateTime.Today
                 };
 
-                // добавляем пользователя в БД.
                 var result = await _userRepository.CreateWithPasswordAsync(user, model.NewPassword);
                 if (result.Succeeded)
                 {
-                    // генерация токена для пользователя.
+                    // Генерация токена для пользователя.
                     string token = await _userRepository.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Action
+                    
+                    // Формирование ссылки для подтверждения регистрации.
+                    string callbackUrl = Url.Action
                         (
                             "ConfirmEmail",
                             "Account",
@@ -86,10 +113,7 @@ namespace PePets.Controllers
                         );
 
                     // Отправка сообщения пользователю на Email для его подтверждения.
-                    EmailService emailService = new EmailService(
-                        _configuration["CompanyEmailAuth:Login"], 
-                        _configuration["CompanyEmailAuth:Password"]);
-                    await emailService.SendEmailAsync(user.FirstName, user.Email, callbackUrl);
+                    await _emailService.SendEmailAsync(user.FirstName, user.Email, callbackUrl);
 
                     // установка куки.
                     await _signInManager.SignInAsync(user, false);
@@ -108,6 +132,10 @@ namespace PePets.Controllers
             return PartialView(model);
         }
 
+        /// <summary>
+        /// Метод для выхода пользователя из аккаунта.
+        /// </summary>
+        /// <returns>Редирект на главную страницу.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -117,6 +145,13 @@ namespace PePets.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Метод для подтверждения регистрации новым пользователем. Вызывается, когда пользователь переходит по
+        /// сгенерированной ссылке, отправленной на электронную почту.
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя.</param>
+        /// <param name="token">Сгенерированный токен для данного пользователя.</param>
+        /// <returns>При удачном подтверждении редирект на главную страницу, при неудачном - представление с ошибкой.</returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
@@ -137,6 +172,11 @@ namespace PePets.Controllers
                 return View("Error");
         }
 
+        /// <summary>
+        /// Метод для внешней авторизации OAuth  с помощью социальных сетей.
+        /// </summary>
+        /// <param name="providerName">Имя провайдера авторизации.</param>
+        /// <returns>Окно авторизации определенного провайдера.</returns>
         [HttpPost]
         [AllowAnonymous]
         public IActionResult ExternalLogin(string providerName)
@@ -149,16 +189,20 @@ namespace PePets.Controllers
             return new ChallengeResult(providerName, properties);
         }
 
+        /// <summary>
+        /// Метод авторизует пользователя после успешного входа в аккаунт социальной сети через OAuth.
+        /// </summary>
+        /// <returns>Редирект на главную страницу.</returns>
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback()
         {
-            // Получаем куки после внешней авторизации
+            // Получаем куки после внешней авторизации.
             var info = await HttpContext.AuthenticateAsync(IdentityConstants.ExternalScheme);
             var externalUser = info.Principal;
             if (externalUser == null)
                 throw new Exception("External authentication error");
 
-            // Получаем нужные утверждения с основной информацией о пользователе
+            // Получаем нужные утверждения с основной информацией о пользователе.
             var claims = externalUser.Claims.ToList();
 
             Claim userEmail = claims.Find(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress");
@@ -168,7 +212,7 @@ namespace PePets.Controllers
 
             User user = await _userRepository.GetByNameAsync(userEmail.Value);
             IdentityResult saveResult;
-            if (user == null) // Если пользователь новый, то создаем и регистрируем его
+            if (user == null) // Если пользователь новый, то создаем и регистрируем его.
             {
                 user = new User 
                 { 
@@ -183,7 +227,7 @@ namespace PePets.Controllers
 
                 saveResult = await _userRepository.CreateWithoutPasswordAsync(user);
             }
-            else // Иначе обновляем его основную информацию на основе полученных от соц. сети
+            else // Иначе обновляем его основную информацию на основе полученных от соц. сети.
             {
                 user.FirstName = userFirstName.Value;
                 user.SecondName = userSecondName.Value;
