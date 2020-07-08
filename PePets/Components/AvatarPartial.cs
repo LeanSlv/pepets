@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace PePets.Components
 {
+    /// <summary>
+    /// Компонент для отображения частичного представления аватарки.
+    /// </summary>
     public class AvatarPartial : ViewComponent
     {
         private readonly IUserRepository _userRepository;
@@ -15,6 +18,11 @@ namespace PePets.Components
             _userRepository = userRepository;
         }
 
+        /// <summary>
+        /// Метод подгружает представление аватарки пользователя.
+        /// </summary>
+        /// <param name="userClaims">Удтверждения текущего пользователя.</param>
+        /// <returns>Представление аватарки пользователя.</returns>
         public async Task<IViewComponentResult> InvokeAsync(ClaimsPrincipal userClaims)
         {
             User user = _userRepository.GetCurrentUser(userClaims);

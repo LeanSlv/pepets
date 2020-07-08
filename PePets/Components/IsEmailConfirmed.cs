@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace PePets.Components
 {
+    /// <summary>
+    /// Компонент для проверки подтверждения электронной почты.
+    /// </summary>
     public class IsEmailConfirmed : ViewComponent
     {
         private readonly IUserRepository _userRepository;
@@ -14,6 +17,11 @@ namespace PePets.Components
             _userRepository = userRepository;
         }
 
+        /// <summary>
+        /// Метод подгружает сообщение о неподтвержденной электронной почте.
+        /// </summary>
+        /// <param name="userName">Логин пользователя.</param>
+        /// <returns>Сообщение о неподтвержденной электронной почте.</returns>
         public async Task<IViewComponentResult> InvokeAsync(string userName)
         {
             if(userName == null)

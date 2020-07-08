@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace PePets.Components
 {
+    /// <summary>
+    /// Компонент для работы со списком пород животных.
+    /// </summary>
     public class BreedsList : ViewComponent
     {
         private readonly IBreedRepository _breedRepository;
@@ -16,6 +19,11 @@ namespace PePets.Components
             _breedRepository = breedRepository;
         }
 
+        /// <summary>
+        /// Метод подгружает список пород для конкретного типа животного.
+        /// </summary>
+        /// <param name="typeName">Название типа животного, для которого нужно подкгрузить список пород.</param>
+        /// <returns>Представление списка пород.</returns>
         public async Task<IViewComponentResult> InvokeAsync(string typeName)
         {
             if (string.IsNullOrEmpty(typeName))
