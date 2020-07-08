@@ -2,23 +2,28 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PePets.Models;
+using PePets.Repositories;
 using PePets.Services;
 
 namespace PePets.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly SignInManager<User> _signInManager;
-        public AccountController(UserRepository userRepository, SignInManager<User> signInManager)
+        private readonly IConfiguration _configuration;
+        
+        public AccountController(IUserRepository userRepository, SignInManager<User> signInManager, IConfiguration configuration)
         {
             _userRepository = userRepository;
             _signInManager = signInManager;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -43,6 +48,7 @@ namespace PePets.Controllers
                     ModelState.AddModelError(nameof(model.Password), "Неправильный логин и (или) пароль");
                 }
             }
+
             return PartialView(model);
         }
 
@@ -65,11 +71,11 @@ namespace PePets.Controllers
                     RegistrationDate = DateTime.Today
                 };
 
-                // добавляем пользователя в БД
-                var result = await _userRepository.SaveUser(user, model.NewPassword);
+                // добавляем пользователя в БД.
+                var result = await _userRepository.CreateWithPasswordAsync(user, model.NewPassword);
                 if (result.Succeeded)
                 {
-                    // генерация токена для пользователя
+                    // генерация токена для пользователя.
                     string token = await _userRepository.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Action
                         (
@@ -79,15 +85,13 @@ namespace PePets.Controllers
                             protocol: HttpContext.Request.Scheme
                         );
 
-                    // Содержимое сообщения
-                    string subject = "Подтвердите ваш email aдрес для регистрации на сайте PePets.ru";
-                    string message = GenerateMessageBody(user.FirstName, callbackUrl);
+                    // Отправка сообщения пользователю на Email для его подтверждения.
+                    EmailService emailService = new EmailService(
+                        _configuration["CompanyEmailAuth:Login"], 
+                        _configuration["CompanyEmailAuth:Password"]);
+                    await emailService.SendEmailAsync(user.FirstName, user.Email, callbackUrl);
 
-                    // Отправка сообщения пользователю на Email для его подтверждения
-                    EmailService emailService = new EmailService();
-                    await emailService.SendEmailAsync(model.Email, subject, message);
-
-                    // установка куки
+                    // установка куки.
                     await _signInManager.SignInAsync(user, false);
 
                     return RedirectToAction("Index", "Home");
@@ -100,6 +104,7 @@ namespace PePets.Controllers
                     }
                 }
             }
+
             return PartialView(model);
         }
 
@@ -107,7 +112,7 @@ namespace PePets.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            // удаляем аутентификационные куки
+            // удаляем аутентификационные куки.
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
@@ -119,7 +124,7 @@ namespace PePets.Controllers
             if (userId == null || token == null)
                 return View("Error");
 
-            User user = await _userRepository.GetUserById(userId);
+            User user = await _userRepository.GetByIdAsync(userId);
             if (user == null)
                 return View("Error");
 
@@ -161,7 +166,7 @@ namespace PePets.Controllers
             Claim userSecondName = claims.Find(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname");
             Claim userPicture = claims.Find(x => x.Type == "picture");
 
-            User user = await _userRepository.GetUserByEmailAsync(userEmail.Value);
+            User user = await _userRepository.GetByNameAsync(userEmail.Value);
             IdentityResult saveResult;
             if (user == null) // Если пользователь новый, то создаем и регистрируем его
             {
@@ -174,7 +179,9 @@ namespace PePets.Controllers
                     EmailConfirmed = true,
                     Avatar = userPicture.Value,
                     RegistrationDate = DateTime.Now
-                };                  
+                };
+
+                saveResult = await _userRepository.CreateWithoutPasswordAsync(user);
             }
             else // Иначе обновляем его основную информацию на основе полученных от соц. сети
             {
@@ -182,25 +189,14 @@ namespace PePets.Controllers
                 user.SecondName = userSecondName.Value;
                 user.EmailConfirmed = true;
                 user.Avatar = userPicture.Value;
+
+                saveResult = await _userRepository.UpdateAsync(user);
             }
 
-            saveResult = await _userRepository.SaveUser(user);
             if(saveResult.Succeeded)
                 await _signInManager.SignInAsync(user, false);
 
             return RedirectToAction("Index", "Home");
-        }
-
-        private string GenerateMessageBody(string userName, string callbackUrl)
-        {
-            return
-                "<div>" +
-                    "<div style = 'padding: 0.5em; margin: 0 auto; width: 50%; font-size: 1.2rem; font-family: Arial, Helvetica, sans-serif;'>" +
-                        $"<div style = 'margin-bottom: 0.7em;' > Здравствуйте {userName},</div>" +
-                        "<div style = 'margin-bottom: 1.5em;' > Для того, чтобы продолжить регистрацию на сайте PePets.ru, пожалуйста, подтвердите ваш email адрес:</div>" +
-                        $"<a style = 'display: flex; padding: 1.5em; background-color: #587fcc; color: white; justify-content: center; text-decoration: none; border-radius: 25px;' href = '{callbackUrl}' > Подтверить email адрес</a>" +
-                     "</div>" +
-                "</div>";
         }
     }
 }

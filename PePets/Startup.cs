@@ -7,7 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Linq;
+using PePets.Data;
 using PePets.Models;
+using PePets.Repositories;
 using PePets.Services;
 using System;
 using System.Security.Claims;
@@ -28,11 +30,12 @@ namespace PePets
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<PePetsDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("PePetsDbContext")));
-            services.AddTransient<PostRepository>();
-            services.AddTransient<UserRepository>();
-            services.AddTransient<BreedRepository>();
-            services.AddTransient<TypeRepository>();
+            services.AddTransient<IPostRepository, PostRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IBreedRepository, BreedRepository>();
+            services.AddScoped<ITypeRepository, TypeRepository>();
             services.AddSingleton<SearchService>();
+            services.AddSingleton(Configuration);
 
             services.AddIdentity<User, IdentityRole>(options =>
             {

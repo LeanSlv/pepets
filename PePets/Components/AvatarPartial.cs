@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PePets.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using PePets.Repositories;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -10,9 +8,9 @@ namespace PePets.Components
 {
     public class AvatarPartial : ViewComponent
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
 
-        public AvatarPartial(UserRepository userRepository)
+        public AvatarPartial(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }

@@ -8,18 +8,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using PePets.Services;
+using PePets.Repositories;
 
 namespace PePets.Controllers
 {
     public class PostsController : Controller
     {
-        private readonly PostRepository _postRepository;
-        private readonly UserRepository _userRepository;
-        IWebHostEnvironment _appEnvironment;
+        private readonly IPostRepository _postRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IWebHostEnvironment _appEnvironment;
         private readonly int maxImagesCount;
         private readonly SearchService _searchService;
 
-        public PostsController(PostRepository postRepository, UserRepository userRepository, IWebHostEnvironment appEnvironment, SearchService searchService)
+        public PostsController(IPostRepository postRepository, IUserRepository userRepository, IWebHostEnvironment appEnvironment, SearchService searchService)
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
@@ -28,67 +29,87 @@ namespace PePets.Controllers
             maxImagesCount = 10;
         }
 
-        public IActionResult PostReview(Guid id)
+        [HttpGet]
+        public async Task<IActionResult> ReviewPost(Guid id)
         {
-            Post post = _postRepository.GetPostById(id);
-            _postRepository.addViewToPost(post);
+            Post post = await _postRepository.GetByIdAsync(id);
+            await _postRepository.AddViewAsync(post);
             return View(post);
         }
 
+        [HttpGet]
         [Authorize]
-        public IActionResult PostEdit(Guid id)
+        public IActionResult CreatePost()
         {
-            if (id == default)
-                return View(new Post());
-
-            Post post = _postRepository.GetPostById(id);
-            if (User.Identity.Name != post.User.UserName)
-                return NotFound();
-
-            return View(post);
+            return View(new Post());
         }
 
         [HttpPost]
         [RequestSizeLimit(31457280)] // 30 Мб
-        public async Task<IActionResult> PostEdit(Post post, string phoneNumberSwitch, IFormFileCollection images)
+        public async Task<IActionResult> CreatePost(Post post, string phoneNumberSwitch, IFormFileCollection images)
         {
+            User currentUser = _userRepository.GetCurrentUser(User);
+
+            // Если включена опция вставки номера в объявление из профиля пользователя.
             if (phoneNumberSwitch == "on")
-            {
-                User user = _userRepository.GetCurrentUser(User);
-                if (string.IsNullOrEmpty(user.PhoneNumber))
-                {
-                    ModelState.AddModelError(nameof(post.PhoneNumber), "В вашем профиле не указан номер телефона, заполните поле самостоятельно");
-                }
-                else
-                {
-                    post.PhoneNumber = user.PhoneNumber;
-                }
-            }
+                post.PhoneNumber = currentUser.PhoneNumber;
 
-            if(string.IsNullOrEmpty(post.PhoneNumber) || post.PhoneNumber.Length < 12)
-                ModelState.AddModelError(nameof(post.PhoneNumber), "Укажите номер телефона");
-
-            if (images.Count > maxImagesCount)
-                ModelState.AddModelError(nameof(post.Images), "Нельзя загружать больше 10 изображений");
-
-            if (!ModelState.IsValid)
+            // Корректно ли объявление.
+            if (!CheckPost(post, phoneNumberSwitch, images.Count))
                 return View(post);
 
-            _postRepository.SavePost(post);
+            // Создаем запись в БД для получения идентификатора поста, чтобы сформировать названия фотографий.
+            await _postRepository.CreateAsync(post);
 
-            // Сохранение изображений в отдельную папку и добавление их путей в БД
+            // Сохранение изображений в отдельную папку и добавление их путей в БД.
             post.Images = SaveImages(post.Id, images);
 
-            //Добавление актуальной даты публикации
+            //Добавление актуальной даты публикации.
             post.PublicationDate = DateTime.Now;
 
-            // Кто создал объявление
-            await _userRepository.AddPost(User, post);
+            // Кто создал объявление.
+            await _userRepository.AddPostAsync(currentUser, post);
 
-            // Сохранение объявления в БД
-            _postRepository.SavePost(post);
+            // Обновляем запись объявления в БД.
+            await _postRepository.UpdateAsync(post);
 
-            // Индексирование данных
+            // Индексирование данных.
+            await _searchService.IndexPost(post);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> EditPost(Guid id)
+        {
+            Post post = await _postRepository.GetByIdAsync(id);
+            if (User.Identity.Name != post.User.UserName)
+                return NotFound();
+
+            return View("CreatePost", post);
+        }
+        [HttpPost]
+        [RequestSizeLimit(31457280)] // 30 Мб
+        public async Task<IActionResult> EditPost(Post post, string phoneNumberSwitch, IFormFileCollection images)
+        {
+            User currentUser = _userRepository.GetCurrentUser(User);
+
+            // Если включена опция вставки номера в объявление из профиля пользователя.
+            if (phoneNumberSwitch == "on")
+                post.PhoneNumber = currentUser.PhoneNumber;
+
+            // Корректно ли объявление.
+            if (!CheckPost(post, phoneNumberSwitch, images.Count))
+                return View(post);
+
+            // Сохранение изображений в отдельную папку и добавление их путей в БД.
+            post.Images = SaveImages(post.Id, images);
+
+            // Обноваление записи объявления в БД.
+            await _postRepository.UpdateAsync(post);
+
+            // Индексирование данных.
             await _searchService.IndexPost(post);
 
             return RedirectToAction("Index", "Home");
@@ -98,48 +119,60 @@ namespace PePets.Controllers
         [HttpPost]
         public async Task<IActionResult> DeletePost(Guid id)
         {
-            Post postToDelete = _postRepository.GetPostById(id);
+            Post postToDelete = await _postRepository.GetByIdAsync(id);
 
-            // Удаление изображений с сервера
+            // Удаление изображений с сервера.
             if(postToDelete.Images.Length > 0)
                 DeleteAllImages(postToDelete.Images);
 
-            // Удаление записи в БД
-            _postRepository.DeletePost(postToDelete);
+            // Удаление записи в БД.
+            await _postRepository.DeleteAsync(postToDelete);
 
             // Удаление индекса
-            await _searchService.DeleteIndex(id.ToString());
+            await _searchService.DeleteIndexAsync(id.ToString());
 
             return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
-        public IActionResult LoadBreedsViewComponent(string typeName)
-        {
-            return ViewComponent("BreedsList", typeName);
-        }
-
-        [HttpGet]
         public async Task<bool> Like(Guid id)
         {
-            Post post = _postRepository.GetPostById(id);
+            Post post = await _postRepository.GetByIdAsync(id);
             User currentUser = _userRepository.GetCurrentUser(User);
 
             // Если объявление уже добавленно в избранное,
             if (_userRepository.IsFavoritePost(User, id))
             {
                 // то удаляем его,
-                _postRepository.UnlikePost(post);
-                await _userRepository.DeleteFavoritePost(currentUser, post);
+                await _postRepository.UnlikeAsync(post);
+                await _userRepository.DeleteFavoritePostAsync(currentUser, post);
                 return false;
             }
             else
             {
                 // иначе добавляем в избранное.
-                _postRepository.LikePost(post);
-                await _userRepository.AddFavoritePost(User, post);
+                await _postRepository.LikeAsync(post);
+                await _userRepository.AddFavoritePostAsync(currentUser, post);
                 return true;
             }  
+        }
+
+        private bool CheckPost(Post post, string phoneNumberSwitch, int imagesCount)
+        {
+            if (phoneNumberSwitch == "on")
+            {
+                if (string.IsNullOrEmpty(post.PhoneNumber))
+                    ModelState.AddModelError(nameof(post.PhoneNumber),
+                        "В вашем профиле не указан номер телефона, заполните поле самостоятельно");
+            }
+
+            if (string.IsNullOrEmpty(post.PhoneNumber) || post.PhoneNumber.Length < 12)
+                ModelState.AddModelError(nameof(post.PhoneNumber), "Укажите номер телефона");
+
+            if (imagesCount > maxImagesCount)
+                ModelState.AddModelError(nameof(post.Images), "Нельзя загружать больше 10 изображений");
+
+            return ModelState.IsValid;
         }
 
         private string[] SaveImages(Guid postId, IFormFileCollection images)

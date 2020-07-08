@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PePets.Models;
+using PePets.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,9 +9,9 @@ namespace PePets.Components
 {
     public class BreedsList : ViewComponent
     {
-        private readonly BreedRepository _breedRepository;
+        private readonly IBreedRepository _breedRepository;
 
-        public BreedsList(BreedRepository breedRepository) 
+        public BreedsList(IBreedRepository breedRepository) 
         {
             _breedRepository = breedRepository;
         }
@@ -20,7 +21,9 @@ namespace PePets.Components
             if (string.IsNullOrEmpty(typeName))
                 return View("BreedsList", new List<BreedOfPet>());
 
-            return View("BreedsList", _breedRepository.GetAllBreedsOfType(typeName).ToList());
+            IEnumerable<BreedOfPet> breeds = await _breedRepository.GetAllBreedsOfTypeAsync(typeName);
+
+            return View("BreedsList", breeds.ToList());
         }
     }
 }

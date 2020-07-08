@@ -1,9 +1,9 @@
 ﻿@model PePets.Models.Post
 
-@inject PePets.Models.UserRepository _userRepository
+@inject PePets.Repositories.IUserRepository _userRepository
 
         <div class="postCard rounded-25 p-3 mb-3 shadow-on-hover">        
-            <a class="block-link" asp-controller="Posts" asp-action="PostReview" asp-route-id=@Model.Id></a> 
+            <a class="block-link" asp-controller="Posts" asp-action="ReviewPost" asp-route-id=@Model.Id></a> 
             <div class="row">
                 <div class="col-3">
                     @if (Model.Images != null && Model.Images.Length > 0)
@@ -56,7 +56,7 @@
                         @if (Model.User.UserName == User.Identity.Name)
                         {
                             <div class="btn-crud">
-                                <a asp-controller="Posts" asp-action="PostEdit" asp-route-id=@Model.Id class="btn-edit text-decoration-none">
+                                <a asp-controller="Posts" asp-action="EditPost" asp-route-id=@Model.Id class="btn-edit text-decoration-none">
                                     <i class="far fa-edit"></i>
                                 </a>
                             </div>

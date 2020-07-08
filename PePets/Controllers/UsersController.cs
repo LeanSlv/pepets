@@ -6,16 +6,17 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PePets.Models;
+using PePets.Repositories;
 
 namespace PePets.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IWebHostEnvironment _appEnvironment;
-        private readonly PostRepository _postRepository;
+        private readonly IPostRepository _postRepository;
 
-        public UsersController(UserRepository userRepository, IWebHostEnvironment appEnvironment, PostRepository postRepository)
+        public UsersController(IUserRepository userRepository, IWebHostEnvironment appEnvironment, IPostRepository postRepository)
         {
             _userRepository = userRepository;
             _appEnvironment = appEnvironment;
@@ -26,7 +27,7 @@ namespace PePets.Controllers
         [Authorize]
         public async Task<IActionResult> UserProfile(string id)
         {
-            User user = await _userRepository.GetUserById(id);
+            User user = await _userRepository.GetByIdAsync(id);
             if (user == null)
                 return NotFound();
 
@@ -55,7 +56,7 @@ namespace PePets.Controllers
         [Authorize]
         public async Task<IActionResult> ChangePersonalData(string id)
         {
-            User user = await _userRepository.GetUserById(id);
+            User user = await _userRepository.GetByIdAsync(id);
             if (user == null)
                 return NotFound();
 
@@ -69,7 +70,7 @@ namespace PePets.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await _userRepository.GetUserById(changePersonalData.Id);
+                User user = await _userRepository.GetByIdAsync(changePersonalData.Id);
                 if(user != null)
                 {
                     user.FirstName = changePersonalData.FirstName;
@@ -99,7 +100,7 @@ namespace PePets.Controllers
                         }
                     }
 
-                    var result = await _userRepository.SaveUser(user);
+                    var result = await _userRepository.CreateWithoutPasswordAsync(user);
                     if (result.Succeeded)
                     {
                         return RedirectToAction("EditProfile");
@@ -119,7 +120,7 @@ namespace PePets.Controllers
         [Authorize]
         public async Task<IActionResult> ChangeContactInfo(string id)
         {
-            User user = await _userRepository.GetUserById(id);
+            User user = await _userRepository.GetByIdAsync(id);
             if (user == null)
                 return NotFound();
 
@@ -133,7 +134,7 @@ namespace PePets.Controllers
         {
             if(ModelState.IsValid)
             {
-                User user = await _userRepository.GetUserById(changeContactInfo.Id);
+                User user = await _userRepository.GetByIdAsync(changeContactInfo.Id);
                 if(user != null)
                 {
                     user.Location = changeContactInfo.Location;
@@ -142,7 +143,7 @@ namespace PePets.Controllers
                     user.DateOfBirth = changeContactInfo.DateOfBirth;
                     user.AboutMe = changeContactInfo.AboutMe;
 
-                    var result = await _userRepository.SaveUser(user);
+                    var result = await _userRepository.CreateWithoutPasswordAsync(user);
                     if(result.Succeeded)
                     {
                         RedirectToAction("EditProfile");
@@ -162,7 +163,7 @@ namespace PePets.Controllers
         [Authorize]
         public async Task<IActionResult> ChangePassword(string id)
         {
-            User user = await _userRepository.GetUserById(id);
+            User user = await _userRepository.GetByIdAsync(id);
             if (user == null)
                 return NotFound();
 
@@ -176,10 +177,10 @@ namespace PePets.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await _userRepository.GetUserById(changePassword.Id);
+                User user = await _userRepository.GetByIdAsync(changePassword.Id);
                 if (user != null)
                 {
-                    var result = await _userRepository.ChangePassword(user, changePassword.OldPassword, changePassword.NewPassword);
+                    var result = await _userRepository.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
                     if (result.Succeeded)
                     {
                         return RedirectToAction("EditProfile");
@@ -204,16 +205,16 @@ namespace PePets.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(string id)
         {
-            User user = await _userRepository.GetUserById(id);
+            User user = await _userRepository.GetByIdAsync(id);
             if (user != null)
             {
                 foreach (Post post in user.Posts)
-                    _postRepository.DeletePost(post);
+                    await _postRepository.DeleteAsync(post);
 
                 foreach(Post post in user.FavoritePosts)
-                    _postRepository.UnlikePost(post);       
+                    await _postRepository.UnlikeAsync(post);       
 
-                await _userRepository.Delete(user);
+                await _userRepository.DeleteAsync(user);
             }
 
             return RedirectToAction("Index", "Roles");
@@ -224,9 +225,9 @@ namespace PePets.Controllers
         public async Task<IActionResult> Rate(int rating, string userId, string returnUrl = null)
         {
             User currentUser = _userRepository.GetCurrentUser(User);
-            User user = await _userRepository.GetUserById(userId);
+            User user = await _userRepository.GetByIdAsync(userId);
 
-            await _userRepository.RateUser(rating, user, currentUser);
+            await _userRepository.RateUserAsync(rating, user, currentUser);
 
             return Redirect(returnUrl);
         }

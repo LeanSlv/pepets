@@ -65,7 +65,7 @@ namespace PePets.Services
             return ids;
         }
 
-        public async Task<DeleteResponse> DeleteIndex(string id)
+        public async Task<DeleteResponse> DeleteIndexAsync(string id)
         {
             return await _elasticClient.DeleteAsync(new DeleteRequest<PostIndex>(id));
         }

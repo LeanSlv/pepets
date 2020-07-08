@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PePets.Models;
+using PePets.Repositories;
 using System.Threading.Tasks;
 
 namespace PePets.Components
 {
     public class IsEmailConfirmed : ViewComponent
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
 
-        public IsEmailConfirmed(UserRepository userRepository)
+        public IsEmailConfirmed(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
@@ -18,7 +19,7 @@ namespace PePets.Components
             if(userName == null)
                 return View("IsEmailConfirmed", true);
 
-            User user = await _userRepository.GetUserByEmailAsync(userName);
+            User user = await _userRepository.GetByNameAsync(userName);
             if(user == null)
                 return View("IsEmailConfirmed", true);
 

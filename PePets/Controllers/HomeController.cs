@@ -3,15 +3,16 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PePets.Models;
+using PePets.Repositories;
 
 namespace PePets.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly PostRepository _postRepository;
+        private readonly IPostRepository _postRepository;
 
-        public HomeController(ILogger<HomeController> logger, PostRepository postRepository)
+        public HomeController(ILogger<HomeController> logger, IPostRepository postRepository)
         {
             _logger = logger;
             _postRepository = postRepository;
@@ -19,7 +20,7 @@ namespace PePets.Controllers
 
         public IActionResult Index()
         {
-            var posts = _postRepository.GetPosts();
+            var posts = _postRepository.GetAll();
             return View(posts.ToList());
         }
 

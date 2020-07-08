@@ -1,15 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PePets.Models;
+using PePets.Repositories;
 using System;
+using System.Threading.Tasks;
 
 namespace PePets.Controllers
 {
     public class BreedController : Controller
     {
-        private readonly BreedRepository _breedRepository;
-        private readonly TypeRepository _typeRepository;
+        private readonly IBreedRepository _breedRepository;
+        private readonly ITypeRepository _typeRepository;
 
-        public BreedController(BreedRepository breedRepository, TypeRepository typeRepository) 
+        public BreedController(IBreedRepository breedRepository, ITypeRepository typeRepository) 
         {
             _breedRepository = breedRepository;
             _typeRepository = typeRepository;
@@ -17,17 +19,17 @@ namespace PePets.Controllers
 
         public IActionResult Index() => View();
 
-        public IActionResult Create(Guid typeId, string breedName)
+        public async Task<IActionResult> Create(Guid typeId, string breedName)
         {
             if (!string.IsNullOrEmpty(breedName))
             {
-                var type = _typeRepository.FindTypeById(typeId);
+                var type = await _typeRepository.GetByIdAsync(typeId);
                 if (type != null)
                 {
                     var breed = new BreedOfPet { Type = type, Breed = breedName };
-                    bool res = _breedRepository.SaveBreed(breed);
-                    if (res)
-                        return RedirectToAction("Index", "Roles");
+                    await _breedRepository.CreateAsync(breed);
+
+                    return RedirectToAction("Index", "Roles");
                 }
                 else
                 {
@@ -42,13 +44,19 @@ namespace PePets.Controllers
             return PartialView(breedName);
         }
 
-        public IActionResult Delete (Guid id)
+        public async Task<IActionResult> Delete (Guid id)
         {
-            var breed = _breedRepository.FindBreedById(id);
+            var breed = await _breedRepository.GetByIdAsync(id);
             if (breed != null)
-                _breedRepository.DeleteBreed(breed);
+                await _breedRepository.DeleteAsync(breed);
 
             return RedirectToAction("Index", "Roles");
+        }
+
+        [HttpGet]
+        public IActionResult LoadBreedsViewComponent(string typeName)
+        {
+            return ViewComponent("BreedsList", typeName);
         }
     }
 }

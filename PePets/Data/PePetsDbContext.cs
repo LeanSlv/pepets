@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using PePets.Models;
 
-namespace PePets.Models
+namespace PePets.Data
 {
     public class PePetsDbContext : IdentityDbContext<User>
     {

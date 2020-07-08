@@ -84,7 +84,7 @@ $('#PetDescription_Type').change(function () {
 
     $.ajax({
         type: 'GET',
-        url: '/Posts/LoadBreedsViewComponent?typeName=' + name,
+        url: '/Breed/LoadBreedsViewComponent?typeName=' + name,
         success: function (data) {
             // заменяем содержимое присланным частичным представлением
             $('#PetDescription_Breed').replaceWith(data);

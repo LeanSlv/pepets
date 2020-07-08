@@ -4,15 +4,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PePets.Services;
 using PePets.Models;
+using PePets.Repositories;
 
 namespace PePets.Controllers
 {
     public class SearchController : Controller
     {
         private readonly SearchService _searchService;
-        private readonly PostRepository _postRepository;
+        private readonly IPostRepository _postRepository;
 
-        public SearchController(SearchService searchService, PostRepository postRepository)
+        public SearchController(SearchService searchService, IPostRepository postRepository)
         {
             _searchService = searchService;
             _postRepository = postRepository;
@@ -30,7 +31,7 @@ namespace PePets.Controllers
 
             var posts = new List<Post>();
             foreach (Guid id in ids)
-                posts.Add(_postRepository.GetPostById(id));
+                posts.Add(await _postRepository.GetByIdAsync(id));
 
             return ViewComponent("PostsList", posts);
         }
