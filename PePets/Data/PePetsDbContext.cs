@@ -20,9 +20,9 @@ namespace PePets.Data
                 .WithOne(a => a.User).HasForeignKey(a => a.UserId);
         }
 
-        public virtual DbSet<Post> Posts { get; set; }
-        public virtual DbSet<PetDescription> PetsDescription { get; set; }
-        public virtual DbSet<TypeOfPet> TypesOfPet { get; set; }
-        public virtual DbSet<BreedOfPet> BreedsOfPet { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<PetDescription> PetsDescription { get; set; }
+        public DbSet<TypeOfPet> TypesOfPet { get; set; }
+        public DbSet<BreedOfPet> BreedsOfPet { get; set; }
     }
 }
