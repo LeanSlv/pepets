@@ -1,0 +1,80 @@
+﻿@model PePets.Models.Login
+
+    <div id="loginModalForm">
+        <div class="modal-header">
+            <h3 class="col-12 modal-title text-center" id="AuthLabel">
+                Вход на сайт
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </h3>
+        </div>
+
+        <div class="modal-body">
+            <form method="post" asp-controller="Account" asp-action="Login" id="loginForm">
+                <div class="form-group">
+                    <input class="form-control" type="email" placeholder="Электронная почта" asp-for="Email" />
+                    <span class="text-danger small" asp-validation-for="Email"></span>
+                </div>
+
+                <div class="form-group">
+                    <input class="form-control" type="password" placeholder="Пароль" asp-for="Password" />
+                    <span class="text-danger small" asp-validation-for="Password"></span>
+                </div>
+
+                <div class="text-danger small" asp-validation-summary="All"></div>
+
+                <div class="form-check">
+                    <input type="checkbox" asp-for="RememberMe" />
+                    <label asp-for="RememberMe">Запомнить?</label>
+
+                    <div class="float-right">
+                        <a href="#" onClick="ShowRegisterForm()">Нет аккаунта? Зарегистрируйтесь</a>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <input class="btn btn-primary btn-lg btn-block" type="submit" value="Войти" />
+                </div>
+            </form>
+        </div>
+
+        <div class="modal-footer d-block text-center">
+            <h6>Войдите, используя уже существующий аккаунт в социальных сетях</h6>
+
+            <!-- Место для кнопок OAuth -->
+            <div class="d-flex justify-content-around mt-3">
+                <div>
+                    <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="Google">
+                        <button type="submit" class="border-0 bg-transparent">
+                            <img src="~/img/social icons/google.svg" alt="Google login" width="40" height="40" />
+                        </button>
+                    </form>
+                </div>
+
+                <div>
+                    <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="Facebook">
+                        <button type="submit" class="border-0 bg-transparent">
+                            <img src="~/img/social icons/facebook.svg" alt="Facebook login" width="40" height="40" />
+                        </button>
+                    </form>
+                </div>
+
+                <div>
+                    <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="VK">
+                        <button type="submit" class="border-0 bg-transparent">
+                            <img src="~/img/social icons/vk.svg" alt="VK login" width="40" height="40" />
+                        </button>
+                    </form>
+                </div>
+
+                <div>
+                    <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-providerName="Odnoklassniki">
+                        <button type="submit" class="border-0 bg-transparent">
+                            <img src="~/img/social icons/odnoklassniki.svg" alt="Odnoklassniki login" width="40" height="40" />
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

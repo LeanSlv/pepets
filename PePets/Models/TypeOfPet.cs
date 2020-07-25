@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace PePets.Models
 {
-    public class HelloModel
+    public class TypeOfPet
     {
-        public string HelloMessage { get; set; }
+        public Guid Id { get; set; }
+        public string Type { get; set; }
     }
 }

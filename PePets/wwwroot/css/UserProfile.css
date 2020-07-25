@@ -1,0 +1,44 @@
+﻿.dialogs-avatar {
+    border-radius: 50px;
+}
+
+.rating {
+    padding: 1em;
+}
+
+.list-posts-btn {
+    font-size: 20px;
+}
+
+/* Анимация ссылок для списка объявлений */
+.border-bottom-3 {
+    border-bottom: solid 3px #019fb6;
+}
+
+.border-bottom-animation:after {
+    display: block;
+    content: '';
+    border-bottom: solid 3px #019fb6;
+    transform: scaleX(0);
+    transition: transform 250ms ease-in-out;
+}
+
+.border-bottom-animation:hover:after {
+    transform: scaleX(0.1);
+}
+
+.border-bottom-animation:active:after {
+    transform: scaleX(0.85);
+}
+
+.posts-link-active:after {
+    display: block;
+    content: '';
+    border-bottom: solid 3px #019fb6;
+    transform: scaleX(0.85);
+    transition: transform 250ms ease-in-out;
+}
+
+#likesPosts {
+    display: none;
+}

@@ -1,0 +1,8 @@
+﻿@model List<string>
+
+<select id="breeds" name="breeds">
+    @foreach(string breed in Model)
+    {
+        <option value=@breed>@breed</option>
+    }
+</select>

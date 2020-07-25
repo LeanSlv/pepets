@@ -1,0 +1,45 @@
+﻿@model PePets.Models.ChangePersonalDataViewModel
+
+    <div class="form-section rounded shadow">
+        <span class="form-section-title">Личные данные</span>
+
+        <form asp-controller="Users" asp-action="ChangePersonalData" method="POST" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
+            <div class="row">
+                <div class="col col-4">
+                    <input type="file" name="upload_avatar" id="upload-avatar" class="upload-avatar">
+                    <label for="upload-avatar" class="upload-avatar-label">
+                        @if (string.IsNullOrEmpty(Model.Avatar))
+                        {
+                            <img src="~/img/user.png" height="200" width="200" id="change_avatar" />
+                        }
+                        else
+                        {
+                            <img src=@Model.Avatar height="200" width="200" id="change_avatar" />
+                        }
+                        <div class="upload-avatar-hover d-flex justify-content-center align-items-center"><i class="fas fa-camera"></i></div>
+                    </label>
+                </div>
+
+                <div class="col col-8">
+                    <div class="input-group-underlined">
+                        <input type="text" class="input-underlined" asp-for="FirstName" required>
+                        <label class="input-label">Имя</label>
+                        <span class="input-bar"></span>
+                        <span class="input-helper">Введите свое имя</span>
+                        <span asp-validation-for="FirstName"></span>
+                    </div>
+
+                    <div class="input-group-underlined">
+                        <input type="text" class="input-underlined" asp-for="SecondName" required>
+                        <label class="input-label">Фамилия</label>
+                        <span class="input-bar"></span>
+                        <span class="input-helper">Введите свою фамилию</span>
+                        <span asp-validation-for="SecondName"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-outline-dark">Сохранить</button>
+                </div>
+            </div>
+        </form>
+    </div>

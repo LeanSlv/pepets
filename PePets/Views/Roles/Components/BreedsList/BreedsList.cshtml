@@ -1,0 +1,21 @@
+﻿@model IEnumerable<PePets.Models.BreedOfPet>
+
+    <ul>
+        @foreach (BreedOfPet breed in Model)
+        {
+            <li>
+                <div class="row">
+                    <div class="col col-9">
+                        <h6>@breed.Breed</h6>
+                    </div>
+
+                    <div class="col col-3">
+                        <form asp-controller="Breed" asp-action="Delete" asp-route-id="@breed.Id" method="post">
+                            <button class="btn btn-sm btn-danger" type="submit">Удалить</button>
+                        </form>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+    

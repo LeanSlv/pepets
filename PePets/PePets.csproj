@@ -2,7 +2,48 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>3feaa47f-b50d-4d90-8e2d-f7c4e8f02011</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="App_Data\**" />
+    <Compile Remove="wwwroot\usersFiles\ava\**" />
+    <Content Remove="App_Data\**" />
+    <Content Remove="wwwroot\usersFiles\ava\**" />
+    <EmbeddedResource Remove="App_Data\**" />
+    <EmbeddedResource Remove="wwwroot\usersFiles\ava\**" />
+    <None Remove="App_Data\**" />
+    <None Remove="wwwroot\usersFiles\ava\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\css\Search.css~RF438fb635.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNet.Security.OAuth.Odnoklassniki" Version="3.1.1" />
+    <PackageReference Include="AspNet.Security.OAuth.Vkontakte" Version="3.1.1" />
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="DeepMorphy" Version="1.2.5" />
+    <PackageReference Include="Elasticsearch.Net" Version="7.7.1" />
+    <PackageReference Include="MailKit" Version="2.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Owin.Security.Google" Version="4.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
+    <PackageReference Include="NEST" Version="7.7.1" />
+    <PackageReference Include="Owin.Security.Providers.VKontakte" Version="2.26.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\usersFiles\avatars\" />
+  </ItemGroup>
 
 
 

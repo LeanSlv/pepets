@@ -1,10 +1,22 @@
-﻿@Model hello
-@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model List<PePets.Models.Post>
 
-<div class="text-center">
-    <h1 class="display-4">ASP.NET</h1>
-    <h2> @Model.HelloMessage</h2>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@await Html.PartialAsync("StartPagePartial")
+
+    <div id="postsPage" class="container">
+        <div class="text-center">
+            <h1 class="display-4">Все объявления</h1>
+        </div>
+
+        <div class="row justify-content-center mb-3">
+            <div class="col col-sm-10">
+                <div class="search w-100">
+                    <form method="get" asp-controller="Search" asp-action="Search" id="search_form">
+                        <input type="text" class="search_input" name="input" placeholder="Поиск..." required>
+                        <button type="submit" class="search_btn"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        @await  Component.InvokeAsync("PostsList", Model)
+    </div>

@@ -1,0 +1,14 @@
+﻿@using PePets.Models
+@model IEnumerable<PePets.Models.BreedOfPet>
+
+    <select id="PetDescription_Breed" name="PetDescription.Breed" class="custom-select">
+        <option value="">Выберите породу</option>
+        @foreach (BreedOfPet breed in Model)
+        {
+            <option value=@breed.Breed>@breed.Breed</option>
+        }
+    </select>
+
+        
+
+

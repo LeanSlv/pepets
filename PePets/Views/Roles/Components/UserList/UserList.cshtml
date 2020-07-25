@@ -1,0 +1,19 @@
+﻿@model IEnumerable<PePets.Models.User>
+
+    <h2>Список пользователей</h2>
+    <div class="p-1 overflow-auto shadow admin-panel">
+        <table class="table">
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Email</td>
+                    <td>
+                        <form asp-controller="Users" asp-action="Delete" asp-route-id="@user.Id" method="post">
+                            <a class="btn btn-sm btn-primary" asp-controller="Roles" asp-action="Edit" asp-route-id="@user.Id">Права доступа</a>
+                            <button class="btn btn-sm btn-danger" type="submit">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
