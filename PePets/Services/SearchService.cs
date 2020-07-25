@@ -23,7 +23,7 @@ namespace PePets.Services
         }
 
         // Индексирование объявления
-        public async Task<IndexResponse> IndexPost(Advert post)
+        public async Task<IndexResponse> IndexPost(Post post)
         {
             // Получение нормализованной формы для индексации
             string title = _morphyService.GetGeneralText(post.Title);
@@ -65,7 +65,7 @@ namespace PePets.Services
             return ids;
         }
 
-        public async Task<DeleteResponse> DeleteIndex(string id)
+        public async Task<DeleteResponse> DeleteIndexAsync(string id)
         {
             return await _elasticClient.DeleteAsync(new DeleteRequest<PostIndex>(id));
         }

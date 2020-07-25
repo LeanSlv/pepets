@@ -1,27 +1,37 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PePets.Models;
-using System;
+using PePets.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace PePets.Components
 {
+    /// <summary>
+    /// Компонент для работы со списком пород животных.
+    /// </summary>
     public class BreedsList : ViewComponent
     {
-        private readonly BreedRepository _breedRepository;
+        private readonly IBreedRepository _breedRepository;
 
-        public BreedsList(BreedRepository breedRepository) 
+        public BreedsList(IBreedRepository breedRepository) 
         {
             _breedRepository = breedRepository;
         }
 
+        /// <summary>
+        /// Метод подгружает список пород для конкретного типа животного.
+        /// </summary>
+        /// <param name="typeName">Название типа животного, для которого нужно подкгрузить список пород.</param>
+        /// <returns>Представление списка пород.</returns>
         public async Task<IViewComponentResult> InvokeAsync(string typeName)
         {
             if (string.IsNullOrEmpty(typeName))
                 return View("BreedsList", new List<BreedOfPet>());
 
-            return View("BreedsList", _breedRepository.GetAllBreedsOfType(typeName).ToList());
+            IEnumerable<BreedOfPet> breeds = await _breedRepository.GetAllBreedsOfTypeAsync(typeName);
+
+            return View("BreedsList", breeds.ToList());
         }
     }
 }

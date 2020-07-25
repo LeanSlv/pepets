@@ -1,12 +1,12 @@
 ﻿<div class="startBlock">
     <div class="row align-items-center justify-content-around h-100">
         <div class="col-md-4 col-sm-12 text-center">
-            <a href="javascript://0" onclick="SlowScroll('#advertsPage')" class="btn btn-info btn-search">Найти объявление</a>
+            <a href="javascript://0" onclick="SlowScroll('#postsPage')" class="btn btn-info btn-search">Найти объявление</a>
         </div>
         <div class="col-md-4 col-sm-12 text-center">
             @if (User.Identity.IsAuthenticated)
             {
-                <a asp-controller="Advert" asp-action="AdvertEdit" class="btn btn-primary btn-add" id="btn_search">Создать объявление</a>
+                <a asp-controller="Posts" asp-action="CreatePost" class="btn btn-primary btn-add" id="btn_search">Создать объявление</a>
             }
             else
             {

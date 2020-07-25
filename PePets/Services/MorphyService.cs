@@ -6,9 +6,8 @@ namespace PePets.Services
 {
     public class MorphyService
     {
-        private MorphAnalyzer morph;
-
-        private Dictionary<string, int> profile = new Dictionary<string, int>
+        private readonly MorphAnalyzer morph;
+        private readonly Dictionary<string, int> profile = new Dictionary<string, int>
         {
             // Наиболее значимые части речи
             { "сущ", 5 },
@@ -37,42 +36,43 @@ namespace PePets.Services
             // Неизвестные части речи 
             { "неизв", 1 }
         };
+        private readonly char[] WordSeparators = { ' ', ',', '.', '!', '?', '/', '\\', '"', '«', '»', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t' };
 
         public MorphyService()
         {
             morph = new MorphAnalyzer(withLemmatization: true);
         }
 
-        // Преобразование текста к нормализованному виду для индексации и поиска
+        // Преобразование текста к нормализованному виду для индексации и поиска.
         public string GetGeneralText(string text)
         {
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            // Получение массива базовых слов
+            // Получение массива базовых слов.
             string[] textLemmas = Lemmatize(text);
 
-            // Очистка массива слов от ненужных слов
+            // Очистка массива слов от ненужных слов.
             string[] cleanWords = ClearWords(textLemmas);
 
-            // Формирование строки из базовых слов
+            // Формирование строки из базовых слов.
             return string.Join(' ', cleanWords);
         }
 
-        // Получение массива слов из текста
+        // Получение массива слов из текста.
         public string[] GetWordsFromText(string text)
         {
-            // Удаление пробелов в начале и конце строки и перевод в нижний регистр
+            // Удаление пробелов в начале и конце строки и перевод в нижний регистр.
             text = text.Trim().ToLower();
 
-            // Замена букв ё на е
+            // Замена букв ё на е.
             text = text.Replace('ё', 'е');
 
-            // Разделене слов по пробелу
-            return text.Split(' ');
+            // Разделене слов по символам разделителям.
+            return text.Split(WordSeparators);
         }
 
-        // Поиск базовой формы для каждого слова
+        // Поиск базовой формы для каждого слова.
         public string[] Lemmatize(string text)
         {
             string[] words = GetWordsFromText(text);
@@ -80,17 +80,20 @@ namespace PePets.Services
             List<string> lemmaWords = new List<string>();
             foreach (string word in words)
             {
-                // Получение информации о слове 
+                if (string.IsNullOrEmpty(word))
+                    continue;
+
+                // Получение информации о слове.
                 var results = morph.Parse(new string[] { word }).ToArray();
 
-                // Добавление базовой формы в список
+                // Добавление базовой формы в список.
                 lemmaWords.Add( results[0].BestTag.Lemma );
             }
 
             return lemmaWords.ToArray();
         }
 
-        // Очистка массива слов от ненужных
+        // Очистка массива слов от ненужных.
         private string[] ClearWords(string[] words)
         {
             List<string> newWords = new List<string>();
@@ -103,9 +106,12 @@ namespace PePets.Services
             return newWords.ToArray();
         }
 
-        // Валидация слова
+        // Валидация слова.
         private bool Validate(string word)
         {
+            if (string.IsNullOrEmpty(word))
+                return false;
+
             if (word == "купить" || word == "продать")
                 return false;
 

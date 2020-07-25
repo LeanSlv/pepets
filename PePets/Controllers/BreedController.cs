@@ -1,36 +1,50 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PePets.Models;
+using PePets.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace PePets.Controllers
 {
+    /// <summary>
+    /// Контроллер для управления породами животных.
+    /// </summary>
     public class BreedController : Controller
     {
-        private readonly BreedRepository _breedRepository;
-        private readonly TypeRepository _typeRepository;
+        private readonly IBreedRepository _breedRepository;
+        private readonly ITypeRepository _typeRepository;
 
-        public BreedController(BreedRepository breedRepository, TypeRepository typeRepository) 
+        public BreedController(IBreedRepository breedRepository, ITypeRepository typeRepository) 
         {
             _breedRepository = breedRepository;
             _typeRepository = typeRepository;
         }
 
-        public IActionResult Index() => View();
+        public IActionResult Index() 
+        {
+            return View();
+        }
 
-        public IActionResult Create(Guid typeId, string breedName)
+        /// <summary>
+        /// Метод создает новую породу для определенного типа животного.
+        /// </summary>
+        /// <param name="typeId">Идентификатор типа животного, для которого создается новая порода.</param>
+        /// <param name="breedName">Название новой породы.</param>
+        /// <returns>
+        /// При удачном создании редирект на страницу панели администрирования, при неудачном - возвращает
+        /// частичное представление с ошибками создания породы.
+        /// </returns>
+        public async Task<IActionResult> Create(Guid typeId, string breedName)
         {
             if (!string.IsNullOrEmpty(breedName))
             {
-                var type = _typeRepository.FindTypeById(typeId);
+                var type = await _typeRepository.GetByIdAsync(typeId);
                 if (type != null)
                 {
                     var breed = new BreedOfPet { Type = type, Breed = breedName };
-                    bool res = _breedRepository.SaveBreed(breed);
-                    if (res)
-                        return RedirectToAction("Index", "Roles");
+                    await _breedRepository.CreateAsync(breed);
+
+                    return RedirectToAction("Index", "Roles");
                 }
                 else
                 {
@@ -45,13 +59,29 @@ namespace PePets.Controllers
             return PartialView(breedName);
         }
 
-        public IActionResult Delete (Guid id)
+        /// <summary>
+        /// Метод удаляет определенную породу из списка.
+        /// </summary>
+        /// <param name="id">Идентификатор породы, которую нужно удалить.</param>
+        /// <returns>Редирект на страницу панели администрирования.</returns>
+        public async Task<IActionResult> Delete (Guid id)
         {
-            var breed = _breedRepository.FindBreedById(id);
+            var breed = await _breedRepository.GetByIdAsync(id);
             if (breed != null)
-                _breedRepository.DeleteBreed(breed);
+                await _breedRepository.DeleteAsync(breed);
 
             return RedirectToAction("Index", "Roles");
+        }
+
+        /// <summary>
+        /// Метод загружает компонент списка пород для определенного типа животного.
+        /// </summary>
+        /// <param name="typeName">Название типа животного, для которого нужно загрузить список пород.</param>
+        /// <returns>Компонент списка пород для определенного типа животного.</returns>
+        [HttpGet]
+        public IActionResult LoadBreedsViewComponent(string typeName)
+        {
+            return ViewComponent("BreedsList", typeName);
         }
     }
 }

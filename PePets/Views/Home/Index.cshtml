@@ -1,8 +1,8 @@
-﻿@model List<PePets.Models.Advert>
+﻿@model List<PePets.Models.Post>
 
 @await Html.PartialAsync("StartPagePartial")
 
-    <div id="advertsPage" class="container">
+    <div id="postsPage" class="container">
         <div class="text-center">
             <h1 class="display-4">Все объявления</h1>
         </div>
@@ -18,5 +18,5 @@
             </div>
         </div>
 
-        @await  Component.InvokeAsync("AdvertsList", Model)
+        @await  Component.InvokeAsync("PostsList", Model)
     </div>

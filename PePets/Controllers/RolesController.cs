@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -9,6 +8,9 @@ using PePets.Models;
 
 namespace PePets.Controllers
 {
+    /// <summary>
+    /// Контроллер для управления ролями пользователей.
+    /// </summary>
     [Authorize(Roles = "admin")]
     public class RolesController : Controller
     {
@@ -23,6 +25,14 @@ namespace PePets.Controllers
 
         public IActionResult Index() => View();
 
+        /// <summary>
+        /// Метод создает новую роль.
+        /// </summary>
+        /// <param name="name">Название новой роли.</param>
+        /// <returns>
+        /// При удачном создании роли редирект на страницу панели администрирования, при неудачном - представление 
+        /// списка ролей с ошибками, возникшими при создании роли.
+        /// </returns>
         [HttpPost]
         public async Task<IActionResult> Create(string name)
         {
@@ -44,6 +54,11 @@ namespace PePets.Controllers
             return View(name);
         }
 
+        /// <summary>
+        /// Метод удаляет определенную роль.
+        /// </summary>
+        /// <param name="id">Идентификатор роли, которую нужно удалить.</param>
+        /// <returns>Редирект на страницу панели администрирования.</returns>
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -55,6 +70,14 @@ namespace PePets.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Метод подгружает страницу для редактирования ролей определенного пользователя.
+        /// </summary>
+        /// <param name="id">Идентификатор пользователя, которому нужно редактировать роли.</param>
+        /// <returns>
+        /// Если пользователь существует, то возвращает представление редактирования ролей, если нет - страница с
+        /// ошибкой, что нужная страница не найдена.
+        /// </returns>
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
@@ -78,6 +101,15 @@ namespace PePets.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// Метод редактирует роли для определенного пользователя.
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя, которому нужно редактировать роли.</param>
+        /// <param name="roles">Список ролей, которое нужно выставить определенному пользователю.</param>
+        /// <returns>
+        /// Если роли отредактированы удачно, то редирект на панель администрирования, если неудачно - страница с
+        /// ошибкой, что нужная страница не найдена.
+        /// </returns>
         [HttpPost]
         public async Task<IActionResult> Edit(string userId, List<string> roles)
         {

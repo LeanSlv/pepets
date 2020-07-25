@@ -4,18 +4,22 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PePets.Services;
 using PePets.Models;
+using PePets.Repositories;
 
 namespace PePets.Controllers
 {
+    /// <summary>
+    /// Контроллер для управления поиском.
+    /// </summary>
     public class SearchController : Controller
     {
         private readonly SearchService _searchService;
-        private readonly AdvertRepository _advertRepository;
+        private readonly IPostRepository _postRepository;
 
-        public SearchController(SearchService searchService, AdvertRepository advertRepository)
+        public SearchController(SearchService searchService, IPostRepository postRepository)
         {
             _searchService = searchService;
-            _advertRepository = advertRepository;
+            _postRepository = postRepository;
         }
 
         public IActionResult Index()
@@ -23,16 +27,21 @@ namespace PePets.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Метод производит поиск по объявлениям на основе строки поиска.
+        /// </summary>
+        /// <param name="input">Строка поиска.</param>
+        /// <returns>Список найденных объявлений.</returns>
         [HttpGet]
         public async Task<IActionResult> Search(string input)
         {
             List<Guid> ids = await _searchService.Search(input);
 
-            List<Advert> adverts = new List<Advert>();
+            var posts = new List<Post>();
             foreach (Guid id in ids)
-                adverts.Add(_advertRepository.GetAdvertById(id));
+                posts.Add(await _postRepository.GetByIdAsync(id));
 
-            return ViewComponent("AdvertsList", adverts);
+            return ViewComponent("PostsList", posts);
         }
     }
 }

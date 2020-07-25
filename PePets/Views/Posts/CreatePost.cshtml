@@ -1,0 +1,193 @@
+﻿@model PePets.Models.Post
+
+<div class="text-center">
+    @if (Model.Id == default)
+    {
+        <h1>Создать объявление</h1>
+    }
+    else
+    {
+        <h1>Редактировать объявление</h1>
+    }
+
+    <div>
+        <div class="row">
+            <div class="col col-9">
+                <form asp-controller="Posts" asp-action=@(Model.Id == default ? "CreatePost" : "EditPost") method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="Id" />
+                    @if (Model.PetDescription != null)
+                    {
+                        <input type="hidden" asp-for="PetDescription.Id" />
+                    }
+
+                    <div class="row">
+                        <div class="col col-2 form-group">
+                            <label asp-for="Title" class="form-text form-field-name">Название</label>
+                        </div>
+
+                        <div class="col col-10 form-group">
+                            <input type="text" asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col col-2 form-group">
+                            <label asp-for="Description" class="form-text form-field-name">Описание</label>
+                        </div>
+
+                        <div class="col col-10 form-group">
+                            <textarea asp-for="Description" class="form-control"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col col-2 form-group">
+                            <label asp-for="Cost" class="form-text form-field-name">Цена</label>
+                        </div>
+
+                        <div class="col col-10 form-group">
+                            <input type="text" class="form-control" asp-for="Cost" />
+                            <span asp-validation-for="Cost" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col col-2 form-group">
+                            <label asp-for="Images" class="form-text form-field-name">Фотографии</label>
+                        </div>
+
+                        <div class="col col-10 form-group">
+
+                            <input type="file" accept="image/*" asp-for="Images" multiple id="validatedCustomFile" class="custom-file-input" />
+                            <label class="custom-file-label" for="validatedCustomFile">Выбирите фотографии</label>
+
+                            @if (Model.Id != default)
+                            {
+                                <div class="form-group">
+                                    <p>Загруженные изображения</p>
+
+                                    @foreach (string imagePath in Model.Images)
+                                    {
+                                        <img src=@imagePath style="max-height: 100px; max-width: 100px" />
+                                    }
+                                </div>
+                            }
+
+                            <span asp-validation-for="Images" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col col-2 form-group">
+                            <label asp-for="PetDescription.Age" class="form-text form-field-name">Возраст</label>
+                        </div>
+
+                        <div class="col col-10 form-group">
+                            <input type="text" asp-for="PetDescription.Age" class="form-control" />
+                            <span asp-validation-for="PetDescription.Age" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col col-2 form-group">
+                            <label asp-for="PetDescription.Color" class="form-text form-field-name">Окрас</label>
+                        </div>
+
+                        <div class="col col-10 form-group">
+                            <input type="text" asp-for="PetDescription.Color" class="form-control" />
+                            <span asp-validation-for="PetDescription.Color" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col col-2 form-group">
+                            <label asp-for="PetDescription.Gender" class="form-text form-field-name">Пол</label>
+                        </div>
+
+                        <div class="col col-10 form-group">
+                            <select asp-for="PetDescription.Gender" class="custom-select">
+                                <option value=@Enum.Parse(typeof(Genders), "NotChosen")>Выберите пол</option>
+                                <option value=@Enum.Parse(typeof(Genders), "Male")>Мужской</option>
+                                <option value=@Enum.Parse(typeof(Genders), "Female")>Женский</option>
+                            </select>
+                            <span asp-validation-for="PetDescription.Gender" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col col-2 form-group">
+                            <label asp-for="PetDescription.Type" class="form-text form-field-name">Категория</label>
+                        </div>
+
+                        <div class="col col-10 form-group">
+                            <select asp-for="PetDescription.Type" class="custom-select">
+                                @await  Component.InvokeAsync("TypesList")
+                            </select>
+                            <span asp-validation-for="PetDescription.Type" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col col-2 form-group">
+                            <label asp-for="PetDescription.Breed" class="form-text form-field-name">Порода</label>
+                        </div>
+
+                        <div class="col col-10 form-group">
+                            @await Component.InvokeAsync("BreedsList", string.Empty)
+                            <span asp-validation-for="PetDescription.Breed" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col col-2 form-group">
+                            <label asp-for="PetDescription.Breed" class="form-text form-field-name">Телефон</label>
+                        </div>
+
+                        <div class="col col-10 form-group">
+
+                            <div class="row mb-1">
+                                <div class="col col-5">
+                                    <div class="custom-control custom-switch p-0">
+                                        <input type="checkbox" class="custom-control-input" id="phoneSwitch" name="phoneNumberSwitch">
+                                        <label class="custom-control-label" for="phoneSwitch">Указать мой телефон из профиля</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-2">
+                                    <select id="countries_phone" class="form-control bfh-countries" data-country="RU"></select>
+                                </div>
+
+                                <div class="col-3">
+                                    <input type="text" asp-for="PhoneNumber" class="form-control bfh-phone" data-country="countries_phone" id="inputPhone">
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col col-2 form-group">
+
+                        </div>
+
+                        <div class="col col-10 form-group">
+                            <input type="submit" value="Сохранить" class="btn btn-primary" />
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="col col-3">
+                <!-- Правая колонка для дополнительной информации -->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

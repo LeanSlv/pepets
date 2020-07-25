@@ -1,6 +1,6 @@
 ﻿@model PePets.Models.User
 @using Microsoft.AspNetCore.Http.Extensions
-@inject PePets.Models.UserRepository _userRepository
+@inject PePets.Repositories.IUserRepository _userRepository
 
 <div class="container">
     <div class="row">
@@ -56,7 +56,7 @@
 
                         @if (User.Identity.IsAuthenticated &&
                            !ViewBag.CurrentUser &&
-                           await _userRepository.CanCurrentUserRate(User, Model))
+                           await _userRepository.CanCurrentUserRateAsync(User, Model))
                         {
                             <div class="m-2">
                                 <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#ratingModal">
@@ -202,35 +202,35 @@
 
                         <!-- Кнопки выбора -->
                         <div class="mb-3">
-                            <div class="row text-center list-adverts-btn">
+                            <div class="row text-center list-posts-btn">
                                 @if (ViewBag.CurrentUser)
                                 {
                                     <div class="col col-6 p-2">
-                                        <a class="text-decoration-none text-dark adverts-link-active" href="javascript://0" id="myAdvertsLink" onclick="LoadMyAdverts()">Мои объявления</a>
+                                        <a class="text-decoration-none text-dark posts-link-active" href="javascript://0" id="myPostsLink" onclick="LoadMyPosts()">Мои объявления</a>
                                     </div>
 
                                     <div class="col col-6 p-2">
-                                        <a class="text-decoration-none text-dark border-bottom-animation" href="javascript://0" id="likesAdvertsLink" onclick="LoadLikesAdverts()">Понравившиеся объявления</a>
+                                        <a class="text-decoration-none text-dark border-bottom-animation" href="javascript://0" id="likesPostsLink" onclick="LoadLikesPosts()">Понравившиеся объявления</a>
                                     </div>
                                 }
                                 else
                                 {
                                     <div class="col col-12 p-2">
-                                        <span class="adverts-link-active">Объявления</span>
+                                        <span class="posts-link-active">Объявления</span>
                                     </div>
                                 }
                             </div>
                         </div>
 
                         <!-- Список объявлений пользователя -->
-                        <div class="row justify-content-center" id="myAdverts">
+                        <div class="row justify-content-center" id="myPosts">
 
-                            @foreach (Advert advert in Model.Adverts)
+                            @foreach (Post post in Model.Posts)
                             {
-                                advert.User = Model;
+                                post.User = Model;
                                 <div class="col col-11">
                                     <!-- Карточка объявления -->
-                                    @await Html.PartialAsync("~/Views/Advert/AdvertCard.cshtml", advert)
+                                    @await Html.PartialAsync("~/Views/Posts/PostCard.cshtml", post)
                                 </div>
                             }
 
@@ -239,14 +239,14 @@
                         @if (ViewBag.CurrentUser)
                         {
                             <!-- Список понравившихся объявлений -->
-                            <div class="row justify-content-center" id="likesAdverts">
+                            <div class="row justify-content-center" id="likesPosts">
 
-                                @foreach (Advert advert in Model.FavoriteAdverts)
+                                @foreach (Post post in Model.FavoritePosts)
                                 {
-                                    advert.User = Model;
+                                    post.User = Model;
                                     <div class="col col-11">
                                         <!-- Карточка объявления -->
-                                        @await Html.PartialAsync("~/Views/Advert/AdvertCard.cshtml", advert)
+                                        @await Html.PartialAsync("~/Views/Posts/PostCard.cshtml", post)
                                     </div>
                                 }
 

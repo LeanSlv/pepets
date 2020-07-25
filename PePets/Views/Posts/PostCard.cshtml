@@ -1,0 +1,73 @@
+﻿@model PePets.Models.Post
+
+@inject PePets.Repositories.IUserRepository _userRepository
+
+        <div class="postCard rounded-25 p-3 mb-3 shadow-on-hover">        
+            <a class="block-link" asp-controller="Posts" asp-action="ReviewPost" asp-route-id=@Model.Id></a> 
+            <div class="row">
+                <div class="col-3">
+                    @if (Model.Images != null && Model.Images.Length > 0)
+                    {
+                        <img src=@Model.Images.First() class="rounded-25 img-fluid" />
+                    }
+                    else
+                    {
+                        <img src="~/img/no-image.png" class="rounded-25 img-fluid" />
+                    }
+                </div>
+                <div class="col-8 description">
+                    <div class="row">
+                        <div class="col-8">
+                            <h4 class="text-truncate">@Model.Title</h4>
+                            <p class="text-truncate">@Model.Description</p>
+                        </div>
+                        <div class="col-4 text-right">
+                            <h3>@Model.Cost <i class="fas fa-ruble-sign"></i></h3>
+                        </div>
+                    </div>
+                    <hr noshade>
+                    <div class="row">
+                        <div class="col-9">
+                            <span>@Model.PetDescription.Type</span>
+                            <span>@Model.PetDescription.Gender</span>
+                            <span>@Model.PetDescription.Color</span>
+                            <span>@Model.PetDescription.Breed</span>
+                            <span>@Model.PetDescription.Age</span>
+                        </div>
+                        <div class="col-3 text-right">
+                            <p>@Model.Location</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1 text-right">
+                    <div class="crud-block">
+                        <div class="btn-crud">
+                            <a asp-controller="Posts" asp-action="Like" asp-route-id=@Model.Id class="btn-like text-decoration-none">
+                                @if (User.Identity.IsAuthenticated && _userRepository.IsFavoritePost(User, Model.Id))
+                                {
+                                    <i class="fas fa-heart like"></i>
+                                }
+                                else
+                                {
+                                    <i class="far fa-heart unlike"></i>
+                                }
+                            </a>    
+                        </div>
+                        @if (Model.User.UserName == User.Identity.Name)
+                        {
+                            <div class="btn-crud">
+                                <a asp-controller="Posts" asp-action="EditPost" asp-route-id=@Model.Id class="btn-edit text-decoration-none">
+                                    <i class="far fa-edit"></i>
+                                </a>
+                            </div>
+                            <div class="btn-crud">
+                                <form method="post" asp-controller="Posts" asp-action="DeletePost">
+                                    <input type="hidden" value=@Model.Id name="Id" />
+                                    <button class="btn-delete border-0 bg-white" type="submit"><i class="far fa-trash-alt"></i></button>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
